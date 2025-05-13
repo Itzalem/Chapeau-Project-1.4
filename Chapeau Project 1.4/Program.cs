@@ -1,4 +1,8 @@
+using Chapeau_Project_1._4.Repositories;
+using Chapeau_Project_1._4.Services;
+
 namespace Chapeau_Project_1._4
+
 {
     public class Program
     {
@@ -7,9 +11,15 @@ namespace Chapeau_Project_1._4
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddSingleton<IMenuRepository, MenuRepository>();
+
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddSingleton<IMenuService, IMenuService>();
+
             var app = builder.Build();
+
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

@@ -19,25 +19,46 @@ namespace Chapeau_Project_1._4.Repositories
             string menuItemName = (string)reader["menuItemName"];
             decimal price = (decimal)reader["price"];
             int stock = (int)reader["stock"];
-			string card = (string)reader["menuCard"];
-			string category = (string)reader["category"];
+            string card = (string)reader["menuCard"];
+            string category = (string)reader["category"];
 
-			return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
+            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
         }
 
-        public List<MenuItem> DisplayMenu()
+        public List<MenuItem> DisplayMenu(string? cardFilter, string? categoryFilter)
         {
             List<MenuItem> menu = new List<MenuItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " + //depending on changes add orderItem_id
-					" FROM MENU_ITEMS ORDER BY menuCard, category; ";
+                    " FROM MENU_ITEMS WHERE 0=0 ";
+
+                //filtering options
+                if (!string.IsNullOrEmpty(cardFilter))
+                {
+                    query += "AND menuCard = @MenuCard ";
+                }
+                if (!string.IsNullOrEmpty(categoryFilter))
+                {
+                    query += "AND category = @Category ";
+                }
+
+                query += "ORDER BY menuCard, category;";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Connection.Open();
+                //parameters for filtering 
+                if (!string.IsNullOrEmpty(cardFilter))
+                {
+                    command.Parameters.AddWithValue("@MenuCard", cardFilter);
+                }
+                if (!string.IsNullOrEmpty(categoryFilter))
+                {
+                    command.Parameters.AddWithValue("@Category", categoryFilter);
+                }
 
+                command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -45,11 +66,44 @@ namespace Chapeau_Project_1._4.Repositories
                     MenuItem menuItem = ReadItem(reader);
                     menu.Add(menuItem);
                 }
-
                 reader.Close();
-            }
 
                 return menu;
+            }
         }
+
+        public List<string> GetCategoriesByCard(string? cardFilter) //FEEDBACK about cardFilter beign null
+        {
+            List<string> dropdownCategories = new List<string>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT category FROM MENU_ITEMS WHERE menuCard = @MenuCard GROUP BY category ;"; //esto es para cuando no es nulo 
+                if (!string.IsNullOrEmpty(cardFilter))
+                {
+                    
+                }
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                if (!string.IsNullOrEmpty(cardFilter))
+                {
+                    command.Parameters.AddWithValue("@MenuCard", cardFilter);
+                }
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string category = (string)reader["category"];
+                    dropdownCategories.Add(category);
+                }
+                reader.Close();
+
+                return dropdownCategories;
+            }
+        }
+   
     }
 }

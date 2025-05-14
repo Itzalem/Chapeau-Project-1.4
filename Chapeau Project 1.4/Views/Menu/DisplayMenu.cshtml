@@ -10,6 +10,27 @@
 	<h1 class="display-4">Le Menu</h1>
 </div>
 
+<form asp-action="DisplayMenu" method="get" class="mb-3">   
+    <!--how to put viewbag in the select-->
+
+    <label for="cardFilter">Select Card</label>
+    <select id="cardFilter" name="cardFilter" value="@ViewBag.CardFilter">
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+        <option value="Drinks">Drinks</option>        
+    </select>
+
+    <label for="categoryFilter">Select Category</label>
+    <select id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter">
+        @foreach (var categorie in ViewBag.DropdownCategories)
+        {
+            <option value="@categorie">@categorie</option>
+        }
+    </select>    
+
+    <button type="submit" class="btn btn-primary mt-2">Filter</button>
+</form>
+
 @foreach (var menuItem in Model)
 {
     

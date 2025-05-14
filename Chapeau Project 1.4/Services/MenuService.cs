@@ -12,9 +12,14 @@ namespace Chapeau_Project_1._4.Services
             _menuRepository = menuRepository;
         }
 
-        public List<MenuItem> DisplayMenu()
+        public List<MenuItem> DisplayMenu(string? cardFilter, string? categoryFilter)
         {
-            return _menuRepository.DisplayMenu();
+            return _menuRepository.DisplayMenu(cardFilter, categoryFilter);
+        }
+
+        public List<string> GetCategoriesByCard(string? cardFilter)
+        {
+            return _menuRepository.GetCategoriesByCard(cardFilter);
         }
     }
 }

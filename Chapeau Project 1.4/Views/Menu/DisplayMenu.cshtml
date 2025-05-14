@@ -1,38 +1,40 @@
 ﻿@model List<Chapeau_Project_1._4.Models.MenuItem>
 
 @{
-	ViewData["Title"] = "Menu";
+	ViewData["Title"] = "Menu";    
+    string card = "";
+    string previuosCategory = "";
 }
 
 <div class="text-center">
 	<h1 class="display-4">Le Menu</h1>
 </div>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Price</th>
-		</tr>
-	</thead>
-	<tbody>
-		@{
-			foreach (var menuItem in Model)
-			{
-				var rowStyle = "";
-				<tr>
-					<td>@menuItem.MenuItemName</td>
-					<td>@menuItem.Price</td>
-					<!-- <td>
-						<a asp-controller="Users" asp-action="Edit" asp-route-id="@menuItem.MenuItemId" class="btn-custom">Edit</a>
-						<a asp-controller="Users" asp-action="Delete" asp-route-id="@menuItem.MenuItemId" class="btn-custom">Delete</a>
+@foreach (var menuItem in Model)
+{
+    
+    if (menuItem.Card != card)
+    {
+        <h1 style="width: 70%; margin: 30px auto; text-align: left;">@menuItem.Card</h1>
+        card = menuItem.Card;
+        previuosCategory = ""; 
+    }
 
-					</td>-->
-				</tr>
-			}
-		}
-	</tbody>
+    
+    if (menuItem.Category != previuosCategory)
+    {
+        <h2 style="text-align: center; margin-top: 20px">@menuItem.Category</h2>
+        previuosCategory = menuItem.Category;
+    }
 
-</table>
+    
+    <table style="border-collapse: collapse; width: 70%; margin: auto;">
+        <tr>
+            <td>@menuItem.MenuItemName</td>
+            <td style="text-align: right;">€@menuItem.Price</td>
+        </tr>
+    </table>
+}
+
 
 <!--<a href="/Users/Create" class="btn-custom">Create User</a>-->

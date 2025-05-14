@@ -6,6 +6,8 @@
         public string MenuItemName { get; set; }
         public decimal Price { get; set; }
         public int Stock {  get; set; }
+        public string Card {  get; set; }
+        public string Category { get; set; }
 
         //depending on the database changes i need to add "orderItem_id" or not
 
@@ -13,12 +15,15 @@
         {
         }
 
-        public MenuItem(int menuItemId, string menuItemName, decimal price, int stock)
+        public MenuItem(int menuItemId, string menuItemName, decimal price, int stock, 
+                        string card, string category)
         {
             MenuItemId = menuItemId;
             MenuItemName = menuItemName;
             Price = price;
             Stock = stock;
+            Card = card;
+            Category = category;
         }
         
     }

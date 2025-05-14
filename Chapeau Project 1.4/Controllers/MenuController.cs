@@ -17,7 +17,7 @@ namespace Chapeau_Project_1._4.Controllers
         {
             List<MenuItem> menu = _menuService.DisplayMenu();
 
-            return View(menu);
-        }
-    }
+			return View(menu);
+		}
+	}
 }

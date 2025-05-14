@@ -3,11 +3,11 @@ using Chapeau_Project_1._4.Repositories;
 
 namespace Chapeau_Project_1._4.Services
 {
-    public class Service : IMenuService
+    public class MenuService : IMenuService
     {
         private IMenuRepository _menuRepository;
 
-        public Service(IMenuRepository menuRepository)
+        public MenuService(IMenuRepository menuRepository)
         {
             _menuRepository = menuRepository;
         }

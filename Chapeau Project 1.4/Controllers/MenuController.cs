@@ -13,7 +13,7 @@ namespace Chapeau_Project_1._4.Controllers
             _menuService = menuService;
         }
 
-        public IActionResult Index()
+        public IActionResult DisplayMenu()
         {
             List<MenuItem> menu = _menuService.DisplayMenu();
 

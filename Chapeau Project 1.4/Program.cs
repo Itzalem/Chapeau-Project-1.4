@@ -15,7 +15,7 @@ namespace Chapeau_Project_1._4
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddSingleton<IMenuService, IMenuService>();
+            builder.Services.AddSingleton<IMenuService, MenuService>();
 
             var app = builder.Build();
 

@@ -49,8 +49,8 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@MenuCard", cardFilter);
-                  
-                
+
+
                 if (category != "All")
                 {
                     command.Parameters.AddWithValue("@Category", categoryFilter);
@@ -69,7 +69,7 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
                 return menu;
             }
         }
-       
-   
+
+
     }
 }

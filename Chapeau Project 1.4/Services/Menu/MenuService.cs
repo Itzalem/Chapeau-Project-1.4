@@ -41,6 +41,11 @@ namespace Chapeau_Project_1._4.Services.Menu
                 }
 
             };
-        
+
+        public Dictionary<ECardOptions, List<ECategoryOptions>> GetCardCategories()
+        {
+            return categoriesByCard;
+        }
+
     }
 }

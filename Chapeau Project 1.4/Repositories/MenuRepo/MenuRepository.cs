@@ -35,13 +35,9 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
                 string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category, itemStatus " + //depending on changes add orderItem_id
                     " FROM MENU_ITEMS WHERE menuCard = @MenuCard";
 
-                string category = categoryFilter.ToString();
-                string card = cardFilter.ToString();
-
-                //filtering options                
-                if (category != "All")
+                if (categoryFilter != ECategoryOptions.All) 
                 {
-                    query += "AND category = @Category ";
+                    query += " AND category = @Category";
                 }
 
                 query += "ORDER BY menuCard, category;";
@@ -49,11 +45,10 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@MenuCard", cardFilter);
-                  
-                
-                if (category != "All")
+
+                if (categoryFilter != ECategoryOptions.All)
                 {
-                    command.Parameters.AddWithValue("@Category", categoryFilter);
+                    command.Parameters.AddWithValue("@Category", categoryFilter.ToString());
                 }
 
                 command.Connection.Open();

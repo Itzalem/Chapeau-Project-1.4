@@ -5,9 +5,8 @@ namespace Chapeau_Project_1._4.Services.Menu
     public interface IMenuService
     {
         List<MenuItem> DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter);
+        Dictionary<ECardOptions, List<ECategoryOptions>> GetCardCategories();
 
 
-
-        
     }
 }

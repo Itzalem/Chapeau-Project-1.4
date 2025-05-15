@@ -1,21 +1,21 @@
-﻿@model List<Chapeau_Project_1._4.Models.MenuItem>
+﻿@model Chapeau_Project_1._4.Models.MenuViewModel
 
 @{
-	ViewData["Title"] = "Menu";    
+    ViewData["Title"] = "Menu";
     string card = "";
-    string previuosCategory = "";
+    string previousCategory = "";
 }
- 
+
 <div class="text-center">
-	<h1 class="display-4">Le Menu</h1>
+    <h1 class="display-4">Le Menu</h1>
 </div>
 
 <ul class="nav nav-pills">
     <li class="nav-item">
         <a class="nav-link active" data-bs-toggle="pill" href="#all">All</a>
     </li>
-    <!--Show cards options from Enum-->
-    @foreach (var cardEnum in Enum.GetValues(typeof(ECardOptions)))
+    <!-- Mostrar opciones de Card desde el Diccionario del ViewModel -->
+    @foreach (var cardEnum in Model.CategoriesDictionary.Keys)
     {
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="pill" href="#@cardEnum">@cardEnum</a>
@@ -23,23 +23,22 @@
     }
 </ul>
 
-
 <div class="tab-content">
-    <!-- ALL shows the full menu, it does not filter-->
+    <!-- ALL muestra todo el menú sin filtro -->
     <div id="all" class="tab-pane fade show active">
-        @foreach (var menuItem in Model)
+        @foreach (var menuItem in Model.MenuItems)
         {
             if (menuItem.Card != card)
             {
                 <h1 style="width: 70%; margin: 30px auto; text-align: left;">@menuItem.Card</h1>
                 card = menuItem.Card;
-                previuosCategory = "";
+                previousCategory = "";
             }
 
-            if (menuItem.Category != previuosCategory)
+            if (menuItem.Category != previousCategory)
             {
                 <h2 style="text-align: center; margin-top: 20px">@menuItem.Category</h2>
-                previuosCategory = menuItem.Category;
+                previousCategory = menuItem.Category;
             }
 
             <table style="border-collapse: collapse; width: 70%; margin: auto;">
@@ -51,10 +50,26 @@
         }
     </div>
 
-   <!--missing the categories from the other card-->
-    <!--....-->
+    <!-- Mostrar categorías filtradas por CardOptions -->
+    <div id="@Model.CardFilter" class="tab-pane fade">
+        @foreach (var category in Model.CategoriesDictionary[Model.CardFilter])
+        {
+            <h2 style="text-align: center; margin-top: 20px">@category</h2>
+
+            <table style="border-collapse: collapse; width: 70%; margin: auto;">
+                @foreach (var menuItem in Model.MenuItems.Where(item => item.Card == Model.CardFilter.ToString() && item.Category == category.ToString()))
+                {
+                    <tr>
+                        <td>@menuItem.MenuItemName</td>
+                        <td style="text-align: right;">€@menuItem.Price</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
 
 </div>
+
 
 
 <!--<a href="/Users/Create" class="btn-custom">Create User</a>-->

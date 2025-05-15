@@ -66,7 +66,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderOverviewRepo
                                 "FROM dbo.ORDER_ITEM AS OI " +
                                     "JOIN dbo.MENU_ITEMS AS MI ON OI.menuItem_id = MI.menuItem_id " +
                                     "JOIN dbo.ORDERS AS O ON O.orderNumber = OI.orderNumber " +
-                                    "JOIN dbo.DISH AS D ON  D.menuItem_id = OI.menuItem_id" +
+                                    "JOIN dbo.DISH AS D ON  D.menuItem_id = OI.menuItem_id " +
                                 "WHERE tableNumber = @table AND [status] NOT LIKE 'payed' AND category NOT LIKE 'drink';";
                 SqlCommand command = new SqlCommand(query, connection);
 

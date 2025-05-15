@@ -37,9 +37,11 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
         [HttpPost]
-        public void GetTable(int table)
+        public ActionResult GetTable(int table)
         {
             Index(table);
+
+            return RedirectToAction("DisplayOrder", table);
         }
     }
 }

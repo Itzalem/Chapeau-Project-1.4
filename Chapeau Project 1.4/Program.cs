@@ -4,6 +4,8 @@ using Chapeau_Project_1._4.Repositories.OrderOverviewRepo;
 using Chapeau_Project_1._4.Repositories.OrderRepo;
 using Chapeau_Project_1._4.Services;
 using Chapeau_Project_1._4.Services.Menu;
+using Chapeau_Project_1._4.Services.Order;
+using Chapeau_Project_1._4.Services.OrderOverview;
 
 namespace Chapeau_Project_1._4
 
@@ -20,8 +22,12 @@ namespace Chapeau_Project_1._4
             
             builder.Services.AddSingleton<IMenuRepository, MenuRepository>();
             builder.Services.AddSingleton<IMenuService, MenuService>();
+
             builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
+            builder.Services.AddSingleton<IOrderService, OrderService>();
+
             builder.Services.AddSingleton<IOrderOverviewRepository, OrderOverviewRepository>();
+            builder.Services.AddSingleton<IOrderOverviewService, OrderOverviewService>();
 
             builder.Services.AddSingleton<IPersonellRepository, PersonellRepository>();
             builder.Services.AddSingleton<IPersonellService, PersonellService>();

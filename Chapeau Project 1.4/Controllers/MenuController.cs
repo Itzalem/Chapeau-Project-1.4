@@ -14,7 +14,7 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
         [HttpGet]
-        public IActionResult DisplayMenu(string cardFilter, string categoryFilter)
+        public IActionResult DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
             List<MenuItem> menu = _menuService.DisplayMenu(cardFilter, categoryFilter);
 

@@ -15,13 +15,14 @@
         <a class="nav-link active" data-bs-toggle="pill" href="#all">All</a>
     </li>
     <!--Show cards options from Enum-->
-    @foreach (var cardEnum in Enum.GetValues(typeof(CardOptions)))
+    @foreach (var cardEnum in Enum.GetValues(typeof(ECardOptions)))
     {
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="pill" href="#@cardEnum">@cardEnum</a>
         </li>
     }
 </ul>
+
 
 <div class="tab-content">
     <!-- ALL shows the full menu, it does not filter-->
@@ -50,27 +51,9 @@
         }
     </div>
 
-    <!--Show only  -->
-    @foreach (var cardEnum in Enum.GetValues(typeof(CardOptions)))
-    {
-        <div id="@cardEnum" class="tab-pane fade">
-            @foreach (var menuItem in Model.Where(m => m.Card == cardEnum))
-            {
-                if (menuItem.Category != previuosCategory)
-                {
-                    <h2 style="text-align: center; margin-top: 20px">@menuItem.Category</h2>
-                    previuosCategory = menuItem.Category;
-                }
+   <!--missing the categories from the other card-->
+    <!--....-->
 
-                <table style="border-collapse: collapse; width: 70%; margin: auto;">
-                    <tr>
-                        <td>@menuItem.MenuItemName</td>
-                        <td style="text-align: right;">€@menuItem.Price</td>
-                    </tr>
-                </table>
-            }
-        </div>
-    }
 </div>
 
 

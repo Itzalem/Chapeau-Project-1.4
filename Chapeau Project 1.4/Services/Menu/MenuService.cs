@@ -12,7 +12,7 @@ namespace Chapeau_Project_1._4.Services.Menu
             _menuRepository = menuRepository;
         }
 
-        public List<MenuItem> DisplayMenu(string? cardFilter, string? categoryFilter)
+        public List<MenuItem> DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
             return _menuRepository.DisplayMenu(cardFilter, categoryFilter);
         }

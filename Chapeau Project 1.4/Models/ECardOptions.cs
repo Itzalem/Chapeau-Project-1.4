@@ -1,8 +1,7 @@
 ﻿namespace Chapeau_Project_1._4.Models
 {
-    public enum CardOptions
-    {
-            All,
+    public enum ECardOptions
+    {            
             Lunch,
             Dinner,
             Drinks

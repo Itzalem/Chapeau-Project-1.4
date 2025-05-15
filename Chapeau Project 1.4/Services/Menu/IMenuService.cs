@@ -4,7 +4,7 @@ namespace Chapeau_Project_1._4.Services.Menu
 {
     public interface IMenuService
     {
-        List<MenuItem> DisplayMenu(string? cardFilter, string? categoryFilter);
+        List<MenuItem> DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter);
         
     }
 }

@@ -19,8 +19,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderOverviewRepo
             //the connection string was set in the constructor 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT Description, Date, Name FROM Activities " +
-                    "ORDER BY Date";
+                string query =  "SELECT DISTINCT tableNumber, menuItemName, isAlcoholic, quantity, note, price" +
+                                "FROM dbo.ORDER_ITEM AS OI " +
+                                    "JOIN dbo.MENU_ITEMS AS MI ON OI.menuItem_id = MI.menuItem_id" +
+                                    "JOIN dbo.ORDERS AS O ON O.orderNumber = OI.orderNumber " +
+                                    "JOIN dbo.DRINK AS D ON  D.menuItem_id = OI.menuItem_id " +
+                                "WHERE tableNumber = 1 AND[status] NOT LIKE 'payed' AND category LIKE 'drink'";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();
@@ -56,8 +60,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderOverviewRepo
             //the connection string was set in the constructor 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT Description, Date, Name FROM Activities " +
-                    "ORDER BY Date";
+                string query = "SELECT DISTINCT tableNumber, menuItemName, quantity, note, price " +
+                                "FROM dbo.ORDER_ITEM AS OI " +
+                                    "JOIN dbo.MENU_ITEMS AS MI ON OI.menuItem_id = MI.menuItem_id " +
+                                    "JOIN dbo.ORDERS AS O ON O.orderNumber = OI.orderNumber " +
+                                    "JOIN dbo.DISH AS D ON  D.menuItem_id = OI.menuItem_id" +
+                                "WHERE tableNumber = 1 AND[status] NOT LIKE 'payed' AND category LIKE 'dish';";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();

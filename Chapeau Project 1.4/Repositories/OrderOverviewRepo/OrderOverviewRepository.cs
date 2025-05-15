@@ -12,20 +12,22 @@ namespace Chapeau_Project_1._4.Repositories.OrderOverviewRepo
             _connectionString = configuration.GetConnectionString("chapeaurestaurant");
         }
 
-        public List<OverviewItem> DisplayOrderDrinks()
+        public List<OverviewItem> DisplayOrderDrinks(int table)
         {
             List<OverviewItem> order = new List<OverviewItem>();
 
             //the connection string was set in the constructor 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query =  "SELECT DISTINCT tableNumber, menuItemName, isAlcoholic, quantity, note, price" +
+                string query =  "SELECT tableNumber, menuItemName, isAlcoholic, quantity, note, price " +
                                 "FROM dbo.ORDER_ITEM AS OI " +
-                                    "JOIN dbo.MENU_ITEMS AS MI ON OI.menuItem_id = MI.menuItem_id" +
+                                    "JOIN dbo.MENU_ITEMS AS MI ON OI.menuItem_id = MI.menuItem_id " +
                                     "JOIN dbo.ORDERS AS O ON O.orderNumber = OI.orderNumber " +
                                     "JOIN dbo.DRINK AS D ON  D.menuItem_id = OI.menuItem_id " +
-                                "WHERE tableNumber = 1 AND[status] NOT LIKE 'payed' AND category LIKE 'drink'";
+                                "WHERE tableNumber = @table AND [status] NOT LIKE 'payed' AND category LIKE 'drink'";
                 SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@table", table);
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -53,20 +55,22 @@ namespace Chapeau_Project_1._4.Repositories.OrderOverviewRepo
             return new OverviewItem(TableNumber, MenuItemName, Quantity, Note, Price, IsAlcoholic);
         }
 
-        public List<OverviewItem> DisplayOrderDishes()
+        public List<OverviewItem> DisplayOrderDishes(int table)
         {
             List<OverviewItem> order = new List<OverviewItem>();
 
             //the connection string was set in the constructor 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT DISTINCT tableNumber, menuItemName, quantity, note, price " +
+                string query = "SELECT tableNumber, menuItemName, quantity, note, price " +
                                 "FROM dbo.ORDER_ITEM AS OI " +
                                     "JOIN dbo.MENU_ITEMS AS MI ON OI.menuItem_id = MI.menuItem_id " +
                                     "JOIN dbo.ORDERS AS O ON O.orderNumber = OI.orderNumber " +
                                     "JOIN dbo.DISH AS D ON  D.menuItem_id = OI.menuItem_id" +
-                                "WHERE tableNumber = 1 AND[status] NOT LIKE 'payed' AND category LIKE 'dish';";
+                                "WHERE tableNumber = @table AND [status] NOT LIKE 'payed' AND category NOT LIKE 'drink';";
                 SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@table", table);
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -90,6 +94,18 @@ namespace Chapeau_Project_1._4.Repositories.OrderOverviewRepo
             decimal Price = (decimal)reader["price"];
 
             return new OverviewItem(TableNumber, MenuItemName, Quantity, Note, Price);
+        }
+
+        private decimal GetTotal(List<OverviewItem> order)
+        {
+            decimal total = 0;
+
+            foreach (OverviewItem item in order)
+            {
+                total += item.Price;
+            }
+
+            return total;
         }
     }
 }

@@ -12,14 +12,14 @@ namespace Chapeau_Project_1._4.Services.OrderOverview
             _orderOverviewRepository = orderOverviewRepository;
         }
 
-        public List<OverviewItem> DisplayOrderDrinks()
+        public List<OverviewItem> DisplayOrderDrinks(int table)
         {
-            return _orderOverviewRepository.DisplayOrderDrinks();
+            return _orderOverviewRepository.DisplayOrderDrinks(table);
         }
 
-        public List<OverviewItem> DisplayOrderDishes()
+        public List<OverviewItem> DisplayOrderDishes(int table)
         {
-            return _orderOverviewRepository.DisplayOrderDishes();
+            return _orderOverviewRepository.DisplayOrderDishes(table);
         }
     }
 }

@@ -8,7 +8,6 @@
         public int Stock {  get; set; }
         public string Card {  get; set; }
         public string Category { get; set; }
-        public string ItemStatus { get; set; }
     
 
         public MenuItem()
@@ -16,7 +15,7 @@
         }
 
         public MenuItem(int menuItemId, string menuItemName, decimal price, int stock, 
-                        string card, string category, string itemStatus)
+                        string card, string category)
         {
             MenuItemId = menuItemId;
             MenuItemName = menuItemName;
@@ -24,7 +23,6 @@
             Stock = stock;
             Card = card;
             Category = category;
-            ItemStatus = itemStatus;
         }
         
     }

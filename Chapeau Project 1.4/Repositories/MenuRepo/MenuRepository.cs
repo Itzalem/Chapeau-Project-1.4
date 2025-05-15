@@ -19,11 +19,12 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
             string menuItemName = (string)reader["menuItemName"];
             decimal price = (decimal)reader["price"];
             int stock = (int)reader["stock"];
-            string card = (string)reader["menuCard"];
-            string category = (string)reader["category"];
-            string itemStatus = (string)reader["itemStatus"];
 
-            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category, itemStatus);
+            // Convertirt to string to dabatase can read them and convert again before filling the object
+            string card = reader["menuCard"].ToString();
+            string category = reader["category"].ToString();
+
+            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
         }
 
         public List<MenuItem> DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
@@ -32,19 +33,19 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category, itemStatus " + //depending on changes add orderItem_id
-                    " FROM MENU_ITEMS WHERE menuCard = @MenuCard";
+                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " + //depending on changes add orderItem_id
+                    " FROM MENU_ITEMS WHERE menuCard = @MenuCard ";
 
                 if (categoryFilter != ECategoryOptions.All) 
                 {
-                    query += " AND category = @Category";
+                    query += " AND category = @Category ";
                 }
 
-                query += "ORDER BY menuCard, category;";
+                query += " ORDER BY menuCard, category;";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@MenuCard", cardFilter);
+                command.Parameters.AddWithValue("@MenuCard", cardFilter.ToString());
 
                 if (categoryFilter != ECategoryOptions.All)
                 {

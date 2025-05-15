@@ -13,11 +13,16 @@ namespace Chapeau_Project_1._4.Controllers
             _menuService = menuService;
         }
 
-        public IActionResult DisplayMenu()
+        [HttpGet]
+        public IActionResult DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
-            List<MenuItem> menu = _menuService.DisplayMenu();
+            List<MenuItem> menu = _menuService.DisplayMenu(cardFilter, categoryFilter);
 
-			return View(menu);
-		}
-	}
+            ViewBag.CardFilter = cardFilter;
+            ViewBag.Categories = categoryFilter;           
+
+            return View(menu);
+        }
+
+    }
 }

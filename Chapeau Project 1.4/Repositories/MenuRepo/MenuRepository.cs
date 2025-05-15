@@ -21,23 +21,45 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
             int stock = (int)reader["stock"];
             string card = (string)reader["menuCard"];
             string category = (string)reader["category"];
+            string itemStatus = (string)reader["itemStatus"];
 
-            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
+            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category, itemStatus);
         }
 
-        public List<MenuItem> DisplayMenu()
+        public List<MenuItem> DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
             List<MenuItem> menu = new List<MenuItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " + //depending on changes add orderItem_id
-                    " FROM MENU_ITEMS ORDER BY menuCard, category; ";
+                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category, itemStatus " + //depending on changes add orderItem_id
+                    " FROM MENU_ITEMS WHERE 0=0 ";
+
+                //filtering options
+                if (!string.IsNullOrEmpty(cardFilter))
+                {
+                    query += "AND menuCard = @MenuCard ";
+                }
+                if (!string.IsNullOrEmpty(categoryFilter))
+                {
+                    query += "AND category = @Category ";
+                }
+
+                query += "ORDER BY menuCard, category;";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Connection.Open();
+                //parameters for filtering 
+                if (!string.IsNullOrEmpty(cardFilter))
+                {
+                    command.Parameters.AddWithValue("@MenuCard", cardFilter);
+                }
+                if (!string.IsNullOrEmpty(categoryFilter))
+                {
+                    command.Parameters.AddWithValue("@Category", categoryFilter);
+                }
 
+                command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -45,11 +67,12 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
                     MenuItem menuItem = ReadItem(reader);
                     menu.Add(menuItem);
                 }
-
                 reader.Close();
-            }
 
-            return menu;
+                return menu;
+            }
         }
+       
+   
     }
 }

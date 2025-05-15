@@ -10,31 +10,51 @@
 	<h1 class="display-4">Le Menu</h1>
 </div>
 
-@foreach (var menuItem in Model)
-{
-    
-    if (menuItem.Card != card)
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="pill" href="#all">All</a>
+    </li>
+    <!--Show cards options from Enum-->
+    @foreach (var cardEnum in Enum.GetValues(typeof(ECardOptions)))
     {
-        <h1 style="width: 70%; margin: 30px auto; text-align: left;">@menuItem.Card</h1>
-        card = menuItem.Card;
-        previuosCategory = ""; 
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="pill" href="#@cardEnum">@cardEnum</a>
+        </li>
     }
+</ul>
 
-    
-    if (menuItem.Category != previuosCategory)
-    {
-        <h2 style="text-align: center; margin-top: 20px">@menuItem.Category</h2>
-        previuosCategory = menuItem.Category;
-    }
 
-    
-    <table style="border-collapse: collapse; width: 70%; margin: auto;">
-        <tr>
-            <td>@menuItem.MenuItemName</td>
-            <td style="text-align: right;">€@menuItem.Price</td>
-        </tr>
-    </table>
-}
+<div class="tab-content">
+    <!-- ALL shows the full menu, it does not filter-->
+    <div id="all" class="tab-pane fade show active">
+        @foreach (var menuItem in Model)
+        {
+            if (menuItem.Card != card)
+            {
+                <h1 style="width: 70%; margin: 30px auto; text-align: left;">@menuItem.Card</h1>
+                card = menuItem.Card;
+                previuosCategory = "";
+            }
+
+            if (menuItem.Category != previuosCategory)
+            {
+                <h2 style="text-align: center; margin-top: 20px">@menuItem.Category</h2>
+                previuosCategory = menuItem.Category;
+            }
+
+            <table style="border-collapse: collapse; width: 70%; margin: auto;">
+                <tr>
+                    <td>@menuItem.MenuItemName</td>
+                    <td style="text-align: right;">€@menuItem.Price</td>
+                </tr>
+            </table>
+        }
+    </div>
+
+   <!--missing the categories from the other card-->
+    <!--....-->
+
+</div>
 
 
 <!--<a href="/Users/Create" class="btn-custom">Create User</a>-->

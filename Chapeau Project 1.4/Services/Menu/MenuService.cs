@@ -1,7 +1,7 @@
 ﻿using Chapeau_Project_1._4.Models;
-using Chapeau_Project_1._4.Repositories;
+using Chapeau_Project_1._4.Repositories.MenuRepo;
 
-namespace Chapeau_Project_1._4.Services
+namespace Chapeau_Project_1._4.Services.Menu
 {
     public class MenuService : IMenuService
     {

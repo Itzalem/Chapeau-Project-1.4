@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 
-namespace Chapeau_Project_1._4.Repositories
+namespace Chapeau_Project_1._4.Repositories.MenuRepo
 {
     public class MenuRepository : IMenuRepository
     {
@@ -19,10 +19,10 @@ namespace Chapeau_Project_1._4.Repositories
             string menuItemName = (string)reader["menuItemName"];
             decimal price = (decimal)reader["price"];
             int stock = (int)reader["stock"];
-			string card = (string)reader["menuCard"];
-			string category = (string)reader["category"];
+            string card = (string)reader["menuCard"];
+            string category = (string)reader["category"];
 
-			return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
+            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
         }
 
         public List<MenuItem> DisplayMenu()
@@ -32,7 +32,7 @@ namespace Chapeau_Project_1._4.Repositories
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " + //depending on changes add orderItem_id
-					" FROM MENU_ITEMS ORDER BY menuCard, category; ";
+                    " FROM MENU_ITEMS ORDER BY menuCard, category; ";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -49,7 +49,7 @@ namespace Chapeau_Project_1._4.Repositories
                 reader.Close();
             }
 
-                return menu;
+            return menu;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using System.Collections.Generic;
 
 namespace Chapeau_Project_1._4.Services.Menu
 {
@@ -17,5 +19,28 @@ namespace Chapeau_Project_1._4.Services.Menu
             return _menuRepository.DisplayMenu(cardFilter, categoryFilter);
         }
 
+        //si tengo tiempo automatizo el llenado de la lista
+        private readonly Dictionary<ECardOptions, List<ECategoryOptions>> categoriesByCard = 
+            new Dictionary<ECardOptions, List<ECategoryOptions>>        
+            {
+                {ECardOptions.Lunch, new  List<ECategoryOptions>
+                    {
+                       ECategoryOptions.All, ECategoryOptions.Starters, ECategoryOptions.Mains, ECategoryOptions.Desserts
+                    }
+                },
+                {ECardOptions.Dinner, new  List<ECategoryOptions>
+                    {
+                       ECategoryOptions.All, ECategoryOptions.Starters, ECategoryOptions.Entremets, ECategoryOptions.Mains, ECategoryOptions.Desserts
+                    }
+                },
+                {ECardOptions.Drinks, new  List<ECategoryOptions>
+                    {
+                        ECategoryOptions.All, ECategoryOptions.SoftDrinks, ECategoryOptions.Beers, ECategoryOptions.Wines, 
+                        ECategoryOptions.Spirits, ECategoryOptions.Coffees, ECategoryOptions.Teas
+                    }
+                }
+
+            };
+        
     }
 }

@@ -29,8 +29,15 @@ namespace Chapeau_Project_1._4
             builder.Services.AddSingleton<IOrderOverviewRepository, OrderOverviewRepository>();
             builder.Services.AddSingleton<IOrderOverviewService, OrderOverviewService>();
 
-            builder.Services.AddSingleton<IPersonellRepository, PersonellRepository>();
+            var connectionString = builder.Configuration.GetConnectionString("chapeaurestaurant");
+
+            // Register the repository manually using the connection string
+            builder.Services.AddSingleton<IPersonellRepository>(provider =>
+                new PersonellRepository(connectionString));
+
+            // Register the service as usual
             builder.Services.AddSingleton<IPersonellService, PersonellService>();
+
 
             var app = builder.Build();
 

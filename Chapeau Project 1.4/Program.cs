@@ -1,4 +1,5 @@
 using Chapeau_Project_1._4.Repositories.MenuRepo;
+using Chapeau_Project_1._4.Repositories.OrderOverviewRepo;
 using Chapeau_Project_1._4.Repositories.OrderRepo;
 using Chapeau_Project_1._4.Services.Menu;
 
@@ -18,6 +19,7 @@ namespace Chapeau_Project_1._4
             
             builder.Services.AddSingleton<IMenuService, MenuService>();
             builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
+            builder.Services.AddSingleton<IOrderOverviewRepository, OrderOverviewRepository>();
 
             var app = builder.Build();
 

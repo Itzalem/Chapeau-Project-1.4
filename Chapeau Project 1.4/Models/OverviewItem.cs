@@ -3,7 +3,7 @@
 namespace Chapeau_Project_1._4.Models
 {
 
-    public class Order
+    public class OverviewItem
     {
         public int TableNumber { get; set; }
         public string MenuItemName { get; set; }
@@ -12,7 +12,7 @@ namespace Chapeau_Project_1._4.Models
         public decimal Price { get; set; }
         public bool IsAlcoholic { get; set; }
 
-        public Order()
+        public OverviewItem()
         {
             TableNumber = 0;
             MenuItemName = "";
@@ -21,7 +21,7 @@ namespace Chapeau_Project_1._4.Models
             Price = 0;
         }
 
-        public Order(int tableNumber, string menuItemName, int quantity, string note, decimal price, bool isAlcoholic)
+        public OverviewItem(int tableNumber, string menuItemName, int quantity, string note, decimal price, bool isAlcoholic)
         {
             TableNumber = tableNumber;
             MenuItemName = menuItemName;
@@ -31,7 +31,7 @@ namespace Chapeau_Project_1._4.Models
             IsAlcoholic = isAlcoholic;
         }
 
-        public Order(int tableNumber, string menuItemName, int quantity, string note, decimal price)
+        public OverviewItem(int tableNumber, string menuItemName, int quantity, string note, decimal price)
         {
             TableNumber = tableNumber;
             MenuItemName = menuItemName;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 
-namespace Chapeau_Project_1._4.Repositories
+namespace Chapeau_Project_1._4.Repositories.MenuRepo
 {
     public class MenuRepository : IMenuRepository
     {

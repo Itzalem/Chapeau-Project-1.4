@@ -1,5 +1,6 @@
-using Chapeau_Project_1._4.Repositories;
-using Chapeau_Project_1._4.Services;
+using Chapeau_Project_1._4.Repositories.MenuRepo;
+using Chapeau_Project_1._4.Repositories.OrderRepo;
+using Chapeau_Project_1._4.Services.Menu;
 
 namespace Chapeau_Project_1._4
 
@@ -14,8 +15,9 @@ namespace Chapeau_Project_1._4
             builder.Services.AddSingleton<IMenuRepository, MenuRepository>();
 
             builder.Services.AddControllersWithViews();
-
+            
             builder.Services.AddSingleton<IMenuService, MenuService>();
+            builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 
             var app = builder.Build();
 

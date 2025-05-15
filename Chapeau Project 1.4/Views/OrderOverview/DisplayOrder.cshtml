@@ -1,0 +1,57 @@
+﻿@model List<Chapeau_Project_1._4.Models.OverviewItem>
+
+@{
+	ViewData["Title"] = "Order";
+
+}
+
+<div class="text-center">
+	<h1 class="display-4">Le Order of table @ViewBag.TableNumber</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>item</th>
+				<th>quantity</th>
+				<th>note</th>
+				<th>price</th>
+				<th>VAT</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				foreach (OverviewItem item in Model)
+				{
+					string rowStyle = "";
+
+					<tr @rowStyle>
+						<td>@item.MenuItemName</td>
+						<td>@item.Quantity</td>
+						<td>@item.Note</td>
+						<td>@item.Price</td>
+						@if (!item.IsAlcoholic)
+						{
+							<td>21%</td>
+						}
+						else
+						{
+							<td>9%</td>
+						}
+					</tr>
+				}
+
+				decimal total = 0;
+
+				foreach (OverviewItem item in Model)
+				{
+					total += item.Price;
+				}
+
+				<tr>
+					<td>total price: €@total</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+

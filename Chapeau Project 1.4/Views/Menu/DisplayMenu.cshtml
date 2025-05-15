@@ -11,21 +11,32 @@
 </div>
 
 <ul class="nav nav-pills">
-    <li class="nav-item">
-        <a class="nav-link active" data-bs-toggle="pill" href="#all">All</a>
-    </li>
-    <!-- Mostrar opciones de Card desde el Diccionario del ViewModel -->
+    
     @foreach (var cardEnum in Model.CategoriesDictionary.Keys)
     {
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="pill" href="#@cardEnum">@cardEnum</a>
+            <a class="nav-link @(Model.CardFilter == cardEnum ? "active" : "")" asp-action="DisplayMenu" asp-route-cardFilter="@cardEnum">@cardEnum</a>
         </li>
     }
+
 </ul>
 
-<div class="tab-content">
+<!-- Mostrar categorías filtradas por CardOptions -->
+@if (Model.CategoriesDictionary.ContainsKey(Model.CardFilter))
+{
+    <p>Choose a Category:</p>
+    @foreach (var category in Model.CategoriesDictionary[Model.CardFilter])
+    {
+        <button class="btn btn-primary"
+                onclick="window.location.href='@Url.Action("DisplayMenu", new { cardFilter = Model.CardFilter, categoryFilter = category })'">
+            @category
+        </button>
+    }
+}
+
+<div class="tab-content overflow-scroll">
     <!-- ALL muestra todo el menú sin filtro -->
-    <div id="all" class="tab-pane fade show active">
+    <div id="All" class="tab-pane fade show active">
         @foreach (var menuItem in Model.MenuItems)
         {
             if (menuItem.Card != card)
@@ -50,23 +61,9 @@
         }
     </div>
 
-    <!-- Mostrar categorías filtradas por CardOptions -->
-    <div id="@Model.CardFilter" class="tab-pane fade">
-        @foreach (var category in Model.CategoriesDictionary[Model.CardFilter])
-        {
-            <h2 style="text-align: center; margin-top: 20px">@category</h2>
+  
 
-            <table style="border-collapse: collapse; width: 70%; margin: auto;">
-                @foreach (var menuItem in Model.MenuItems.Where(item => item.Card == Model.CardFilter.ToString() && item.Category == category.ToString()))
-                {
-                    <tr>
-                        <td>@menuItem.MenuItemName</td>
-                        <td style="text-align: right;">€@menuItem.Price</td>
-                    </tr>
-                }
-            </table>
-        }
-    </div>
+    
 
 </div>
 

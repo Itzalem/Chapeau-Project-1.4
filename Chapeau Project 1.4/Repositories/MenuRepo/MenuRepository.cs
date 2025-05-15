@@ -33,9 +33,9 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " + //depending on changes add orderItem_id
+                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " +
                     " FROM MENU_ITEMS WHERE menuCard = @MenuCard ";
-
+               
                 if (categoryFilter != ECategoryOptions.All) 
                 {
                     query += " AND category = @Category ";
@@ -44,8 +44,8 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
                 query += " ORDER BY menuCard, category;";
 
                 SqlCommand command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@MenuCard", cardFilter.ToString());
+                
+                command.Parameters.AddWithValue("@MenuCard", cardFilter.ToString());                          
 
                 if (categoryFilter != ECategoryOptions.All)
                 {

@@ -10,52 +10,68 @@
 	<h1 class="display-4">Le Menu</h1>
 </div>
 
-<form asp-action="DisplayMenu" method="get" class="mb-3">   
-    <!--how to put viewbag in the select-->
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="pill" href="#all">All</a>
+    </li>
+    <!--Show cards options from Enum-->
+    @foreach (var cardEnum in Enum.GetValues(typeof(CardOptions)))
+    {
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="pill" href="#@cardEnum">@cardEnum</a>
+        </li>
+    }
+</ul>
 
-    <label for="cardFilter">Select Card</label>
-    <select id="cardFilter" name="cardFilter" value="@ViewBag.CardFilter">
-        <option value="Lunch">Lunch</option>
-        <option value="Dinner">Dinner</option>
-        <option value="Drinks">Drinks</option>        
-    </select>
-
-    <label for="categoryFilter">Select Category</label>
-    <select id="categoryFilter" name="categoryFilter" value="@ViewBag.CategoryFilter">
-        @foreach (var categorie in ViewBag.DropdownCategories)
+<div class="tab-content">
+    <!-- ALL shows the full menu, it does not filter-->
+    <div id="all" class="tab-pane fade show active">
+        @foreach (var menuItem in Model)
         {
-            <option value="@categorie">@categorie</option>
+            if (menuItem.Card != card)
+            {
+                <h1 style="width: 70%; margin: 30px auto; text-align: left;">@menuItem.Card</h1>
+                card = menuItem.Card;
+                previuosCategory = "";
+            }
+
+            if (menuItem.Category != previuosCategory)
+            {
+                <h2 style="text-align: center; margin-top: 20px">@menuItem.Category</h2>
+                previuosCategory = menuItem.Category;
+            }
+
+            <table style="border-collapse: collapse; width: 70%; margin: auto;">
+                <tr>
+                    <td>@menuItem.MenuItemName</td>
+                    <td style="text-align: right;">€@menuItem.Price</td>
+                </tr>
+            </table>
         }
-    </select>    
+    </div>
 
-    <button type="submit" class="btn btn-primary mt-2">Filter</button>
-</form>
-
-@foreach (var menuItem in Model)
-{
-    
-    if (menuItem.Card != card)
+    <!--Show only  -->
+    @foreach (var cardEnum in Enum.GetValues(typeof(CardOptions)))
     {
-        <h1 style="width: 70%; margin: 30px auto; text-align: left;">@menuItem.Card</h1>
-        card = menuItem.Card;
-        previuosCategory = ""; 
-    }
+        <div id="@cardEnum" class="tab-pane fade">
+            @foreach (var menuItem in Model.Where(m => m.Card == cardEnum))
+            {
+                if (menuItem.Category != previuosCategory)
+                {
+                    <h2 style="text-align: center; margin-top: 20px">@menuItem.Category</h2>
+                    previuosCategory = menuItem.Category;
+                }
 
-    
-    if (menuItem.Category != previuosCategory)
-    {
-        <h2 style="text-align: center; margin-top: 20px">@menuItem.Category</h2>
-        previuosCategory = menuItem.Category;
+                <table style="border-collapse: collapse; width: 70%; margin: auto;">
+                    <tr>
+                        <td>@menuItem.MenuItemName</td>
+                        <td style="text-align: right;">€@menuItem.Price</td>
+                    </tr>
+                </table>
+            }
+        </div>
     }
-
-    
-    <table style="border-collapse: collapse; width: 70%; margin: auto;">
-        <tr>
-            <td>@menuItem.MenuItemName</td>
-            <td style="text-align: right;">€@menuItem.Price</td>
-        </tr>
-    </table>
-}
+</div>
 
 
 <!--<a href="/Users/Create" class="btn-custom">Create User</a>-->

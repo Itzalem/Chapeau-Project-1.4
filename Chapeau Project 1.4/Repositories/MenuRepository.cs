@@ -21,8 +21,9 @@ namespace Chapeau_Project_1._4.Repositories
             int stock = (int)reader["stock"];
             string card = (string)reader["menuCard"];
             string category = (string)reader["category"];
+            string itemStatus = (string)reader["itemStatus"];
 
-            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
+            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category, itemStatus);
         }
 
         public List<MenuItem> DisplayMenu(string? cardFilter, string? categoryFilter)
@@ -31,7 +32,7 @@ namespace Chapeau_Project_1._4.Repositories
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " + //depending on changes add orderItem_id
+                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category, itemStatus " + //depending on changes add orderItem_id
                     " FROM MENU_ITEMS WHERE 0=0 ";
 
                 //filtering options
@@ -71,39 +72,7 @@ namespace Chapeau_Project_1._4.Repositories
                 return menu;
             }
         }
-
-        public List<string> GetCategoriesByCard(string? cardFilter) //FEEDBACK about cardFilter beign null
-        {
-            List<string> dropdownCategories = new List<string>();
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string query = "SELECT category FROM MENU_ITEMS WHERE menuCard = @MenuCard GROUP BY category ;"; //esto es para cuando no es nulo 
-                if (!string.IsNullOrEmpty(cardFilter))
-                {
-                    
-                }
-
-                SqlCommand command = new SqlCommand(query, connection);
-
-                if (!string.IsNullOrEmpty(cardFilter))
-                {
-                    command.Parameters.AddWithValue("@MenuCard", cardFilter);
-                }
-
-                command.Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    string category = (string)reader["category"];
-                    dropdownCategories.Add(category);
-                }
-                reader.Close();
-
-                return dropdownCategories;
-            }
-        }
+       
    
     }
 }

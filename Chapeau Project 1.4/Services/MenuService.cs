@@ -17,9 +17,5 @@ namespace Chapeau_Project_1._4.Services
             return _menuRepository.DisplayMenu(cardFilter, categoryFilter);
         }
 
-        public List<string> GetCategoriesByCard(string? cardFilter)
-        {
-            return _menuRepository.GetCategoriesByCard(cardFilter);
-        }
     }
 }

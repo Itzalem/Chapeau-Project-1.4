@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Chapeau_Project_1._4.Repositories
+namespace Chapeau_Project_1._4.Repositories.PersonellRepo
 {
     public class PersonellRepository : IPersonellRepository
     {

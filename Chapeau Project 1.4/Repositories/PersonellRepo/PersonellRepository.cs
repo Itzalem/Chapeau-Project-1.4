@@ -14,19 +14,16 @@ namespace Chapeau_Project_1._4.Repositories.PersonellRepo
             _connectionString = configuration.GetConnectionString("chapeaurestaurant");
         }
 
-        public Personell? GetByLoginCredentials(string username, string password)
+        public Personell? GetByLoginCredentials(string username, string hashedPassword)
         {
             Personell? personell = null;
-
-            // Hash the input password with SHA-256 before comparing it in the query
-            string hashedPassword = HashPasswordSHA256(password);
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = @"
-                 SELECT staff_id, username, password, role
-                 FROM PERSONELL
-                 WHERE username = @Username AND password = @Password";
+                            SELECT staff_id, username, password, role
+                            FROM PERSONELL
+                            WHERE username = @Username AND password = @Password";
 
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Username", username);
@@ -49,14 +46,6 @@ namespace Chapeau_Project_1._4.Repositories.PersonellRepo
             }
 
             return personell;
-        }
-        public string HashPasswordSHA256(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return Convert.ToBase64String(hashBytes);
-            }
         }
 
     }

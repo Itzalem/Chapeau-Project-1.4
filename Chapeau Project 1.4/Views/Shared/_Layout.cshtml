@@ -29,6 +29,27 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="OrderOverview" asp-action="GetTable">View order</a>
                         </li>
                     </ul>
+
+                    <ul class="navbar-nav">
+                        @if (Context.Session.GetString("LoggedInUsername") == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Personell" asp-action="Login">Login</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link text-dark">@Context.Session.GetString("LoggedInUsername")</span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Personell" asp-action="LogOff" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-link nav-link text-dark">Log off</button>
+                                </form>
+                            </li>
+                        }
+                    </ul>
+
                 </div>
             </div>
         </nav>

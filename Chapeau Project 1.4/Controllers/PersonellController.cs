@@ -20,7 +20,14 @@ namespace Chapeau_Project_1._4.Controllers
             return View();
         }
 
-        
+        [HttpPost]
+        public IActionResult LogOff()
+        {
+            HttpContext.Session.Clear(); // Clear login session
+            return RedirectToAction("Login", "Personell");
+        }
+
+
         [HttpPost]
         public IActionResult GetByLoginCredentials(LoginModel loginModel)
         {
@@ -36,7 +43,7 @@ namespace Chapeau_Project_1._4.Controllers
                 HttpContext.Session.SetString("LoggedInUsername", personell.Username);
                 HttpContext.Session.SetString("UserRole", personell.Role);
 
-                return RedirectToAction("Index", "Users");
+                return RedirectToAction("Index", "Home");
             }   
         }
         

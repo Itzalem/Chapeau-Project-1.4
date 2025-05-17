@@ -2,8 +2,10 @@ using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.Repositories.OrderOverviewRepo;
 using Chapeau_Project_1._4.Repositories.OrderRepo;
 using Chapeau_Project_1._4.Repositories.PersonellRepo;
+using Chapeau_Project_1._4.Repositories.RestaurantTableRepo;
 using Chapeau_Project_1._4.Services;
 using Chapeau_Project_1._4.Services.Menu;
+using Chapeau_Project_1._4.Services.RestaurantTableService;
 
 namespace Chapeau_Project_1._4
 
@@ -33,6 +35,9 @@ namespace Chapeau_Project_1._4
             builder.Services.AddSingleton<IOrderOverviewRepository, OrderOverviewRepository>();
             builder.Services.AddSingleton<IPersonellRepository, PersonellRepository>();
             builder.Services.AddSingleton<IPersonellService, PersonellService>();
+
+            builder.Services.AddSingleton<IRestaurantTableService, RestaurantTableService>();
+            builder.Services.AddSingleton<IRestaurantTableRepository, RestaurantTableRepository>();
 
             var app = builder.Build();
 

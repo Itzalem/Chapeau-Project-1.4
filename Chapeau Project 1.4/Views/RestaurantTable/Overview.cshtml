@@ -1,0 +1,29 @@
+﻿@model List<Chapeau_Project_1._4.Models.RestaurantTable>
+
+<h2>Restaurant Overview</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Table #</th>
+            <th>Reserved</th>
+            <th>Guests</th>
+            <th>Occupied</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var table in Model)
+        {
+            <tr class="@(table.IsOccupied ? "table-danger" : "table-success")">
+                <td>@table.TableNumber</td>
+                <td>@(table.IsReserved ? "Yes" : "No")</td>
+                <td>@table.AmountOfGuests</td>
+                <td>@(table.IsOccupied ? "Occupied" : "Free")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form method="get">
+    <button type="submit" asp-controller="RestaurantTable" asp-action="Overview" class="btn btn-secondary">Refresh</button>
+</form>

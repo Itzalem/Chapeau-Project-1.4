@@ -13,7 +13,7 @@ namespace Chapeau_Project_1._4.Controllers
 			_orderOverviewService = orderOverviewService;
 		}
 
-		public IActionResult Index(int table)
+		public IActionResult DisplayOrder(int table)
         {
 			List<OverviewItem> drinks = _orderOverviewService.DisplayOrderDrinks(table);
 			List<OverviewItem> dishes = _orderOverviewService.DisplayOrderDishes(table);
@@ -39,7 +39,7 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpPost]
         public ActionResult GetTable(int table)
         {
-            Index(table);
+            DisplayOrder(table);
 
             return RedirectToAction("DisplayOrder", table);
         }

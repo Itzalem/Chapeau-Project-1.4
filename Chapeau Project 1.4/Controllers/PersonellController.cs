@@ -28,13 +28,13 @@ namespace Chapeau_Project_1._4.Controllers
 
             if (personell == null)
             {
-                // ViewBag.ErrorMessage = "Bad username/password combination!";
-                return View(loginModel);
+                ViewBag.ErrorMessage = "Bad username/password combination!";
+                return View("Login", loginModel);
             }
             else
             {
-
-                // object value = HttpContext.Session.SetObject("LoggedInUser", personell);
+                HttpContext.Session.SetString("LoggedInUsername", personell.Username);
+                HttpContext.Session.SetString("UserRole", personell.Role);
 
                 return RedirectToAction("Index", "Users");
             }   

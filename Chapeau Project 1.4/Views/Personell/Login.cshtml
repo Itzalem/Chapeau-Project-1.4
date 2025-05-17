@@ -13,12 +13,12 @@
     }
 }
 
-<form action="/Users/Login" method="Post">
+<form asp-controller="Personell" asp-action="GetByLoginCredentials" method="post">
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" class="form-control" required value="@Model?.Username" />
+    <input type="text" id="username" name="username" asp-for="Username" class="form-control" required value="@Model?.Username" />
 
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" class="form-control" required value="@Model?.Password" />
+    <input type="password" id="password" name="password" asp-for="Password" class="form-control" required value="@Model?.Password" />
 
 
     <button type="submit" class="btn btn-primary">Send</button>

@@ -7,11 +7,11 @@ namespace Chapeau_Project_1._4.Repositories.PersonellRepo
 {
     public class PersonellRepository : IPersonellRepository
     {
-        private readonly string _connectionString;
+        private readonly string? _connectionString;
 
-        public PersonellRepository(string connectionString)
+        public PersonellRepository(IConfiguration configuration)
         {
-            _connectionString = connectionString;
+            _connectionString = configuration.GetConnectionString("chapeaurestaurant");
         }
 
         public Personell? GetByLoginCredentials(string username, string password)

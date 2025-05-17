@@ -1,0 +1,18 @@
+﻿
+.runningOut {
+    background-color: darkorange;
+    color: white;
+    padding: 0 10px;
+    border-radius: 10px;
+    font-style: italic;
+}
+
+
+.outOfStock {
+    background-color: darkred;
+    color: white;
+    padding: 0 10px;
+    border-radius: 10px;
+    font-style: italic;
+}
+

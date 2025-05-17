@@ -2,7 +2,6 @@
 
 namespace Chapeau_Project_1._4.Models
 {
-
     public class OverviewItem
     {
         public int TableNumber { get; set; }

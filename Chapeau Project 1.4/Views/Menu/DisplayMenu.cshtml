@@ -54,16 +54,28 @@
 
             <table style="border-collapse: collapse; width: 70%; margin: auto;">
                 <tr>
-                    <td>@menuItem.MenuItemName</td>
+                    <td>
+                        @menuItem.MenuItemName
+
+                        @if (menuItem.Stock <= 10 && menuItem.Stock > 0)
+                        {
+                            <span class="runningOut"> Running out </span>
+                        }
+                        else if (menuItem.Stock <= 0)
+                        {
+                            <span class="outOfStock"> Out of stock </span>
+                        }
+                    </td>
+
                     <td style="text-align: right;">€@menuItem.Price</td>
+
                 </tr>
+
             </table>
+
         }
-    </div>
+    </div>  
 
-  
-
-    
 
 </div>
 

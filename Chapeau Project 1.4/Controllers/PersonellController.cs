@@ -20,7 +20,7 @@ namespace Chapeau_Project_1._4.Controllers
             return View();
         }
 
-        /*
+        
         [HttpPost]
         public IActionResult GetByLoginCredentials(LoginModel loginModel)
         {
@@ -34,11 +34,11 @@ namespace Chapeau_Project_1._4.Controllers
             else
             {
 
-                object value = HttpContext.Session.SetObject("LoggedInUser", personell);
+                // object value = HttpContext.Session.SetObject("LoggedInUser", personell);
 
                 return RedirectToAction("Index", "Users");
             }   
         }
-        */
+        
     }
 }

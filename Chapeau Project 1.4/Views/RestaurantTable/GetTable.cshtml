@@ -1,0 +1,45 @@
+﻿@model List<Chapeau_Project_1._4.Models.RestaurantTable>
+
+@{
+    ViewData["Title"] = "Select Table";
+}
+
+<h4>Select a table</h4>
+
+
+<div class="text-center">
+	<h1 class="display-4">La tables</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>table</th>
+				<th>reserved</th>
+				<th>guests</th>
+				<th>occupied</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				foreach (var table in Model)
+				{
+					string rowStyle = "";
+
+					<tr @rowStyle>
+						<td>@table.TableNumber</td>
+						if (@table.IsReserved)
+							<td>yes</td>
+						else
+							<td>no</td>
+						<td>@table.AmountOfGuests</td>
+						if (@table.IsOccupied)
+							<td>yes</td>
+						else
+							<td>no</td>
+						<td><a href="/OrderOverview/DisplayOrder/@table.TableNumber">Go to order</a></td>
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
+</div>

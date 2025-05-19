@@ -27,13 +27,12 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
                 {
                     while (reader.Read())
                     {
-                        tables.Add(new RestaurantTable
-                        {
-                            TableNumber = reader.GetInt32(0),
-                            IsReserved = reader.GetBoolean(1),
-                            AmountOfGuests = reader.GetInt32(2),
-                            IsOccupied = reader.GetBoolean(3)
-                        });
+                        int TableNumber = reader.GetInt32(0);
+                        bool IsReserved = reader.GetBoolean(1);
+                        int AmountOfGuests = reader.GetInt32(2);
+                        bool IsOccupied = reader.GetBoolean(3);
+
+						tables.Add(new RestaurantTable(TableNumber, IsReserved, AmountOfGuests, IsOccupied));
                     }
                 }
             }

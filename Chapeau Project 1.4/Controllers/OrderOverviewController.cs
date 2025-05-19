@@ -30,18 +30,18 @@ namespace Chapeau_Project_1._4.Controllers
 			return View(order);
         }
 
-        [HttpGet]
-        public ActionResult GetTable()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public ActionResult GetTable()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public ActionResult GetTable(int table)
-        {
-            DisplayOrder(table);
+        //[HttpPost]
+        //public ActionResult GetTable(int table)
+        //{
+        //    DisplayOrder(table);
 
-            return RedirectToAction("DisplayOrder", table);
-        }
+        //    return RedirectToAction("DisplayOrder", table);
+        //}
     }
 }

@@ -10,36 +10,26 @@
 <div class="text-center">
 	<h1 class="display-4">La tables</h1>
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>table</th>
-				<th>reserved</th>
-				<th>guests</th>
-				<th>occupied</th>
-			</tr>
-		</thead>
-		<tbody>
-			@{
-				foreach (var table in Model)
-				{
-					string rowStyle = "";
-
-					<tr @rowStyle>
-						<td>@table.TableNumber</td>
-						if (@table.IsReserved)
-							<td>yes</td>
-						else
-							<td>no</td>
-						<td>@table.AmountOfGuests</td>
-						if (@table.IsOccupied)
-							<td>yes</td>
-						else
-							<td>no</td>
-						<td><a href="/OrderOverview/DisplayOrder/@table.TableNumber">Go to order</a></td>
-					</tr>
-				}
-			}
-		</tbody>
-	</table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Table #</th>
+                <th>Reserved</th>
+                <th>Guests</th>
+                <th>Occupied</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var table in Model)
+            {
+                <tr class="@(table.IsOccupied ? "table-danger" : "table-success")">
+                    <td>@table.TableNumber</td>
+                    <td>@(table.IsReserved ? "Yes" : "No")</td>
+                    <td>@table.AmountOfGuests</td>
+                    <td>@(table.IsOccupied ? "Occupied" : "Free")</td>
+                    <td><a href="/OrderOverview/DisplayOrder/@table.TableNumber">Go to order</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

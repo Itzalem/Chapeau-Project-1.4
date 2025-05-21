@@ -13,7 +13,7 @@ namespace Chapeau_Project_1._4.Controllers
 			_orderOverviewService = orderOverviewService;
 		}
 
-		public IActionResult DisplayOrder(int table)
+		public IActionResult DisplayOrder(int? table)
         {
 			List<OverviewItem> drinks = _orderOverviewService.DisplayOrderDrinks(table);
 			List<OverviewItem> dishes = _orderOverviewService.DisplayOrderDishes(table);
@@ -27,21 +27,7 @@ namespace Chapeau_Project_1._4.Controllers
 
 			ViewBag.TableNumber = table;
 
-			return View(order);
+			return View(order);			
         }
-
-        //[HttpGet]
-        //public ActionResult GetTable()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public ActionResult GetTable(int table)
-        //{
-        //    DisplayOrder(table);
-
-        //    return RedirectToAction("DisplayOrder", table);
-        //}
     }
 }

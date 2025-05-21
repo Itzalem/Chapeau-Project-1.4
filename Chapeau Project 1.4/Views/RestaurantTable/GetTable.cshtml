@@ -22,12 +22,12 @@
         <tbody>
             @foreach (var table in Model)
             {
-                <tr class="@(table.IsOccupied ? "table-danger" : "table-success")">
+                <tr>
                     <td>@table.TableNumber</td>
                     <td>@(table.IsReserved ? "Yes" : "No")</td>
                     <td>@table.AmountOfGuests</td>
                     <td>@(table.IsOccupied ? "Occupied" : "Free")</td>
-                    <td><a href="/OrderOverview/DisplayOrder/@table.TableNumber">Go to order</a></td>
+                    <td><a href="/OrderOverview/DisplayOrder?table=@table.TableNumber">Go to order</a></td>
                 </tr>
             }
         </tbody>

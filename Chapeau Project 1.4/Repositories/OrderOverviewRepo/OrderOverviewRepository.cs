@@ -12,7 +12,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderOverviewRepo
             _connectionString = configuration.GetConnectionString("chapeaurestaurant");
         }
 
-        public List<OverviewItem> DisplayOrderDrinks(int table)
+        public List<OverviewItem> DisplayOrderDrinks(int? table)
         {
             List<OverviewItem> order = new List<OverviewItem>();
 
@@ -55,7 +55,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderOverviewRepo
             return new OverviewItem(TableNumber, MenuItemName, Quantity, Note, Price, IsAlcoholic);
         }
 
-        public List<OverviewItem> DisplayOrderDishes(int table)
+        public List<OverviewItem> DisplayOrderDishes(int? table)
         {
             List<OverviewItem> order = new List<OverviewItem>();
 

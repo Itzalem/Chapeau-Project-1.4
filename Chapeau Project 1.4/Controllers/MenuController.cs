@@ -1,5 +1,6 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Services.Menu;
+using Chapeau_Project_1._4.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chapeau_Project_1._4.Controllers

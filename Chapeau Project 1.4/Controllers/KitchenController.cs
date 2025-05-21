@@ -21,7 +21,9 @@ namespace Chapeau_Project_1._4.Controllers
             var orders = _orderRepository.DiplayOrder();
             var orderItems = _orderItemRepository.DisplayOrderItem();
 
-
+            // in order to fill in the order, I need to have OrderItemName and ORderItemCategory, 
+            // a method must be created to fetch these two and give it to me and the outcome must be RunningOrderMenuCategory 
+            // var x = _repositoy.getData();
 
             var OrderViewModelResult = orders.Select(x => new RunningOrder
             {
@@ -32,7 +34,12 @@ namespace Chapeau_Project_1._4.Controllers
                 runningOrders = orderItems.Where(p => p.OrderNumber == x.OrderNumber).Select(o => new RunningOrderItem
                 {
                     ItemStatus = o.ItemStatus,
-                    OrderItemName = o.OrderItemId.ToString(),
+                    // RunningOrderItemCategory = x.
+                    RunningOrderItemCategory = new RunnigOrderMenuCategory
+                    {
+                        OrderItemName = o.OrderItemId.ToString(),
+                        OrderItemCategory = ""
+                    },
                     Note = o.Note,
                     OrderItemId = o.OrderItemId,
                     Quantity = o.Quantity,

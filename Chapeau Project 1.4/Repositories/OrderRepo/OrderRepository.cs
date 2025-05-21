@@ -50,7 +50,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query =" SELECT orderNumber, status, tableNumber, orderTim FROM Orders WHERE orderNumber = @id";
+                string query =@"SELECT orderNumber, status, tableNumber, orderTim FROM Orders WHERE orderNumber = @id";
 
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", id);
@@ -73,7 +73,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 
-                string query = " UPDATE Orders SET status = @status, tableNumber = @tableNumber, orderTime = @orderTime WHERE orderNumber = @orderNumber";
+                string query = @"UPDATE Orders SET status = @status, tableNumber = @tableNumber, orderTime = @orderTime WHERE orderNumber = @orderNumber";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@status", order.Status.ToString());
                 command.Parameters.AddWithValue("@tableNumber", order.TableNumber);
@@ -90,7 +90,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = " UPDATE Orders SET status = @status WHERE orderNumber = @id";
+                string query = @"UPDATE Orders SET status = @status WHERE orderNumber = @id";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@status", status.ToString());
                 command.Parameters.AddWithValue("@id", id);

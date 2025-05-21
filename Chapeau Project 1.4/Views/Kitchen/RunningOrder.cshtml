@@ -1,23 +1,50 @@
-﻿@* COMMENTED CAUSE IT WAS GIVING ERRORS AND NOT LETTING THE APP RUN 
+﻿@using Chapeau_Project_1._4.ViewModel
+@model List<RunningOrder>
 
-@model IEnumerable<RunningOrderVm>
-<h2>Running Orders</h2>
-<button onclick="location.reload()">Refresh</button>
-<table>
-    <thead>
-        <tr><th>Table</th><th>Ordered At</th><th>Waiting (min)</th></tr>
-    </thead>
-    <tbody>
-        @foreach (var order in Model)
-        {
-            <tr>
-                <td>@order.TableNumber</td>
-                <td>@order.OrderTime:HH:mm</td>
-                <td>@order.WaitingTime</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h2 class="page-title">Running Orders</h2>
+<button class="btn-refresh" onclick="location.reload()">Refresh</button>
 
-*@
+<div class="orders-container">
+    @foreach (var order in Model)
+    {
+        var statusClass = order.runningOrders.All(x => x.ItemStatus == EItemStatus.ReadyToServe)
+        ? "status-completed"
+        : order.runningOrders.All(x => x.ItemStatus == EItemStatus.BeingPrepared)
+        ? "status-inprogress"
+        : "status-default";
+
+        <div class="order-card @statusClass">
+            <header class="order-header">
+                <div class="order-time">@order.OrderTime</div>
+                <div class="order-wait">Waiting Time:<strong>@order.WaitingTime</strong>min</div>
+            </header>
+
+            <section class="order-details">
+                <span>Table #<strong>@order.TableNumber</strong></span>
+                <span>Order #<strong>@order.OrderNumber</strong></span>
+            </section>
+
+            <ul class="order-items">
+                @foreach (var item in order.runningOrders)
+                {
+                    <li>
+                        <span class="item-name">@item.OrderItemName</span>
+                        <span class="item-qty">@item.Quantity×</span>
+                        @if (!string.IsNullOrEmpty(item.Note))
+                        {
+                            <div class="item-note"><i>@item.Note</i></div>
+                        }
+                    </li>
+                }
+            </ul>
+
+            <footer class="order-footer">
+                <span class="status-badge">
+                    @order.runningOrders.First().ItemStatus
+                </span>
+            </footer>
+        </div>
+    }
+</div>
+
 

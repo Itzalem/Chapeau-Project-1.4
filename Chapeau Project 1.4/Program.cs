@@ -1,4 +1,5 @@
 using Chapeau_Project_1._4.Repositories.MenuRepo;
+using Chapeau_Project_1._4.Repositories.OrderItemRepo;
 using Chapeau_Project_1._4.Repositories.OrderOverviewRepo;
 using Chapeau_Project_1._4.Repositories.OrderRepo;
 using Chapeau_Project_1._4.Repositories.PersonellRepo;
@@ -36,6 +37,9 @@ namespace Chapeau_Project_1._4
 
             builder.Services.AddSingleton<IOrderService, OrderService>();
             builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
+
+            builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();
+           // builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 
             builder.Services.AddSingleton<IOrderOverviewService, OrderOverviewService>();
             builder.Services.AddSingleton<IOrderOverviewRepository, OrderOverviewRepository>();

@@ -6,7 +6,6 @@
     <thead>
         <tr>
             <th>Table #</th>
-            <th>Reserved</th>
             <th>Guests</th>
             <th>Occupied</th>
         </tr>
@@ -16,7 +15,6 @@
         {
             <tr class="@(table.IsOccupied ? "table-danger" : "table-success")">
                 <td>@table.TableNumber</td>
-                <td>@(table.IsReserved ? "Yes" : "No")</td>
                 <td>@table.AmountOfGuests</td>
                 <td>@(table.IsOccupied ? "Occupied" : "Free")</td>
             </tr>

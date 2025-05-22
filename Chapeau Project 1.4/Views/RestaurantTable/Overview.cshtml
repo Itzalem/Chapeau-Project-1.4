@@ -1,26 +1,27 @@
 ﻿@model List<Chapeau_Project_1._4.Models.RestaurantTable>
 
-<h2>Restaurant Overview</h2>
+<h2>Restaurant Table Layout</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Table #</th>
-            <th>Guests</th>
-            <th>Occupied</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var table in Model)
+<div class="table-grid">
+    @foreach (var table in Model)
+    {
+        string statusClass = "free";
+        string statusText = "Free";
+
+        if (table.IsOccupied)
         {
-            <tr class="@(table.IsOccupied ? "table-danger" : "table-success")">
-                <td>@table.TableNumber</td>
-                <td>@table.AmountOfGuests</td>
-                <td>@(table.IsOccupied ? "Occupied" : "Free")</td>
-            </tr>
+            statusClass = "occupied";
+            statusText = "Occupied";
         }
-    </tbody>
-</table>
+
+        <a asp-controller="RestaurantTable" asp-action="Details" asp-route-id="@table.TableNumber" class="table-square @statusClass">
+            <div class="table-number">Table @table.TableNumber</div>
+            <div class="table-status">@statusText</div>
+            <div class="table-guests">Guests: @table.AmountOfGuests</div>
+        </a>
+    }
+</div>
+
 
 <form method="get">
     <button type="submit" asp-controller="RestaurantTable" asp-action="Overview" class="btn btn-secondary">Refresh</button>

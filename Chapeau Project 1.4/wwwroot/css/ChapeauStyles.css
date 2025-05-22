@@ -189,3 +189,62 @@
 
 
 
+/* RESTAURANT TABLE OVERVIEW -> GRID */
+/* Restaurant Table Grid */
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns */
+    gap: 4.5rem 4rem; /* vertical and horizontal spacing */
+    margin-top: 2.5rem;
+    padding: 1rem;
+    justify-items: center;
+}
+
+/* Table Square (bigger & more spaced) */
+.table-square {
+    width: 210px;
+    height: 210px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+}
+
+.table-square:hover {
+    transform: scale(1.08);
+}
+
+/* Status Colors */
+.table-square.free {
+    background-color: #28a745; /* green */
+}
+
+.table-square.occupied {
+    background-color: #dc3545; /* red */
+}
+
+/* Table Number */  
+.table-number {
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+}
+
+/* Status Label */
+.table-status {
+    font-size: 1rem;
+}
+
+/* Guests */
+.table-guests {
+    font-size: 1rem;
+    margin-top: 0.3rem;
+}
+
+

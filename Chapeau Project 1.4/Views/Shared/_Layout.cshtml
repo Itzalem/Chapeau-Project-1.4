@@ -42,7 +42,7 @@
                         @if (Context.Session.GetString("LoggedInUsername") == null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Personell" asp-action="Login">Login</a>
+                                <a class="nav-link login-button" asp-controller="Personell" asp-action="Login">Login</a>
                             </li>
                         }
                         else

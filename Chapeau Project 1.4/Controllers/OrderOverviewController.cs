@@ -15,19 +15,11 @@ namespace Chapeau_Project_1._4.Controllers
 
 		public IActionResult DisplayOrder(int? table)
         {
-			List<OverviewItem> drinks = _orderOverviewService.DisplayOrderDrinks(table);
-			List<OverviewItem> dishes = _orderOverviewService.DisplayOrderDishes(table);
-
 			List<OverviewItem> order = new List<OverviewItem>();
-
-			foreach (OverviewItem drink in drinks)
-				order.Add(drink);
-			foreach (OverviewItem dish in dishes)
-				order.Add(dish);
 
 			ViewBag.TableNumber = table;
 
-			return View(order);			
+			return View(order);
         }
     }
 }

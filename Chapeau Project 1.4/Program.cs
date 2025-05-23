@@ -1,3 +1,4 @@
+using Chapeau_Project_1._4.Repositories.DrinkRepo;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.Repositories.OrderItemRepo;
 using Chapeau_Project_1._4.Repositories.OrderOverviewRepo;
@@ -5,8 +6,9 @@ using Chapeau_Project_1._4.Repositories.OrderRepo;
 using Chapeau_Project_1._4.Repositories.PersonellRepo;
 using Chapeau_Project_1._4.Repositories.RestaurantTableRepo;
 using Chapeau_Project_1._4.Services;
+using Chapeau_Project_1._4.Services.Drinks;
 using Chapeau_Project_1._4.Services.Menu;
-using Chapeau_Project_1._4.Services.Order;
+using Chapeau_Project_1._4.Services.Orders;
 using Chapeau_Project_1._4.Services.OrderOverview;
 using Chapeau_Project_1._4.Services.RestaurantTableService;
 
@@ -39,7 +41,7 @@ namespace Chapeau_Project_1._4
             builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 
             builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();
-           // builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
+            builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();
 
             builder.Services.AddSingleton<IOrderOverviewService, OrderOverviewService>();
             builder.Services.AddSingleton<IOrderOverviewRepository, OrderOverviewRepository>();
@@ -49,6 +51,9 @@ namespace Chapeau_Project_1._4
 
             builder.Services.AddSingleton<IRestaurantTableService, RestaurantTableService>();
             builder.Services.AddSingleton<IRestaurantTableRepository, RestaurantTableRepository>();
+
+            builder.Services.AddSingleton<IDrinkService, DrinkService>();
+            builder.Services.AddSingleton<IDrinkRepository, DrinkRepository>();
 
             var app = builder.Build();
 

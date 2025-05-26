@@ -1,4 +1,5 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.ViewModel;
 using Microsoft.Data.SqlClient;
 
 namespace Chapeau_Project_1._4.Repositories.OrderRepo
@@ -7,6 +8,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
     {
 
         private readonly string? _connectionString;
+        
 
         public OrderRepository(IConfiguration configuration)
         {
@@ -22,7 +24,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
            
             return new Order(OrderNumber, Status, OrderTime, TableNumber);
         }
-        public List<Order> DiplayOrder()
+        public List<Order> DisplayOrder()
         {
             
             List<Order> orders = new List<Order>(); 
@@ -99,5 +101,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 command.ExecuteNonQuery();
             }
         }
+
+  
     }
 }

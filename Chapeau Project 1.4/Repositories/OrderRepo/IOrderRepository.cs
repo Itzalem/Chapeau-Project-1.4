@@ -1,10 +1,11 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.ViewModel;
 
 namespace Chapeau_Project_1._4.Repositories.OrderRepo
 {
     public interface IOrderRepository
     {
-        List<Order> DiplayOrder();
+        List<Order> DisplayOrder();
 
         // Get a single order by its OrderNumber.
         Order? GetOrderById(int id);

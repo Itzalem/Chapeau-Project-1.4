@@ -186,6 +186,17 @@
     border-top: 4px solid #5cb85c;
 }
 
+.status-form-sm,
+.status-form-course {
+    display: inline-block;
+    margin-left: auto;
+}
+
+.status-form-sm select,
+.status-form-course select {
+        padding: .25rem;
+        font-size: .85rem;
+}
 
 
 

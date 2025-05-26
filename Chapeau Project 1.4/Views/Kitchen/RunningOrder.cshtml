@@ -76,34 +76,37 @@
             {
                 <section class="course-group">
                     <h4>@grp.Key</h4>
-                    <hr />
+
+                    <form asp-action="UpdateCourseStatus" method="post" class="status-form-course">
+                        <input type="hidden" name="orderNumber" value="@order.OrderNumber" />
+                        <input type="hidden" name="category" value="@grp.Key" />
+
+                    </form>
+
                     <ul class="course-items">
                         @foreach (var item in grp)
                         {
                             <li class="course-item">
                                 <i class="fa fa-cutlery"></i>
                                 @item.RunningOrderItemCategory.OrderItemName (×@item.Quantity)
-                                <span class="item-badge badge-@item.ItemStatus.ToString().ToLower()">
-                                    @item.ItemStatus
-                                    .ToString()
-                                    .Replace("BeingPrepared","Being Prepared")
-                                    .Replace("ReadyToServe","Ready to Serve")
-                                </span>
+                                @* <span class="item-badge badge-@item.ItemStatus.ToString().ToLower()">
+                                    @item.ItemStatus.ToString()
+                                </span> *@
 
-                                @* Pure-HTML “dropdown” *@
+                                
                                 <details class="item-status-dropdown">
                                     <summary class="btn-status-sm">
                                         <i class="fa fa-pencil"></i> Change Status
                                     </summary>
 
-                                    <form asp-controller="Kitchen"
-                                          asp-action="UpdateItemStatus"
-                                          method="post"
-                                          class="status-form">
-                                        <input type="hidden" name="id" value="@item.OrderItemId" />
-                                        <button type="submit" name="status" value="Ordered">Ordered</button>
-                                        <button type="submit" name="status" value="BeingPrepared">Being Prepared</button>
-                                        <button type="submit" name="status" value="ReadyToServe">Ready to Serve</button>
+                                    <form asp-action="UpdateItemStatus" method="post" class="status-form-sm">
+                                        <input type="hidden" name="orderItemId" value="@item.OrderItemId" />
+                                        <select name="status" onchange="this.form.submit()">
+                                            <option selected disabled>Change…</option>
+                                            <option value="Ordered">Ordered</option>
+                                            <option value="BeingPrepared">Being Prepared</option>
+                                            <option value="ReadyToServe">Ready to Serve</option>
+                                        </select>
                                     </form>
                                 </details>
                             </li>
@@ -115,16 +118,3 @@
     }
 </div>
 
-@section Scripts {
-    <script>
-        function updateOrderStatus(orderNumber, newStatus) {
-            fetch(`/Kitchen/UpdateOrderStatus?orderNumber=${orderNumber}&status=${newStatus}`, {
-                method: 'POST'
-            }).then(() => location.reload());
-        }
-        function updateItemStatus(itemId) {
-            fetch(`/Kitchen/AdvanceItem?id=${itemId}`, { method: 'POST' })
-                .then(() => location.reload());
-        }
-    </script>
-}

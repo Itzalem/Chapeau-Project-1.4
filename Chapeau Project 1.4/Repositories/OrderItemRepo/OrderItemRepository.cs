@@ -95,7 +95,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = @" SELECT orderItem_id, orderNumber, menuItem_id, quantity, note, itemStatus
-                                  FROM Order_Item
+                                  FROM ORDER_ITEM
                                   WHERE itemStatus <> @ready
                                   ORDER BY orderNumber, orderItem_id;";
                 SqlCommand command = new SqlCommand(query, connection);
@@ -117,17 +117,67 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         public void UpdateItemStatus(int orderItemId, EItemStatus newStatus)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @" UPDATE ORDER_ITEM 
+                                  SET itemStatus = @st
+                                  WHERE orderItem_id = @id;";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@st", newStatus.ToString());
+                command.Parameters.AddWithValue("@id", orderItemId);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+            }
         }
 
         public void UpdateCourseStatus(int orderNumber, string courseCategory, EItemStatus newStatus)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @" UPDATE ORDER_ITEM
+                                  SET itemStatus = @st
+                                  FROM ORDER_ITEM
+                                  JOIN MENU_ITEMS ON ORDER_ITEM.menuItem_id = MENU_ITEMS.menuItem_id
+                                  WHERE ORDER_ITEM.orderNumber = @ord
+                                  AND MENU_ITEMS.category = @cat;";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@st", newStatus.ToString());
+                command.Parameters.AddWithValue("@ord", orderNumber);
+                command.Parameters.AddWithValue("@cat", courseCategory);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+            }
         }
 
         public List<OrderItem> GetFinishedItems(DateTime date)
         {
-            throw new NotImplementedException();
+            List<OrderItem> orderItems = new List<OrderItem>(); 
+
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @" SELECT orderItem_id, orderNumber, menuItem_id, quantity, note, itemStatus
+                                  FROM ORDER_ITEM
+                                  JOIN ORDERS ON ORDER_ITEM.orderNumber = ORDERS.orderNumber
+                                  WHERE ORDER_ITEM.itemStatus = @ready
+                                  AND CAST(ORDERS.orderTime AS DATE) = @dt;";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@ready", EItemStatus.ReadyToServe.ToString());
+                command.Parameters.AddWithValue("@dt", date.Date);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    OrderItem orderItem = ReadOrderItem(reader);
+                    orderItems.Add(orderItem);
+                }
+                reader.Close();
+            }
+            return orderItems; 
         }
     }
 }

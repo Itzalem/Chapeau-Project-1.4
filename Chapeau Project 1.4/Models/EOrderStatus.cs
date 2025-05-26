@@ -8,5 +8,7 @@
         pending,
         prepared,
         payed
+
+            //paid an unpaid, other status will move to orderitem
     }
 }

@@ -93,6 +93,27 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return null;
         }
 
+        public Order? GetOrderByTable(int? table)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @"SELECT orderNumber, status, tableNumber, orderTim FROM Orders WHERE tableNumber = @table";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@table", table);
+
+                command.Connection.Open();
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return ReadOrder(reader);
+                }
+            }
+            return null;
+        }
+
 
         public void Update(Order order)
         {

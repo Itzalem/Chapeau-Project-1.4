@@ -11,7 +11,7 @@ namespace Chapeau_Project_1._4.Services
     {
         private readonly IPersonellRepository _personellRepository;
 
-        public PersonellService(IPersonellRepository personellRepository, ILogger<PersonellService> logger)
+        public PersonellService(IPersonellRepository personellRepository)
         {
             _personellRepository = personellRepository;
         }
@@ -21,6 +21,7 @@ namespace Chapeau_Project_1._4.Services
 
             string hashedPassword = HashPassword(password);
 
+            // Get the user from the database
             Personell? personell = _personellRepository.GetByLoginCredentials(userName, hashedPassword);
 
             return personell;

@@ -27,7 +27,7 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
             return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
         }
 
-        public List<MenuItem> DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
+        public List<MenuItem> GetMenuItems(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
             List<MenuItem> menu = new List<MenuItem>();
 

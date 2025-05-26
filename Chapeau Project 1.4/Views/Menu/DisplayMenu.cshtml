@@ -27,10 +27,10 @@
     <p>Choose a Category:</p>
     @foreach (var category in Model.CategoriesDictionary[Model.CardFilter])
     {
-        <button class="btn btn-primary"
-                onclick="window.location.href='@Url.Action("DisplayMenu", new { cardFilter = Model.CardFilter, categoryFilter = category })'">
-            @category
-        </button>
+        <a class="btn btn-primary" href='@Url.Action("DisplayMenu", new { cardFilter = Model.CardFilter, categoryFilter = category })'>
+                @category
+        </a>
+        
     }
 }
 

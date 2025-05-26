@@ -1,5 +1,6 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 
 namespace Chapeau_Project_1._4.Repositories.OrderRepo
 {
@@ -45,6 +46,31 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             }
             return orders;
         }
+
+        public void CreateNewOrder(int tableNumber)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = $"INSERT INTO ORDERS (status, tableNumber, orderTime " +
+                                $" VALUES (@Status, @TableNumber, @OrderTime); ";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Status", "Draft");
+                command.Parameters.AddWithValue("@TableNumber", tableNumber);
+                command.Parameters.AddWithValue("@OrderTime", DateTime.Now);
+
+                command.Connection.Open();
+                int rowsChanged = command.ExecuteNonQuery();
+                if (rowsChanged != 1)
+                {
+                    throw new Exception("Error in creating new order");
+                }
+
+            }
+
+        }
+
 
         public Order? GetOrderById(int id)
         {

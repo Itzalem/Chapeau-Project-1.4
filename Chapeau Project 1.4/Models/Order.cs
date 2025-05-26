@@ -17,7 +17,7 @@
         {
             OrderNumber = orderNumber;
             Status = status;
-            OrderTime = orderTime;
+            OrderTime = DateTime.Now;
             TableNumber = tableNumber;
         }   
     }

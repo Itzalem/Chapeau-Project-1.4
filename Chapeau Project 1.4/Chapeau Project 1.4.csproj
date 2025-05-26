@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\Order\" />
     <Folder Include="Views\Order\" />
   </ItemGroup>
 

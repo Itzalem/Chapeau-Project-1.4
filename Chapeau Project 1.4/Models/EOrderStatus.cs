@@ -6,9 +6,9 @@
         ordered,
         cancelled,
         pending,
+        inProgress, 
         prepared,
-        payed
-
+        paid
             //paid an unpaid, other status will move to orderitem
     }
 }

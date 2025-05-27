@@ -21,10 +21,11 @@ namespace Chapeau_Project_1._4.Controllers
         {
             var orders = _orderRepository.DisplayOrder();
             var orderItems = _orderItemRepository.DisplayOrderItem();
+            var orderMenuItemValue = _orderRepository.DisplayOrderItem();
 
-             //in order to fill in the order, I need to have OrderItemName and OrderItemCategory,
-             //a method must be created to fetch these two and give it to me and the outcome must be RunningOrderMenuCategory
-             //var x = _repositoy.getData();
+            //in order to fill in the order, I need to have OrderItemName and OrderItemCategory,
+            //a method must be created to fetch these two and give it to me and the outcome must be RunningOrderMenuCategory
+            //var x = _repositoy.getData();
 
             var OrderViewModelResult = orders.Select(x => new RunningOrder
             {
@@ -36,9 +37,9 @@ namespace Chapeau_Project_1._4.Controllers
                 {
                     ItemStatus = o.ItemStatus,
                     // RunningOrderItemCategory = x.
-                    RunningOrderItemCategory = new RunnigOrderMenuCategory
+                    RunnigOrderMenuItem = new RunnigOrderMenuItem
                     {
-                        OrderItemName = o.OrderItemId.ToString(),
+                        OrderItemName = _orderRepository.GetOrderMunuItemNames(o.OrderNumber),
                         OrderItemCategory = ""
                     },
                     Note = o.Note,
@@ -48,7 +49,7 @@ namespace Chapeau_Project_1._4.Controllers
             }).ToList();
 
 
-            return View("RunningOrder", OrderViewModelResult);   
+            return View(/*"RunningOrder", OrderViewModelResult*/);   
         }
 
         [HttpPost]

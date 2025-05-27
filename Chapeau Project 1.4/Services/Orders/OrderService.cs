@@ -12,7 +12,7 @@ namespace Chapeau_Project_1._4.Services.Orders
             _orderRepository = orderRepository;
         }
 
-        public Order? GetOrderByTable(int? table)
+        public Chapeau_Project_1._4.Models.Order? GetOrderByTable(int? table)
         {
             return _orderRepository.GetOrderByTable(table);
         }

@@ -1,6 +1,7 @@
 ﻿@using Chapeau_Project_1._4.ViewModel
 @model List<RunningOrder>
 
+
 <h2 class="page-title">Orders</h2>
 
 <div class="view-tabs">
@@ -34,7 +35,7 @@
                     <i class="fa fa-hashtag"></i>
                     Order #@order.OrderNumber
                     <span class="separator">–</span>
-                    Table @order.TableNumber
+                    Table #@order.TableNumber
                 </h3>
                 <div class="order-meta">
                     <span>
@@ -53,13 +54,13 @@
                         <i class="fa fa-caret-down"></i>
                     </button>
                     <ul class="status-menu">
-                        <li onclick="updateOrderStatus(@order.OrderNumber,'Ordered')">
+                        <li onclick="UpdateOrderStatus(@order.OrderNumber,'Ordered')">
                             Ordered
                         </li>
-                        <li onclick="updateOrderStatus(@order.OrderNumber,'BeingPrepared')">
+                        <li onclick="UpdateOrderStatus(@order.OrderNumber,'BeingPrepared')">
                             Being Prepared
                         </li>
-                        <li onclick="updateOrderStatus(@order.OrderNumber,'ReadyToServe')">
+                        <li onclick="UpdateOrderStatus(@order.OrderNumber,'ReadyToServe')">
                             Ready to Serve
                         </li>
                     </ul>
@@ -69,10 +70,10 @@
             @{
                 // group your RunningOrderItems by their category string
                 var courseGroups = order.runningOrders
-                .GroupBy(i => i.RunningOrderItemCategory.OrderItemCategory);
+                .GroupBy(i => i.RunnigOrderMenuItem.OrderItemCategory);
             }
 
-            @foreach (var grp in order.runningOrders.GroupBy(i => i.RunningOrderItemCategory.OrderItemCategory))
+            @foreach (var grp in order.runningOrders.GroupBy(i => i.RunnigOrderMenuItem.OrderItemCategory))
             {
                 <section class="course-group">
                     <h4>@grp.Key</h4>
@@ -88,10 +89,7 @@
                         {
                             <li class="course-item">
                                 <i class="fa fa-cutlery"></i>
-                                @item.RunningOrderItemCategory.OrderItemName (×@item.Quantity)
-                                @* <span class="item-badge badge-@item.ItemStatus.ToString().ToLower()">
-                                    @item.ItemStatus.ToString()
-                                </span> *@
+                                @item.RunnigOrderMenuItem.OrderItemName (×@item.Quantity)
 
                                 
                                 <details class="item-status-dropdown">

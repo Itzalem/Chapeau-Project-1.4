@@ -149,6 +149,62 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             }
         }
 
-  
+
+
+        public List<object> GetOrderMunuItemNames(int OrderNumber) 
+        {
+            
+
+            List<object> orders = new List<object>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                #region Query TXT
+                string query = @"SELECT 
+                                mi.menuItem_id,
+                                mi.menuItemName,
+                                mi.category,
+	                            mi.categoryStatus
+                            FROM 
+                                Orders o
+                            INNER JOIN 
+                              ORDER_ITEM oi ON o.orderNumber = oi.orderNumber
+                            INNER JOIN 
+                                MENU_ITEMS mi ON oi.menuItem_id = mi.menuItem_id
+                            WHERE 
+                                o.orderNumber = @OrderNumber
+                            ORDER BY o.orderTime;";
+
+                #endregion
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@OrderNumber", OrderNumber);
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    object order = ReadOrderGraph(reader);
+                    orders.Add(order);
+                }
+                reader.Close();
+
+            }
+            return orders;
+
+        }
+
+
+
+        private object ReadOrderGraph(SqlDataReader reader)
+        {
+            int orderItemId = (int)reader["orderItem_id"];
+            int menuItemId = (int)reader["menuItem_id"];
+            string menuItemName = (string)reader["menuItemName"];
+            string category = (string)reader["category"];
+            ECategoryStatus categoryStatus = (ECategoryStatus)Enum.Parse(typeof(ECategoryStatus), reader["categoryStatus"].ToString()!);
+
+            return new{ OrderItemId  = orderItemId  , MenuItemId = menuItemId , Category = category , CategoryStatus = categoryStatus};
+        }
+
     }
 }

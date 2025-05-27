@@ -1,5 +1,6 @@
 ﻿namespace Chapeau_Project_1._4.Models
 {
+    public enum ECategoryStatus { pending, InProcess, Completed } 
     public class MenuItem
     {
         public int MenuItemId { get; set; }
@@ -8,6 +9,7 @@
         public int Stock {  get; set; }
         public string Card {  get; set; }
         public string Category { get; set; }
+        public ECategoryStatus CategoryStatus { get; set; } 
     
 
         public MenuItem()
@@ -15,7 +17,7 @@
         }
 
         public MenuItem(int menuItemId, string menuItemName, decimal price, int stock, 
-                        string card, string category)
+                        string card, string category, ECategoryStatus categoryStatus = ECategoryStatus.pending)
         {
             MenuItemId = menuItemId;
             MenuItemName = menuItemName;
@@ -23,6 +25,7 @@
             Stock = stock;
             Card = card;
             Category = category;
+            CategoryStatus = categoryStatus;
         }
         
     }

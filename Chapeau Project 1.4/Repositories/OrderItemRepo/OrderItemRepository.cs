@@ -19,7 +19,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
             int OrderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
-            int MenuItemId = (int)reader["menuItem_id"];
+            int MenuItemName = (int)reader["menuItemName"];
             string note = (string)reader["note"];
 
 
@@ -29,7 +29,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 quantity,
                 note,
                 itemStatus,
-                MenuItemId,
+                MenuItemName,
                 OrderNumber
                
             );
@@ -40,8 +40,10 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT orderItem_id, quantity, note, menuItem_id, orderNumber, itemStatus
-                                FROM ORDER_ITEM";
+                string query = @"SELECT orderItem_id, quantity, note, menuItemName, orderNumber, itemStatus
+                                FROM ORDER_ITEM
+                                INNER JOIN MENU_ITEMS
+                                ON ORDER_ITEM.menuItem_id = MENU_ITEMS.menuItem_id";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();

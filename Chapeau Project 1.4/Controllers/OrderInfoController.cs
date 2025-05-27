@@ -2,7 +2,7 @@
 using Chapeau_Project_1._4.Services.Menu;
 using Chapeau_Project_1._4.Services.Drinks;
 using Microsoft.AspNetCore.Mvc;
-using Chapeau_Project_1._4.Services.Orders;
+using Chapeau_Project_1._4.Services.Order;
 using Chapeau_Project_1._4.Services.OrderItems;
 using Chapeau_Project_1._4.ViewModel;
 

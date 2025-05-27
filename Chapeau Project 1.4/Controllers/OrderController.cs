@@ -1,7 +1,7 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Services.Menu;
 using Chapeau_Project_1._4.Services.OrderItems;
-using Chapeau_Project_1._4.Services.Orders;
+using Chapeau_Project_1._4.Services.Order;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -44,7 +44,7 @@ namespace Chapeau_Project_1._4.Controllers
             List<OrderItem> orderList = _orderItemService.DisplayOrderItems();
                                   
 
-            return RedirectToAction("DisplayMenu", "Menu", orderList);
+            return View("~/Views/Menu/DisplayMenu.cshtml", orderList);
         }
 
 

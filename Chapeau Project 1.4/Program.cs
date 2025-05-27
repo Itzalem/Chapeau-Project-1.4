@@ -8,7 +8,7 @@ using Chapeau_Project_1._4.Repositories.RestaurantTableRepo;
 using Chapeau_Project_1._4.Services;
 using Chapeau_Project_1._4.Services.Drinks;
 using Chapeau_Project_1._4.Services.Menu;
-using Chapeau_Project_1._4.Services.Orders;
+using Chapeau_Project_1._4.Services.Order;
 using Chapeau_Project_1._4.Services.OrderOverview;
 using Chapeau_Project_1._4.Services.RestaurantTableService;
 

@@ -15,9 +15,12 @@ namespace Chapeau_Project_1._4.Services.Order
 
         //public void AddNewOrder(int tableNumber)
         //{
-           // _orderRepository.CreateNewOrder(tableNumber);
+        // _orderRepository.CreateNewOrder(tableNumber);
         //}
 
-          
+        /*public Order? GetOrderByTable(int? table)
+      {
+          return _orderRepository.GetOrderByTable(table);
+      }*/
     }
 }

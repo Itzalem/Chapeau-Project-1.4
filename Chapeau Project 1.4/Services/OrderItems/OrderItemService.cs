@@ -12,6 +12,11 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             _orderItemRepository = orderItemRepository;
         }
 
+        public void AddOrderItem(OrderItem orderItem)
+        {
+            _orderItemRepository.AddOrderItem(orderItem);
+        }
+
         public List<OrderItem> GetByOrderNumber(int orderNumber)
         {
             return _orderItemRepository.GetByOrderNumber(orderNumber);

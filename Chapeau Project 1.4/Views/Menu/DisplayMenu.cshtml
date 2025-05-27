@@ -70,14 +70,14 @@
                     <td style="text-align: right;">€@menuItem.Price</td>
 
                     <td>
-                        <form asp-controller="Order" asp-action="AddItemsToOrder" method="post">
-                            <input type="hidden" asp-for="@menuItem.MenuItemId" />
-                            <input type="hidden" asp-for="@menuItem.MenuItemName" />    
-                            <input type="hidden" asp-for="@menuItem.Price" />    
-                            <input type="hidden" asp-for="@menuItem.Stock" /> 
-                            <input type="hidden" asp-for="@menuItem.Card" /> 
-                            <input type="hidden" asp-for="@menuItem.Category" />      
-                            
+                        <form asp-controller="Order" asp-action="InputItemDetails" method="post">
+                            <input type="hidden" name="MenuItemId" value="@menuItem.MenuItemId" />
+                            <input type="hidden" name="MenuItemName" value="@menuItem.MenuItemName" />
+                            <input type="hidden" name="Price" value="@menuItem.Price" />
+                            <input type="hidden" name="Stock" value="@menuItem.Stock" />
+                            <input type="hidden" name="Card" value="@menuItem.Card" />
+                            <input type="hidden" name="Category" value="@menuItem.Category" />
+
                             <button type="submit">Add to order</button>
                         </form>
                     </td>

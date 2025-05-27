@@ -1,0 +1,24 @@
+﻿@model Chapeau_Project_1._4.Models.OrderItem
+
+<form asp-controller="Order" asp-action="AddItemsToOrder" method="post">
+    <input type="hidden" asp-for="MenuItem.MenuItemId" />
+    <input type="hidden" asp-for="MenuItem.MenuItemName" />
+    <input type="hidden" asp-for="MenuItem.Price" />
+    <input type="hidden" asp-for="MenuItem.Stock" />
+    <input type="hidden" asp-for="MenuItem.Card" />
+    <input type="hidden" asp-for="MenuItem.Category" />
+
+    <!--Check if this works-->
+    <input type="hidden" asp-for="ItemStatus" />
+    <input type="hidden" asp-for="OrderNumber" />
+
+    <label for="quantity">Quantity:</label>
+    <input type="number" asp-for="Quantity" id="quantity" required />
+
+    <label for="note">Note:</label>
+    <textarea asp-for="Note" id="note"></textarea>
+
+    <button type="submit">Confirm</button>
+</form>
+
+<a href="/Menu/DisplayMenu" class="btn-custom"> Cancel</a>

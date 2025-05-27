@@ -49,7 +49,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return orders;
         }
 
-        public void CreateNewOrder(int tableNumber)
+        public void CreateNewOrder(int tableNumber) //possibly to be deleted, check if its called from any controller 
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {

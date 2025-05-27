@@ -14,12 +14,13 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         }
 
         private OrderItem ReadOrderItem(SqlDataReader reader)
+        //!!!Menuitemid was replaced by menuitem as object, check if you need to change something in your queries
         {
             int OrderNumber = (int)reader["orderNumber"];
             EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
             int OrderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
-            int MenuItemId = (int)reader["menuItem_id"];
+            MenuItem MenuItem = (MenuItem)reader["menuItem"];
             string note = (string)reader["note"];
 
 
@@ -29,12 +30,38 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 quantity,
                 note,
                 itemStatus,
-                MenuItemId,
+                MenuItem,
                 OrderNumber
                
             );
         }
-        public List<OrderItem> DisplayOrderItem()
+
+        public void AddOrderItem(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "INSERT INTO ORDER_ITEM (quantity, note, menuItem_id, orderNumber, itemStatus)" + 
+                                "VALUES (@Quantity, @Note, @MenuItemId, @OrderNumber, @ItemStatus);";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Quantity", orderItem.Quantity);
+                command.Parameters.AddWithValue("@Note", orderItem.Note);
+                command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
+                command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
+                command.Parameters.AddWithValue("@@ItemStatus", orderItem.ItemStatus);
+
+                command.Connection.Open();
+
+                int rowsChanged = command.ExecuteNonQuery();
+                if (rowsChanged != 1)
+                {
+                    throw new Exception("Item addition failed");
+                }
+            }
+        }
+
+
+        public List<OrderItem> DisplayOrderItems()
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 

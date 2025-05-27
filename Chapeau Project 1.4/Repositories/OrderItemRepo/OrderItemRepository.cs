@@ -52,7 +52,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 command.Parameters.AddWithValue("@Note", orderItem.Note);
                 command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
                 command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
-                command.Parameters.AddWithValue("@@ItemStatus", orderItem.ItemStatus);
+                command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus);
 
                 command.Connection.Open();
 

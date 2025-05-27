@@ -7,7 +7,7 @@
         public int Quantity { get; set; }
         public string Note { get; set; }    
         public EItemStatus ItemStatus { get; set; }  
-        public int MenuItemId { get; set; } 
+        public int MenuItemId { get; set; } //pass the whole object 
         public int OrderNumber { get; set; }   
         
 

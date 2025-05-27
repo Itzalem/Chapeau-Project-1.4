@@ -7,6 +7,7 @@
         public DateTime OrderTime { get; set; } 
         public int TableNumber { get; set; }
 
+        //the list of orderitems 
 
 
         public Order()
@@ -18,7 +19,7 @@
         {
             OrderNumber = orderNumber;
             Status = status;
-            OrderTime = orderTime;
+            OrderTime = DateTime.Now;
             TableNumber = tableNumber;
         }   
     }

@@ -27,7 +27,7 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
             return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
         }
 
-        public List<MenuItem> DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
+        public List<MenuItem> GetMenuItems(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
             List<MenuItem> menu = new List<MenuItem>();
 
@@ -66,6 +66,25 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
             }
         }
 
+        public MenuItem GetMenuById(int? menuItemId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " +
+                    " FROM MENU_ITEMS WHERE menuItem_id = @menuItemId ";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@menuItemId", menuItemId);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                MenuItem menuItem = ReadItem(reader);
+
+                return menuItem;
+            }
+        }
 
     }
 }

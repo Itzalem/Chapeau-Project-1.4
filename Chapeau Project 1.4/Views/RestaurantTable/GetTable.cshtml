@@ -14,7 +14,6 @@
         <thead>
             <tr>
                 <th>Table #</th>
-                <th>Reserved</th>
                 <th>Guests</th>
                 <th>Occupied</th>
             </tr>
@@ -24,7 +23,6 @@
             {
                 <tr>
                     <td>@table.TableNumber</td>
-                    <td>@(table.IsReserved ? "Yes" : "No")</td>
                     <td>@table.AmountOfGuests</td>
                     <td>@(table.IsOccupied ? "Occupied" : "Free")</td>
                     <td><a href="/OrderOverview/DisplayOrder?table=@table.TableNumber">Go to order</a></td>

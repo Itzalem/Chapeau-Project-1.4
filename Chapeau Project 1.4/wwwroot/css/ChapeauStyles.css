@@ -1,4 +1,46 @@
-﻿
+﻿/*THIS IS HEADER / NAV BAR STYLING LETS GOOOO*/
+/* General link style */
+.navbar-nav .nav-link {
+    padding: 0.5rem 1rem;
+    color: #333;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth hover without layout shift */
+.navbar-nav .nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #000;
+    text-decoration: none; /* remove underline to prevent jitter */
+}
+
+/* Login button styling */
+.navbar-nav .login-button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #555;
+    border-radius: 6px;
+    color: #333;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Subtle scale + bg change on hover */
+.navbar-nav .login-button:hover {
+    background-color: #eee;
+    transform: scale(1.03);
+    color: #000;
+    text-decoration: none;
+}
+
+
+
+
+
+
+
 .runningOut {
     background-color: darkorange;
     color: white;
@@ -198,5 +240,64 @@
         font-size: .85rem;
 }
 
+
+
+/* RESTAURANT TABLE OVERVIEW -> GRID */
+/* Restaurant Table Grid */
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns */
+    gap: 4.5rem 4rem; /* vertical and horizontal spacing */
+    margin-top: 2.5rem;
+    padding: 1rem;
+    justify-items: center;
+}
+
+/* Table Square (bigger & more spaced) */
+.table-square {
+    width: 210px;
+    height: 210px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+}
+
+.table-square:hover {
+    transform: scale(1.08);
+}
+
+/* Status Colors */
+.table-square.free {
+    background-color: #28a745; /* green */
+}
+
+.table-square.occupied {
+    background-color: #dc3545; /* red */
+}
+
+/* Table Number */  
+.table-number {
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+}
+
+/* Status Label */
+.table-status {
+    font-size: 1rem;
+}
+
+/* Guests */
+.table-guests {
+    font-size: 1rem;
+    margin-top: 0.3rem;
+}
 
 

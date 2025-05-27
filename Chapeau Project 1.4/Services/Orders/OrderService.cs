@@ -1,8 +1,7 @@
 ﻿using Chapeau_Project_1._4.Models;
-using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.Repositories.OrderRepo;
 
-namespace Chapeau_Project_1._4.Services.Order
+namespace Chapeau_Project_1._4.Services.Orders
 {
     public class OrderService : IOrderService
     {
@@ -13,11 +12,9 @@ namespace Chapeau_Project_1._4.Services.Order
             _orderRepository = orderRepository;
         }
 
-        public void AddNewOrder(int tableNumber)
+        public Order? GetOrderByTable(int? table)
         {
-            _orderRepository.CreateNewOrder(tableNumber);
+            return _orderRepository.GetOrderByTable(table);
         }
-
-          
     }
 }

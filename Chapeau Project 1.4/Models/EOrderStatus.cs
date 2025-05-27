@@ -2,9 +2,13 @@
 {
     public enum EOrderStatus
     {
+        draft,
         ordered,
+        cancelled,
         pending,
         prepared,
         payed
+
+            //paid an unpaid, other status will move to orderitem
     }
 }

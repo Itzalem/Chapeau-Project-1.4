@@ -14,9 +14,9 @@ namespace Chapeau_Project_1._4.Services.Menu
             _menuRepository = menuRepository;
         }
 
-        public List<MenuItem> DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
+        public List<MenuItem> GetMenuItems(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
-            return _menuRepository.DisplayMenu(cardFilter, categoryFilter);
+            return _menuRepository.GetMenuItems(cardFilter, categoryFilter);
         }
 
         //si tengo tiempo automatizo el llenado de la lista
@@ -47,5 +47,9 @@ namespace Chapeau_Project_1._4.Services.Menu
             return categoriesByCard;
         }
 
+        public MenuItem GetMenuById(int? menuItemId)
+        {
+            return _menuRepository.GetMenuById(menuItemId);
+        }
     }
 }

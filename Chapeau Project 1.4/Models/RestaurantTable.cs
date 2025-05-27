@@ -3,17 +3,18 @@
     public class RestaurantTable
     {
         public int TableNumber { get; set; }
-        public bool IsReserved { get; set; }
         public int AmountOfGuests { get; set; }
         public bool IsOccupied { get; set; }
 
-        public RestaurantTable(int tableNumber, bool isReserved, int amountOfGuests, bool isOccupied)
+        public RestaurantTable()
+        {
+            
+        }
+        public RestaurantTable(int tableNumber, int amountOfGuests, bool isOccupied)
         {
             TableNumber = tableNumber;
-            IsReserved = isReserved;
             AmountOfGuests = amountOfGuests;
             IsOccupied = isOccupied;
         }
     }
-
 }

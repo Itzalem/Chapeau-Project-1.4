@@ -16,7 +16,7 @@ namespace Chapeau_Project_1._4.Controllers
        
         public IActionResult DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
-            List<MenuItem> menu = _menuService.DisplayMenu(cardFilter, categoryFilter);
+            List<MenuItem> menu = _menuService.GetMenuItems(cardFilter, categoryFilter);
             var categories = _menuService.GetCardCategories();         
             
             var viewModel = new MenuViewModel

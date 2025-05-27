@@ -3,18 +3,22 @@ using Chapeau_Project_1._4.Services.Menu;
 using Chapeau_Project_1._4.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Chapeau_Project_1._4.Controllers
+namespace Chapeau_Project_1._4.Views.ViewComponents
 {
-    public class MenuController : Controller
+    public class MenuViewComponent : ViewComponent
     {
+
         private readonly IMenuService _menuService;
 
-        public MenuController(IMenuService menuService)
+        public MenuViewComponent(IMenuService menuService)
         {
             _menuService = menuService;
         }
 
-        public IActionResult DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
+
+        //if it does not work return this code to menucontroller 
+
+        public IViewComponentResult Invoke(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
             List<MenuItem> menu = _menuService.GetMenuItems(cardFilter, categoryFilter);
             var categories = _menuService.GetCardCategories();
@@ -30,7 +34,7 @@ namespace Chapeau_Project_1._4.Controllers
             return View(viewModel);
         }
 
-        
+
 
     }
 }

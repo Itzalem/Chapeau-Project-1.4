@@ -33,12 +33,13 @@ namespace Chapeau_Project_1._4
             });
 
             builder.Services.AddControllersWithViews();
-            
-            builder.Services.AddSingleton<IMenuRepository, MenuRepository>();
-            builder.Services.AddSingleton<IMenuService, MenuService>();
 
             builder.Services.AddSingleton<IOrderService, OrderService>();
             builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
+
+            builder.Services.AddSingleton<IMenuRepository, MenuRepository>();
+            builder.Services.AddSingleton<IMenuService, MenuService>();
+            
 
             builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();
             builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();

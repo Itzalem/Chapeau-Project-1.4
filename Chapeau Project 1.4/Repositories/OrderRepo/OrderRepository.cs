@@ -14,6 +14,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             // get (database connectionstring from appsetings 
             _connectionString = configuration.GetConnectionString("ChapeauRestaurant");
         }
+
+
         private Order ReadOrder(SqlDataReader reader)
         {
             int OrderNumber = (int)reader["orderNumber"];

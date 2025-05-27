@@ -23,7 +23,7 @@ namespace Chapeau_Project_1._4.Controllers
             _orderItemService = orderItemService;
         }
 
-        public IActionResult Index(int? table)
+        /*public IActionResult Index(int? table)
         {
             Order? order = _orderService.GetOrderByTable(table);
 
@@ -45,6 +45,6 @@ namespace Chapeau_Project_1._4.Controllers
             OrderInfo orderInfo = new OrderInfo(order, orderItems, menuItems, drinks);
 
             return View(orderInfo);
-        }
+        }*/
     }
 }

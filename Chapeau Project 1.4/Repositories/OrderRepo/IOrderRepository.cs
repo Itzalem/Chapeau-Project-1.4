@@ -4,6 +4,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 {
     public interface IOrderRepository
     {
+
         void CreateNewOrder(int tableNumber);
 
         List<Order> DiplayOrder();

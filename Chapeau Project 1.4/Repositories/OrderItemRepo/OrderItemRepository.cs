@@ -23,7 +23,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             int orderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
             int menuItemId = (int)reader["menuItem_id"];
-            string note = (string)reader["note"];
+            string? note = reader["note"] == DBNull.Value ? null : reader["note"].ToString();
+
 
             MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);
 
@@ -49,7 +50,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@Quantity", orderItem.Quantity);
-                command.Parameters.AddWithValue("@Note", orderItem.Note);
+
+                if (orderItem.Note == null)
+                    command.Parameters.AddWithValue("@Note", DBNull.Value);
+                else
+                    command.Parameters.AddWithValue("@Note", orderItem.Note);
+                
                 command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
                 command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
                 command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus);
@@ -65,15 +71,17 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         }
 
 
-        public List<OrderItem> DisplayOrderItems()
+        public List<OrderItem> DisplayOrderItems(int orderNumber)
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = @"SELECT orderItem_id, quantity, note, menuItem_id, orderNumber, itemStatus
-                                FROM ORDER_ITEM";
+                                FROM ORDER_ITEM  WHERE orderNumber = @orderNumber" ;
                 SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();

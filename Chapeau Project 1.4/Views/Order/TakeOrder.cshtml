@@ -4,32 +4,43 @@
     ViewData["Title"] = "Take Order";
     ECardOptions cardFilter = (ECardOptions)ViewData["CardFilter"];
     ECategoryOptions categoryFilter = (ECategoryOptions)ViewData["CategoryFilter"];
+    int orderNumber = (int)ViewData["OrderNumber"];  
 }
 
+<div style="display: flex; gap: 20px;">
 
-@await Component.InvokeAsync("Menu", new { cardFilter = cardFilter, categoryFilter = categoryFilter })
+    <div style="flex: 1; border: 1px solid #ccc; padding: 10px;">
+        @await Component.InvokeAsync("Menu", new { orderNumber = orderNumber, cardFilter = cardFilter, categoryFilter = categoryFilter })
+    </div>
 
+    <div style="flex: 1; border: 1px solid #ccc; padding: 10px;">
+        <h2>Order List</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MenuItem.MenuItemName</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Note</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-<h2>Order List</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Item</th>
-            <th>Quantity</th>
-            <th>Note</th>            
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.MenuItem.MenuItemName</td>
-                <td>@item.Quantity</td>
-                <td>@item.Note</td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <a class="btn btn-success">Send</a>
+        <a class="btn btn-danger">Cancel</a>
+        <a class="btn btn-primary">Pay</a>
+    </div>
+
+</div>
 
 
 

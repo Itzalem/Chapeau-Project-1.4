@@ -19,14 +19,24 @@ namespace Chapeau_Project_1._4.Controllers
             _orderItemService = orderItemService;
         }
 
-        
-        public IActionResult TakeOrder(ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
+        [HttpGet]
+        public IActionResult AddOrder(int tableNumber)
+        {
+            int newOrderNumber = _orderService.AddNewOrder(tableNumber);
+
+            
+
+            return RedirectToAction("TakeOrder", new { orderNumber = newOrderNumber });
+        }
+
+        public IActionResult TakeOrder(int orderNumber, ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
             // Sólo pasamos a la vista los orderItems; el menú lo carga el ViewComponent
-            List <OrderItem> orderItems = _orderItemService.DisplayOrderItems();
+            List <OrderItem> orderItems = _orderItemService.DisplayOrderItems(orderNumber);
 
             ViewData["CardFilter"] = cardFilter;
             ViewData["CategoryFilter"] = categoryFilter;
+            ViewData["OrderNumber"] = orderNumber;
 
             return View(orderItems);
         }
@@ -37,28 +47,26 @@ namespace Chapeau_Project_1._4.Controllers
         {
             _orderItemService.AddOrderItem(orderItem); //add item to Db
 
-            //List<OrderItem> orderList = _orderItemService.DisplayOrderItems(); not sure if i need this
+            return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
 
-
-            return RedirectToAction("TakeOrder");
         }
 
 
         [HttpPost]
-        public IActionResult InputItemDetails(MenuItem menuItem)
+        public IActionResult InputItemDetails(MenuItem menuItem, int OrderNumber)
         {
-
             OrderItem orderItem = new OrderItem
             {
                 MenuItem = menuItem,
                 ItemStatus = EItemStatus.NotOrdered,
-                OrderNumber = 0 //the order is not send yet so it does not have a number, actually it does have 
-                                //   a number, i need to get it from somewhere :(
-                                //check implementation later on an change here and in the repository
+                OrderNumber = OrderNumber,
             };
 
             return View(orderItem);
 
         }
+
+
+        
     }
 }

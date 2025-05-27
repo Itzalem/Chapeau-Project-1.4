@@ -2,9 +2,9 @@
 {
     public enum EOrderStatus
     {
-        draft,
-        ordered,
-        cancelled,
+       
+        ordered, //is this one necessary?
+        
         pending,
         prepared,
         payed

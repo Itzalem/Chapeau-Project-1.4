@@ -19,7 +19,7 @@ namespace Chapeau_Project_1._4.Controllers
         public IActionResult Index()
         {
             var orders = _orderRepository.DiplayOrder();
-            var orderItems = _orderItemRepository.DisplayOrderItems();
+            var orderItems = _orderItemRepository.DisplayOrderItems(1); //change the 1
 
             // in order to fill in the order, I need to have OrderItemName and ORderItemCategory, 
             // a method must be created to fetch these two and give it to me and the outcome must be RunningOrderMenuCategory 

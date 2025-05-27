@@ -12,6 +12,8 @@
     <input type="hidden" asp-for="ItemStatus" />
     <input type="hidden" asp-for="OrderNumber" />
 
+    <p>Order #: @Model.OrderNumber</p>
+
     <label for="quantity">Quantity:</label>
     <input type="number" asp-for="Quantity" id="quantity" required />
 

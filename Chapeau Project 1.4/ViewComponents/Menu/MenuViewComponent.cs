@@ -18,20 +18,20 @@ namespace Chapeau_Project_1._4.ViewComponents.Menu
         }
 
         // recibe opcionalmente filtros desde la llamada
-        public async Task<IViewComponentResult> InvokeAsync(ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
+        public async Task<IViewComponentResult> InvokeAsync(int orderNumber, ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
             var menuItems = _menuService.GetMenuItems(cardFilter, categoryFilter);
             var categories = _menuService.GetCardCategories();
-            var orderItems = _orderItemService.DisplayOrderItems();
 
             var viewModel = new MenuViewModel
             {
                 CardFilter = cardFilter,
                 CategoryFilter = categoryFilter,
                 CategoriesDictionary = categories,
-                MenuItems = menuItems,
-                OrderItems = orderItems
+                MenuItems = menuItems
             };
+
+            ViewData["OrderNumber"] = orderNumber;
 
             return View(viewModel);
         }

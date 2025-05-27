@@ -7,11 +7,7 @@ namespace Chapeau_Project_1._4.ViewModel
         public ECardOptions CardFilter { get; set; }
         public ECategoryOptions CategoryFilter { get; set; }
         public Dictionary<ECardOptions, List<ECategoryOptions>> CategoriesDictionary { get; set; }
-        public List<MenuItem> MenuItems { get; set; }
-
-        //to show the order list 
-        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-
+        public List<MenuItem> MenuItems { get; set; }      
 
     }
 }

@@ -66,7 +66,7 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
             }
         }
 
-        public MenuItem GetMenuById(int? menuItemId)
+        public MenuItem GetMenuItemById(int menuItemId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {

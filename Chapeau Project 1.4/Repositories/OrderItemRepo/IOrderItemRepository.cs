@@ -11,6 +11,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         List<OrderItem> GetByOrderNumber (int orderNumber);
         List<OrderItem> DisplayOrderItems(); 
         List<OrderItem> GetRunningItem(); 
+
         //Change the status for one specific order‐item
         void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
         void UpdateCourseStatus(int orderNumber, string courseCategory, EItemStatus newStatus);

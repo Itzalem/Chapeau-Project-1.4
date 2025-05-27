@@ -6,6 +6,8 @@ namespace Chapeau_Project_1._4.Services.OrderItems
     {
         void AddOrderItem(OrderItem orderItem);
 
+        List<OrderItem> DisplayOrderItems();
+
         List<OrderItem> GetByOrderNumber(int orderNumber);
     }
 }

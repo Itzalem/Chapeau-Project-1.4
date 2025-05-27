@@ -41,11 +41,8 @@ namespace Chapeau_Project_1._4.Controllers
         {
             _orderItemService.AddOrderItem(orderItem); //add item to Db
 
-
-            //add item to orderlist?? but here im creating the list each time 
-            List<OrderItem> orderList = new List<OrderItem>();
-
-            orderList.Add(orderItem);
+            List<OrderItem> orderList = _orderItemService.DisplayOrderItems();
+                                  
 
             return RedirectToAction("DisplayMenu", "Menu", orderList);
         }

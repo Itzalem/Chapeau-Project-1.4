@@ -6,6 +6,6 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
     {
         List<MenuItem> GetMenuItems(ECardOptions cardFilter, ECategoryOptions categoryFilter);
 
-        MenuItem GetMenuById(int? menuItemId);
+        MenuItem GetMenuItemById(int menuItemId);
     }
 }

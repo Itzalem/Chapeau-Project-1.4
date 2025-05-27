@@ -1,4 +1,5 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Microsoft.Data.SqlClient;
 
 namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
@@ -6,34 +7,37 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
     public class OrderItemRepository : IOrderItemRepository
     {
         private readonly string? _connectionString;
+        private readonly IMenuRepository _menuRepository;
 
-        public OrderItemRepository(IConfiguration configuration)
+        public OrderItemRepository(IConfiguration configuration, IMenuRepository menuRepository)
         {
             // get (database connectionstring from appsetings 
             _connectionString = configuration.GetConnectionString("ChapeauRestaurant");
+            _menuRepository = menuRepository;
         }
 
         private OrderItem ReadOrderItem(SqlDataReader reader)
-        //!!!Menuitemid was replaced by menuitem as object, check if you need to change something in your queries
         {
-            int OrderNumber = (int)reader["orderNumber"];
+            int orderNumber = (int)reader["orderNumber"];
             EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
-            int OrderItemId = (int)reader["orderItem_id"];
+            int orderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
-            MenuItem MenuItem = (MenuItem)reader["menuItem"];
+            int menuItemId = (int)reader["menuItemId"];
             string note = (string)reader["note"];
 
+            MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);
 
             return new OrderItem(
-            
-                OrderItemId,
+
+                orderItemId,
                 quantity,
                 note,
                 itemStatus,
-                MenuItem,
-                OrderNumber
-               
-            );
+                menuItem,
+                orderNumber
+
+            );        
+            
         }
 
         public void AddOrderItem(OrderItem orderItem)
@@ -84,6 +88,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
             return orderItems;
         }
+
 
         public List<OrderItem> GetByOrderNumber(int orderNumber)
         {

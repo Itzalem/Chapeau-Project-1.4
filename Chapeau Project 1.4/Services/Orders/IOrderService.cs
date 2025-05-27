@@ -6,6 +6,5 @@ namespace Chapeau_Project_1._4.Services.Orders
     {
         //Order? GetOrderByTable(int? table);
 
-        
     }
 }

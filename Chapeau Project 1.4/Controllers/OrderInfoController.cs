@@ -34,7 +34,7 @@ namespace Chapeau_Project_1._4.Controllers
 
             foreach (OrderItem orderItem in orderItems)
             {
-                MenuItem menuItem = _menuService.GetMenuById(orderItem.MenuItemId);
+                MenuItem menuItem = _menuService.GetMenuItemById(orderItem.MenuItemId);
                 menuItems.Add(menuItem);
 
                 Drink drink = _drinkService.GetDrinks(orderItem.MenuItemId);

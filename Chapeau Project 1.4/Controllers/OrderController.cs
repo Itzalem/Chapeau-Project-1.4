@@ -20,42 +20,45 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
         
-        [HttpPost]
-        public IActionResult InputItemDetails (MenuItem menuItem)
+        public IActionResult TakeOrder(ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
-         
-            OrderItem orderItem = new OrderItem { 
-                MenuItem = menuItem, 
-                ItemStatus = EItemStatus.NotOrdered,
-                OrderNumber = 0 //the order is not send yet so it does not have a number, actually it does have 
-                                 //   a number, i need to get it from somewhere :(
-                                //check implementation later on an change here and in the repository
-            };
+            // Sólo pasamos a la vista los orderItems; el menú lo carga el ViewComponent
+            List <OrderItem> orderItems = _orderItemService.DisplayOrderItems();
 
-            return View(orderItem);
+            ViewData["CardFilter"] = cardFilter;
+            ViewData["CategoryFilter"] = categoryFilter;
 
+            return View(orderItems);
         }
+
 
         [HttpPost]
         public IActionResult AddItemsToOrder(OrderItem orderItem)
         {
             _orderItemService.AddOrderItem(orderItem); //add item to Db
 
-            List<OrderItem> orderList = _orderItemService.DisplayOrderItems();
-                                  
+            //List<OrderItem> orderList = _orderItemService.DisplayOrderItems(); not sure if i need this
 
-            return View("~/Views/Menu/DisplayMenu.cshtml", orderList);
+
+            return RedirectToAction("TakeOrder");
         }
 
 
-        public IActionResult TakeOrder(/*int tableNumber*/)
+        [HttpPost]
+        public IActionResult InputItemDetails(MenuItem menuItem)
         {
-            //_orderService.AddNewOrder(tableNumber);
 
+            OrderItem orderItem = new OrderItem
+            {
+                MenuItem = menuItem,
+                ItemStatus = EItemStatus.NotOrdered,
+                OrderNumber = 0 //the order is not send yet so it does not have a number, actually it does have 
+                                //   a number, i need to get it from somewhere :(
+                                //check implementation later on an change here and in the repository
+            };
 
-            return View();
+            return View(orderItem);
+
         }
-
-
     }
 }

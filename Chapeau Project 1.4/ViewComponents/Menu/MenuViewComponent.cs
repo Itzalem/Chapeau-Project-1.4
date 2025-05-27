@@ -4,40 +4,39 @@ using Chapeau_Project_1._4.Services.OrderItems;
 using Chapeau_Project_1._4.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Chapeau_Project_1._4.Controllers
+namespace Chapeau_Project_1._4.ViewComponents.Menu
 {
-    public class MenuController : Controller
+    public class MenuViewComponent : ViewComponent
     {
-        //everything its on the menuviewcomponent
-        /*
         private readonly IMenuService _menuService;
         private readonly IOrderItemService _orderItemService;
 
-        public MenuController(IMenuService menuService, IOrderItemService orderItemService)
+        public MenuViewComponent(IMenuService menuService, IOrderItemService orderItemService)
         {
             _menuService = menuService;
             _orderItemService = orderItemService;
         }
 
-        public IActionResult DisplayMenu(ECardOptions cardFilter, ECategoryOptions categoryFilter)
+        // recibe opcionalmente filtros desde la llamada
+        public async Task<IViewComponentResult> InvokeAsync(ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
-            List<MenuItem> menu = _menuService.GetMenuItems(cardFilter, categoryFilter);
+            var menuItems = _menuService.GetMenuItems(cardFilter, categoryFilter);
             var categories = _menuService.GetCardCategories();
-            var orderItems = _orderItemService.DisplayOrderItems();     // 
+            var orderItems = _orderItemService.DisplayOrderItems();
 
             var viewModel = new MenuViewModel
             {
                 CardFilter = cardFilter,
                 CategoryFilter = categoryFilter,
                 CategoriesDictionary = categories,
-                MenuItems = menu,
-                OrderItems = orderItems    // 
+                MenuItems = menuItems,
+                OrderItems = orderItems
             };
 
             return View(viewModel);
-        }*/ 
-
-        
-
+        }
     }
 }
+
+
+

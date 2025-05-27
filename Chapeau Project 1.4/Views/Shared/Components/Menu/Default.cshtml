@@ -1,6 +1,7 @@
 ﻿@model Chapeau_Project_1._4.ViewModel.MenuViewModel
 
-@{   
+@{
+    ViewData["Title"] = "Menu";
     string card = "";
     string previousCategory = "";
 }
@@ -9,16 +10,12 @@
     <h1 class="display-4">Le Menu</h1>
 </div>
 
-<p>Debug (MenuViewComponent): CardFilter = @Model.CardFilter, CategoryFilter = @Model.CategoryFilter</p>
-
-
-
 <ul class="nav nav-pills">
 
     @foreach (var cardEnum in Model.CategoriesDictionary.Keys)
     {
         <li class="nav-item">
-            <a class="nav-link @(Model.CardFilter == cardEnum ? "active" : "")" asp-action="TakeOrder" asp-route-cardFilter="@cardEnum">@cardEnum</a>
+            <a class="nav-link @(Model.CardFilter == cardEnum ? "active" : "")" asp-controller="Order" asp-action="TakeOrder" asp-route-cardFilter="@cardEnum">@cardEnum</a>
         </li>
     }
 
@@ -30,9 +27,13 @@
     <p>Choose a Category:</p>
     @foreach (var category in Model.CategoriesDictionary[Model.CardFilter])
     {
-        <a class="btn btn-primary" href='@Url.Action("TakeOrder", new { cardFilter = Model.CardFilter, categoryFilter = category })'>
+        <a class="btn btn-primary" 
+            asp-controller="Order"
+            asp-action="TakeOrder"
+            asp-route-cardFilter="@Model.CardFilter"
+            asp-route-categoryFilter="@category" >            
             @category
-        </a>
+        </a>      
 
     }
 }
@@ -72,6 +73,18 @@
 
                     <td style="text-align: right;">€@menuItem.Price</td>
 
+                    <td>
+                        <form asp-controller="Order" asp-action="InputItemDetails" method="post">
+                            <input type="hidden" name="MenuItemId" value="@menuItem.MenuItemId" />
+                            <input type="hidden" name="MenuItemName" value="@menuItem.MenuItemName" />
+                            <input type="hidden" name="Price" value="@menuItem.Price" />
+                            <input type="hidden" name="Stock" value="@menuItem.Stock" />
+                            <input type="hidden" name="Card" value="@menuItem.Card" />
+                            <input type="hidden" name="Category" value="@menuItem.Category" />
+
+                            <button type="submit">Add to order</button>
+                        </form>
+                    </td>
                 </tr>
 
             </table>
@@ -81,3 +94,7 @@
 
 
 </div>
+
+
+
+<!--<a href="/Users/Create" class="btn-custom">Create User</a>-->

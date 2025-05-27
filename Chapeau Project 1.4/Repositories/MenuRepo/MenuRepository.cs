@@ -1,6 +1,7 @@
 ﻿using Chapeau_Project_1._4.Models;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+using System.Collections;
 
 namespace Chapeau_Project_1._4.Repositories.MenuRepo
 {
@@ -28,14 +29,14 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
         }
 
         public List<MenuItem> GetMenuItems(ECardOptions cardFilter, ECategoryOptions categoryFilter)
-        {
+        {         
             List<MenuItem> menu = new List<MenuItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " +
                     " FROM MENU_ITEMS WHERE menuCard = @MenuCard ";
-               
+
                 if (categoryFilter != ECategoryOptions.All) 
                 {
                     query += " AND category = @Category ";
@@ -80,9 +81,14 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                MenuItem menuItem = ReadItem(reader);
 
-                return menuItem;
+                if (reader.Read()) // Verifica que hay una fila antes de leer
+                {
+                    return ReadItem(reader); // Solo se llama si hay datos
+                }
+
+                // ❗ Si no hay datos, lanza excepción clara
+                throw new Exception($"No MenuItem found with ID: {menuItemId}");
             }
         }
 

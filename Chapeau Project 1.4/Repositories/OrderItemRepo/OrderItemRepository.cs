@@ -22,7 +22,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
             int orderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
-            int menuItemId = (int)reader["menuItemId"];
+            int menuItemId = (int)reader["menuItem_id"];
             string note = (string)reader["note"];
 
             MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);

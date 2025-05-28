@@ -37,8 +37,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 note,
                 itemStatus,
                 menuItemId,
-                OrderNumber
-
+                orderNumber
             );
 
             orderItem.MenuItem = new MenuItem(menuItemId, menuItemName, category, categoryStatus);
@@ -196,6 +195,11 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 reader.Close();
             }
             return orderItems; 
+        }
+
+        public void AddOrderItem(OrderItem orderItem)
+        {
+            throw new NotImplementedException();
         }
     }
 }

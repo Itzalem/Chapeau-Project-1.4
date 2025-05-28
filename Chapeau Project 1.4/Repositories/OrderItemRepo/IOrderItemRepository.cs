@@ -6,7 +6,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
     {
         void AddOrderItem(OrderItem orderItem);
 
-
         //Returns all items belonging to a specific order
         List<OrderItem> GetByOrderNumber (int orderNumber);
         List<OrderItem> DisplayOrderItems(int orderNumber); 

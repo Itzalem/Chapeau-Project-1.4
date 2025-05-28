@@ -199,8 +199,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
         }
 
-
-
         private object ReadOrderGraph(SqlDataReader reader)
         {
             int orderItemId = (int)reader["orderItem_id"];
@@ -212,5 +210,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return new{ OrderItemId  = orderItemId  , MenuItemId = menuItemId , Category = category , CategoryStatus = categoryStatus};
         }
 
+        public void CreateNewOrder(int tableNumber)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

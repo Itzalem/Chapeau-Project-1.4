@@ -1,13 +1,13 @@
 ﻿namespace Chapeau_Project_1._4.Models
 {
-    public enum EItemStatus {NotOrdered, pending , BeingPrepared, ReadyToServe }
+    public enum EItemStatus {pending , BeingPrepared, ReadyToServe }
     public class OrderItem
     {
         public int OrderItemId { get; set; }    
         public int Quantity { get; set; }
         public string Note { get; set; }    
-        public EItemStatus ItemStatus { get; set; }  
-        public int MenuItemId { get; set; }  
+        public EItemStatus ItemStatus { get; set; }
+        public int MenuItemId { get; set; }
         public MenuItem MenuItem { get; set; } //pass the whole object 
         public int OrderNumber { get; set; }   
         
@@ -22,9 +22,19 @@
             OrderItemId = orderItemId;
             Quantity = quantity;
             Note = note;
-            ItemStatus = itemStatus;
+            ItemStatus = itemStatus;    
             MenuItem = menuItem;
             OrderNumber = orderNumber;
-        }   
+        }
+
+        //public OrderItem(int orderItemId, int quantity, string note, EItemStatus itemStatus, int menuItemId, int orderNumber)
+        //{
+        //    OrderItemId = orderItemId;
+        //    Quantity = quantity;
+        //    Note = note;
+        //    ItemStatus = itemStatus;
+        //    MenuItemId = menuItemId;
+        //    OrderNumber = orderNumber;
+        //}
     }
 }

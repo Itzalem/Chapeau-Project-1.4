@@ -22,12 +22,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
             int orderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
-            //string MenuItemName = (string)reader["menuItemName"];
             string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
             int menuItemId = (int)reader["menuItem_id"];
-            //string menuItemName = (string)reader["menuItemName"];
-            //string category = (string)reader["category"];
-            //ECategoryStatus categoryStatus = (ECategoryStatus)Enum.Parse(typeof(ECategoryStatus), reader["categoryStatus"].ToString()!);
+            
 
             MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);
 
@@ -39,7 +36,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 itemStatus,
                 menuItem,
                 orderNumber
-
             );
 
            
@@ -77,23 +73,46 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
         }
 
-        public List<OrderItem> DisplayOrderItems(int orderNumber)
+        public List<OrderItem> DisplayOrderItems()
+        {
+            List<OrderItem> orderItems = new List<OrderItem>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+               string query = @"SELECT orderItem_id ,MNT.menuItem_id,MNT.menuItemName , MNT.category , MNT.categoryStatus, quantity, note, menuItemName, orderNumber, itemStatus
+                                    FROM ORDER_ITEM
+                                    INNER JOIN MENU_ITEMS as MNT
+                                    ON ORDER_ITEM.menuItem_id = MNT.menuItem_id
+                                     where MNT.category in ('Starters','Mains','Desserts')
+                                    ORDER By MNT.category desc";
+
+
+                SqlCommand command = new SqlCommand(query, connection);
+                
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    OrderItem orderItem = ReadOrderItem(reader);
+                    orderItems.Add(orderItem);
+                }
+                reader.Close();
+
+            }
+            return orderItems;
+        }
+
+
+        public List<OrderItem> DisplayItemsPerOrder(int orderNumber)
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = @"SELECT orderItem_id, quantity, note, menuItem_id, orderNumber, itemStatus 
-                                FROM ORDER_ITEM  WHERE orderNumber = @orderNumber ;" ;
-
-
-
-                /*string query = @"SELECT orderItem_id ,MNT.menuItem_id,MNT.menuItemName , MNT.category , MNT.categoryStatus, quantity, note, menuItemName, orderNumber, itemStatus
-                                    FROM ORDER_ITEM
-                                    INNER JOIN MENU_ITEMS as MNT
-                                    ON ORDER_ITEM.menuItem_id = MNT.menuItem_id
-                                     where MNT.category in ('Starters','Mains','Desserts')
-                                    ORDER By MNT.category desc";*/
+                                    FROM ORDER_ITEM  WHERE orderNumber = @orderNumber ;" ;
 
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -234,5 +253,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
             return orderItems; 
         }
+
     }
 }

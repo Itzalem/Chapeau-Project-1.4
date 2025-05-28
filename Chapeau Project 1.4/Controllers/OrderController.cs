@@ -22,9 +22,7 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpGet]
         public IActionResult AddOrder(int tableNumber)
         {
-            int newOrderNumber = _orderService.AddNewOrder(tableNumber);
-
-            
+            int newOrderNumber = _orderService.AddNewOrder(tableNumber);            
 
             return RedirectToAction("TakeOrder", new { orderNumber = newOrderNumber });
         }
@@ -32,7 +30,7 @@ namespace Chapeau_Project_1._4.Controllers
         public IActionResult TakeOrder(int orderNumber, ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
             // Sólo pasamos a la vista los orderItems; el menú lo carga el ViewComponent
-            List <OrderItem> orderItems = _orderItemService.DisplayOrderItems(orderNumber);
+            List <OrderItem> orderItems = _orderItemService.DisplayItemsPerOrder(orderNumber);
 
             ViewData["CardFilter"] = cardFilter;
             ViewData["CategoryFilter"] = categoryFilter;
@@ -58,7 +56,7 @@ namespace Chapeau_Project_1._4.Controllers
             OrderItem orderItem = new OrderItem
             {
                 MenuItem = menuItem,
-                ItemStatus = EItemStatus.NotOrdered,
+                ItemStatus = EItemStatus.pending,
                 OrderNumber = OrderNumber,
             };
 

@@ -16,6 +16,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         // Update only the Status of an order.
         void UpdateOrderStatus (EOrderStatus status, int id);
 
-        List<object> GetOrderMunuItemName(int OrderNumber);
+        object GetOrderMunuItemName(int OrderNumber);
     }
 }

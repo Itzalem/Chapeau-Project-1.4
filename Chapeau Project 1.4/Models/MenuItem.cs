@@ -27,6 +27,12 @@
             Category = category;
             CategoryStatus = categoryStatus;
         }
-        
+        public MenuItem(int menuItemId, string menuItemName,string category, ECategoryStatus categoryStatus = ECategoryStatus.pending)
+        {
+            MenuItemId = menuItemId;
+            MenuItemName = menuItemName;
+            Category = category;
+            CategoryStatus = categoryStatus;
+        }
     }
 }

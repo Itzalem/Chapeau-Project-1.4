@@ -151,7 +151,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
 
 
-        public List<object> GetOrderMunuItemNames(int OrderNumber) 
+        public object GetOrderMunuItemName(int OrderNumber) 
         {
             
 
@@ -184,12 +184,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 while (reader.Read())
                 {
                     object order = ReadOrderGraph(reader);
-                    orders.Add(order);
+                    return order;
                 }
                 reader.Close();
 
             }
-            return orders;
+            return null;
 
         }
 

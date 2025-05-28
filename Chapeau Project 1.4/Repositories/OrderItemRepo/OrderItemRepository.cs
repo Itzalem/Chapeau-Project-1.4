@@ -19,20 +19,28 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
             int OrderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
-            int MenuItemName = (int)reader["menuItemName"];
-            string note = (string)reader["note"];
+            string MenuItemName = (string)reader["menuItemName"];
+            string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
+            int menuItemId = (int)reader["menuItem_id"];
+            string menuItemName = (string)reader["menuItemName"];
+            string category = (string)reader["category"];
+            ECategoryStatus categoryStatus = (ECategoryStatus)Enum.Parse(typeof(ECategoryStatus), reader["categoryStatus"].ToString()!);
 
 
-            return new OrderItem(
+            var orderItem = new OrderItem(
             
                 OrderItemId,
                 quantity,
                 note,
                 itemStatus,
-                MenuItemName,
+                menuItemId,
                 OrderNumber
-               
+
             );
+
+            orderItem.MenuItem = new MenuItem(menuItemId, menuItemName, category, categoryStatus);
+
+            return orderItem;
         }
         public List<OrderItem> DisplayOrderItem()
         {
@@ -40,10 +48,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT orderItem_id, quantity, note, menuItemName, orderNumber, itemStatus
-                                FROM ORDER_ITEM
-                                INNER JOIN MENU_ITEMS
-                                ON ORDER_ITEM.menuItem_id = MENU_ITEMS.menuItem_id";
+                string query = @"SELECT orderItem_id ,MNT.menuItem_id,MNT.menuItemName , MNT.category , MNT.categoryStatus, quantity, note, menuItemName, orderNumber, itemStatus
+                                    FROM ORDER_ITEM
+                                    INNER JOIN MENU_ITEMS as MNT
+                                    ON ORDER_ITEM.menuItem_id = MNT.menuItem_id
+                                     where MNT.category in ('Starters','Mains','Desserts')
+                                    ORDER By MNT.category desc";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();
@@ -133,7 +143,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
         }
 
-        public void UpdateCourseStatus(int orderNumber, string courseCategory, EItemStatus newStatus)
+        public void UpdateCourseStatus(int orderNumber , EItemStatus newStatus)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -141,12 +151,10 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                                   SET itemStatus = @st
                                   FROM ORDER_ITEM
                                   JOIN MENU_ITEMS ON ORDER_ITEM.menuItem_id = MENU_ITEMS.menuItem_id
-                                  WHERE ORDER_ITEM.orderNumber = @ord
-                                  AND MENU_ITEMS.category = @cat;";
+                                  WHERE ORDER_ITEM.orderNumber = @ord;";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@st", newStatus.ToString());
                 command.Parameters.AddWithValue("@ord", orderNumber);
-                command.Parameters.AddWithValue("@cat", courseCategory);
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();

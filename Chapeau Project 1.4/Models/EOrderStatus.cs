@@ -3,7 +3,7 @@
     public enum EOrderStatus
     {
        
-        ordered, //is this one necessary?
+       
         
         pending,
         inProgress, 

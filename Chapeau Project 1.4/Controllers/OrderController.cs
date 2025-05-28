@@ -4,6 +4,7 @@ using Chapeau_Project_1._4.Services.OrderItems;
 using Chapeau_Project_1._4.Services.Order;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using System.Drawing;
 
 
 namespace Chapeau_Project_1._4.Controllers
@@ -50,6 +51,12 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpPost]
         public IActionResult AddItemsToOrder(OrderItem orderItem)
         {
+            if (orderItem.Quantity <= 0)
+            {
+                ViewData["Error"] = "Enter a valid quantity";
+                return View("InputItemDetails", orderItem);
+            }
+
             _orderItemService.AddOrderItem(orderItem); //add item to Db
 
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });

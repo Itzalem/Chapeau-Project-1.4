@@ -1,5 +1,12 @@
 ﻿@model Chapeau_Project_1._4.Models.OrderItem
 
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @ViewData["Error"]
+    </div>
+}
+
 <form asp-controller="Order" asp-action="AddItemsToOrder" method="post">
     <input type="hidden" asp-for="MenuItem.MenuItemId" />
     <input type="hidden" asp-for="MenuItem.MenuItemName" />

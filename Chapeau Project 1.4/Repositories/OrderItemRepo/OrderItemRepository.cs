@@ -46,33 +46,111 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         public void AddOrderItem(OrderItem orderItem)
         {
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "INSERT INTO ORDER_ITEM (quantity, note, menuItem_id, orderNumber, itemStatus)" + 
-                                "VALUES (@Quantity, @Note, @MenuItemId, @OrderNumber, @ItemStatus);";
-                SqlCommand command = new SqlCommand(query, connection);
+                connection.Open();
 
-                command.Parameters.AddWithValue("@Quantity", orderItem.Quantity);
+                int? existingItemId = FindMatchingOrderItemId(connection, orderItem);
 
-                if (orderItem.Note == null)
-                    command.Parameters.AddWithValue("@Note", DBNull.Value);
-                else
-                    command.Parameters.AddWithValue("@Note", orderItem.Note);
-
-                command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
-                command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
-                command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus.ToString());
-
-
-                command.Connection.Open();
-
-                int rowsChanged = command.ExecuteNonQuery();
-                if (rowsChanged != 1)
+                if (existingItemId != null)
                 {
-                    throw new Exception("Item addition failed");
+                    UpdateQuantity(connection, existingItemId.Value, orderItem.Quantity);
+                }
+                else
+                {
+                    InsertOrderItem(connection, orderItem);
                 }
             }
         }
+
+        private int? FindMatchingOrderItemId(SqlConnection connection, OrderItem orderItem)
+        {
+            string query = "SELECT orderItem_id FROM ORDER_ITEM " +
+                           " WHERE orderNumber = @OrderNumber AND menuItem_id = @MenuItemId " +
+                           " AND ((note IS NULL AND @Note IS NULL) OR note = @Note)";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
+            command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
+            command.Parameters.AddWithValue("@Note", (object?)orderItem.Note ?? DBNull.Value);
+
+            object? result = command.ExecuteScalar();
+
+            if (result != null)
+            {
+                return (int?)Convert.ToInt32(result); 
+            }
+            else
+            {
+                return null; 
+            }
+
+        }
+
+        private void UpdateQuantity(SqlConnection connection, int orderItemId, int extraQuantity)
+        {
+            string query = "UPDATE ORDER_ITEM SET quantity = quantity + @ExtraQuantity " +
+                            " WHERE orderItem_id = @Id ;";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@ExtraQuantity", extraQuantity);
+            command.Parameters.AddWithValue("@Id", orderItemId);
+            command.ExecuteNonQuery();            
+        }
+
+        private void InsertOrderItem(SqlConnection connection, OrderItem orderItem)
+        {
+            string query = "INSERT INTO ORDER_ITEM (quantity, note, menuItem_id, orderNumber, itemStatus)" +
+                            " VALUES (@Quantity, @Note, @MenuItemId, @OrderNumber, @ItemStatus)";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@Quantity", orderItem.Quantity);
+            command.Parameters.AddWithValue("@Note", (object?)orderItem.Note ?? DBNull.Value);
+            command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
+            command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
+            command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus.ToString());
+
+            int rowsChanged = command.ExecuteNonQuery();
+            if (rowsChanged != 1)
+            {
+                throw new Exception("Item addition failed");
+            }
+
+        }
+
+
+
+        /*using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "INSERT INTO ORDER_ITEM (quantity, note, menuItem_id, orderNumber, itemStatus)" + 
+                            "VALUES (@Quantity, @Note, @MenuItemId, @OrderNumber, @ItemStatus);";
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@Quantity", orderItem.Quantity);
+
+            if (orderItem.Note == null)
+                command.Parameters.AddWithValue("@Note", DBNull.Value);
+            else
+                command.Parameters.AddWithValue("@Note", orderItem.Note);
+
+            command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
+            command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
+            command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus.ToString());
+
+
+            command.Connection.Open();
+
+            int rowsChanged = command.ExecuteNonQuery();
+            if (rowsChanged != 1)
+            {
+                throw new Exception("Item addition failed");
+            }
+        }*/
+
 
         public List<OrderItem> DisplayOrderItems()
         {

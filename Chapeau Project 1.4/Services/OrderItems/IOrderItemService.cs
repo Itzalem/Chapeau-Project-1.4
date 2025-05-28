@@ -10,5 +10,7 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         List<OrderItem> DisplayItemsPerOrder(int orderNumber);
 
         List<OrderItem> GetByOrderNumber(int orderNumber);
+
+        void UpdateAllItemsStatus(EItemStatus updatedItemStatus, int orderNumber);
     }
 }

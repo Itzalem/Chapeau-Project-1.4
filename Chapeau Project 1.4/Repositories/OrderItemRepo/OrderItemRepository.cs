@@ -24,7 +24,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             int quantity = (int)reader["quantity"];
             string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
             int menuItemId = (int)reader["menuItem_id"];
-            
+
 
             MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);
 
@@ -38,7 +38,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 orderNumber
             );
 
-           
+
             //orderItem.MenuItem = new MenuItem(menuItemId, menuItemName, category, categoryStatus);
 
             return orderItem;
@@ -80,11 +80,11 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
             if (result != null)
             {
-                return (int?)Convert.ToInt32(result); 
+                return (int?)Convert.ToInt32(result);
             }
             else
             {
-                return null; 
+                return null;
             }
 
         }
@@ -98,7 +98,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
             command.Parameters.AddWithValue("@ExtraQuantity", extraQuantity);
             command.Parameters.AddWithValue("@Id", orderItemId);
-            command.ExecuteNonQuery();            
+            command.ExecuteNonQuery();
         }
 
         private void InsertOrderItem(SqlConnection connection, OrderItem orderItem)
@@ -122,53 +122,23 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         }
 
-
-
-        /*using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            string query = "INSERT INTO ORDER_ITEM (quantity, note, menuItem_id, orderNumber, itemStatus)" + 
-                            "VALUES (@Quantity, @Note, @MenuItemId, @OrderNumber, @ItemStatus);";
-            SqlCommand command = new SqlCommand(query, connection);
-
-            command.Parameters.AddWithValue("@Quantity", orderItem.Quantity);
-
-            if (orderItem.Note == null)
-                command.Parameters.AddWithValue("@Note", DBNull.Value);
-            else
-                command.Parameters.AddWithValue("@Note", orderItem.Note);
-
-            command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
-            command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
-            command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus.ToString());
-
-
-            command.Connection.Open();
-
-            int rowsChanged = command.ExecuteNonQuery();
-            if (rowsChanged != 1)
-            {
-                throw new Exception("Item addition failed");
-            }
-        }*/
-
-
         public List<OrderItem> DisplayOrderItems()
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-               string query = @"SELECT orderItem_id ,MNT.menuItem_id,MNT.menuItemName , MNT.category , MNT.categoryStatus, quantity, note, menuItemName, orderNumber, itemStatus
+                string query = @"SELECT orderItem_id ,MNT.menuItem_id,MNT.menuItemName , MNT.category , MNT.categoryStatus, quantity, note, menuItemName, orderNumber, itemStatus
                                     FROM ORDER_ITEM
                                     INNER JOIN MENU_ITEMS as MNT
                                     ON ORDER_ITEM.menuItem_id = MNT.menuItem_id
                                     WHERE MNT.category in ('Starters','Mains','Desserts') 
                                     AND ORDER_ITEM.itemStatus <> 'onHold'
                                     ORDER By MNT.category desc";
-                                    // in the where i need another filtering that states itemstatus is different in onhold so i will not catch the onhold orders 
+                // in the where i need another filtering that states itemstatus is different in onhold so i will not catch the onhold orders 
 
                 SqlCommand command = new SqlCommand(query, connection);
-                
+
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -192,7 +162,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = @"SELECT orderItem_id, quantity, note, menuItem_id, orderNumber, itemStatus 
-                                    FROM ORDER_ITEM  WHERE orderNumber = @orderNumber ;" ;
+                                    FROM ORDER_ITEM  WHERE orderNumber = @orderNumber ;";
 
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -216,7 +186,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         public List<OrderItem> GetByOrderNumber(int orderNumber)
         {
-            List<OrderItem > orderItems = new List<OrderItem>();    
+            List<OrderItem> orderItems = new List<OrderItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -242,7 +212,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
             return orderItems;
         }
-        
+
 
         public List<OrderItem> GetRunningItem()
         {
@@ -268,7 +238,25 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 reader.Close();
             }
 
-            return orderItems ; 
+            return orderItems;
+        }
+
+        public void UpdateAllItemsStatus(EItemStatus updatedItemStatus, int orderNumber)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = " UPDATE ORDER_ITEM SET itemStatus = @UpdatedItemStatus " +
+                                "WHERE orderNumber = @OrderNumber;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UpdatedItemStatus", updatedItemStatus.ToString());
+                command.Parameters.AddWithValue("@OrderNumber", orderNumber);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+            }
+
         }
 
         public void UpdateItemStatus(int orderItemId, EItemStatus newStatus)
@@ -287,7 +275,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
         }
 
-        public void UpdateCourseStatus(int orderNumber , EItemStatus newStatus)
+        public void UpdateCourseStatus(int orderNumber, EItemStatus newStatus)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -307,7 +295,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         public List<OrderItem> GetFinishedItems(DateTime date)
         {
-            List<OrderItem> orderItems = new List<OrderItem>(); 
+            List<OrderItem> orderItems = new List<OrderItem>();
 
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -331,7 +319,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 }
                 reader.Close();
             }
-            return orderItems; 
+            return orderItems;
         }
 
     }

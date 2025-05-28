@@ -216,9 +216,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return new{ OrderItemId  = orderItemId  , MenuItemId = menuItemId , Category = category , CategoryStatus = categoryStatus};
         }
 
-        public void CreateNewOrder(int tableNumber)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

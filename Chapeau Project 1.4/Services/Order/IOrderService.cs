@@ -8,5 +8,7 @@ namespace Chapeau_Project_1._4.Services.Order
 
         Chapeau_Project_1._4.Models.Order? GetOrderByTable(int? table);
 
+        void UpdateOrderStatus(EOrderStatus status, int orderNumber);
+
     }
 }

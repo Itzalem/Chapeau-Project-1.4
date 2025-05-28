@@ -32,5 +32,10 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         {
             return _orderItemRepository.GetByOrderNumber(orderNumber);
         }
+
+        public void UpdateAllItemsStatus(EItemStatus itemStatus, int orderNumber)
+        {
+            _orderItemRepository.UpdateAllItemsStatus(itemStatus, orderNumber);
+        }
     }
 }

@@ -7,8 +7,14 @@
     int orderNumber = (int)ViewData["OrderNumber"];  
 }
 
+@if (TempData["SuccesMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccesMessage"]
+    </div>
+}
 
-<div style="display: flex; gap: 20px;">
+<div style="display: flex; gap: 20pxc;">
 
     <div style="flex: 1; border: 1px solid #ccc; padding: 10px;">
         @await Component.InvokeAsync("Menu", new { orderNumber = orderNumber, cardFilter = cardFilter, categoryFilter = categoryFilter })
@@ -36,7 +42,7 @@
             </tbody>
         </table>
 
-        <a class="btn btn-success">Send</a>
+        <a class="btn btn-success" asp-controller="Order" asp-action="SendOrder" asp-route-orderNumber="@orderNumber">Send</a>
         <a class="btn btn-danger">Cancel</a>
         <a class="btn btn-primary">Pay</a>
     </div>

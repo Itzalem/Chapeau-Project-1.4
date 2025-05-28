@@ -78,7 +78,21 @@ namespace Chapeau_Project_1._4.Controllers
 
         }
 
+        public IActionResult SendOrder(int orderNumber) 
+            //i could pass the full order objet but i would have to update
+            //the model i use in the view to recieve a full order object
+            //and change every view and method, and repositories and services
+        {
 
+            //i pass the status because I'm reusing a method that its already expecting a status
+            _orderService.UpdateOrderStatus(EOrderStatus.pending, orderNumber);             
+
+            _orderItemService.UpdateAllItemsStatus(EItemStatus.pending, orderNumber);
+
+            TempData["SuccesMessage"] = "Order Sent Successfully";
+
+            return RedirectToAction("TakeOrder", new { orderNumber = orderNumber });
+        }
         
     }
 }

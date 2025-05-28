@@ -1,4 +1,6 @@
-﻿namespace Chapeau_Project_1._4.ViewModel
+﻿using Chapeau_Project_1._4.Models;
+
+namespace Chapeau_Project_1._4.ViewModel
 {
     public class RunningOrder
     {
@@ -9,6 +11,4 @@
         public List<RunningOrderItem> runningOrders { get; set; } = new List<RunningOrderItem>();   
         // Constructor is domain based, we don't need it in the viewmodel (UI) 
     }
-
- 
 }

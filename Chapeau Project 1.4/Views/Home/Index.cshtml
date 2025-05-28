@@ -7,6 +7,5 @@
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<a href="/Menu/DisplayMenu" class="btn-custom">Menu</a>
-<a href="/OrderOverview/DisplayOrder" class="btn-custom">Display Order</a>
-<a href="/OrderOverview/GetTable" class="btn-custom">Get Table</a>
+<a asp-controller="Order" asp-action="AddOrder" asp-route-tableNumber="5">Ver Orden 5</a>
+

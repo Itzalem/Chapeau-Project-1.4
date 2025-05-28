@@ -2,9 +2,13 @@
 {
     public enum EOrderStatus
     {
-        ordered,
+       
+        ordered, //is this one necessary?
+        
         pending,
+        inProgress, 
         prepared,
-        payed
+        paid
+            //paid an unpaid, other status will move to orderitem
     }
 }

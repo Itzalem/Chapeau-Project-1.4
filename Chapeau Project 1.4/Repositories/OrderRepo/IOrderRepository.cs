@@ -4,7 +4,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 {
     public interface IOrderRepository
     {
-        List<Order> DiplayOrder();
+        void CreateNewOrder(int tableNumber);
+        List<Order> DisplayOrder();
 
         // Get a single order by its OrderNumber.
         Order? GetOrderById(int id);
@@ -14,5 +15,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         void Update(Order order);
         // Update only the Status of an order.
         void UpdateOrderStatus (EOrderStatus status, int id);
+
+        object GetOrderMunuItemName(int OrderNumber);
     }
 }

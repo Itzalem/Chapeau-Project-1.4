@@ -1,4 +1,5 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Microsoft.Data.SqlClient;
 
 namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
@@ -6,43 +7,61 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
     public class OrderItemRepository : IOrderItemRepository
     {
         private readonly string? _connectionString;
+        private readonly IMenuRepository _menuRepository;
 
-        public OrderItemRepository(IConfiguration configuration)
+        public OrderItemRepository(IConfiguration configuration, IMenuRepository menuRepository)
         {
             // get (database connectionstring from appsetings 
             _connectionString = configuration.GetConnectionString("ChapeauRestaurant");
+            _menuRepository = menuRepository;
         }
 
         private OrderItem ReadOrderItem(SqlDataReader reader)
         {
-            int OrderNumber = (int)reader["orderNumber"];
+            int orderNumber = (int)reader["orderNumber"];
             EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
-            int OrderItemId = (int)reader["orderItem_id"];
+            int orderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
-            int MenuItemId = (int)reader["menuItem_id"];
-            string note = (string)reader["note"];
+            string MenuItemName = (string)reader["menuItemName"];
+            string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
+            int menuItemId = (int)reader["menuItem_id"];
+            string menuItemName = (string)reader["menuItemName"];
+            string category = (string)reader["category"];
+            ECategoryStatus categoryStatus = (ECategoryStatus)Enum.Parse(typeof(ECategoryStatus), reader["categoryStatus"].ToString()!);
 
 
-            return new OrderItem(
-            
-                OrderItemId,
+            var orderItem = new OrderItem(
+
+                orderItemId,
                 quantity,
                 note,
                 itemStatus,
-                MenuItemId,
+                menuItemId,
                 OrderNumber
-               
+
             );
+
+            orderItem.MenuItem = new MenuItem(menuItemId, menuItemName, category, categoryStatus);
+
+            return orderItem;
         }
-        public List<OrderItem> DisplayOrderItem()
+
+
+        public List<OrderItem> DisplayOrderItems(int orderNumber)
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT orderItem_id, quantity, note, menuItem_id, orderNumber, itemStatus
-                                FROM ORDER_ITEM";
+                string query = @"SELECT orderItem_id ,MNT.menuItem_id,MNT.menuItemName , MNT.category , MNT.categoryStatus, quantity, note, menuItemName, orderNumber, itemStatus
+                                    FROM ORDER_ITEM
+                                    INNER JOIN MENU_ITEMS as MNT
+                                    ON ORDER_ITEM.menuItem_id = MNT.menuItem_id
+                                     where MNT.category in ('Starters','Mains','Desserts')
+                                    ORDER By MNT.category desc";
                 SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -57,6 +76,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
             return orderItems;
         }
+
 
         public List<OrderItem> GetByOrderNumber(int orderNumber)
         {
@@ -95,7 +115,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = @" SELECT orderItem_id, orderNumber, menuItem_id, quantity, note, itemStatus
-                                  FROM Order_Item
+                                  FROM ORDER_ITEM
                                   WHERE itemStatus <> @ready
                                   ORDER BY orderNumber, orderItem_id;";
                 SqlCommand command = new SqlCommand(query, connection);
@@ -117,17 +137,65 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         public void UpdateItemStatus(int orderItemId, EItemStatus newStatus)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @" UPDATE ORDER_ITEM 
+                                  SET itemStatus = @st
+                                  WHERE orderItem_id = @id;";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@st", newStatus.ToString());
+                command.Parameters.AddWithValue("@id", orderItemId);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+            }
         }
 
-        public void UpdateCourseStatus(int orderNumber, string courseCategory, EItemStatus newStatus)
+        public void UpdateCourseStatus(int orderNumber , EItemStatus newStatus)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @" UPDATE ORDER_ITEM
+                                  SET itemStatus = @st
+                                  FROM ORDER_ITEM
+                                  JOIN MENU_ITEMS ON ORDER_ITEM.menuItem_id = MENU_ITEMS.menuItem_id
+                                  WHERE ORDER_ITEM.orderNumber = @ord;";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@st", newStatus.ToString());
+                command.Parameters.AddWithValue("@ord", orderNumber);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+            }
         }
 
         public List<OrderItem> GetFinishedItems(DateTime date)
         {
-            throw new NotImplementedException();
+            List<OrderItem> orderItems = new List<OrderItem>(); 
+
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @" SELECT orderItem_id, orderNumber, menuItem_id, quantity, note, itemStatus
+                                  FROM ORDER_ITEM
+                                  JOIN ORDERS ON ORDER_ITEM.orderNumber = ORDERS.orderNumber
+                                  WHERE ORDER_ITEM.itemStatus = @ready
+                                  AND CAST(ORDERS.orderTime AS DATE) = @dt;";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@ready", EItemStatus.ReadyToServe.ToString());
+                command.Parameters.AddWithValue("@dt", date.Date);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    OrderItem orderItem = ReadOrderItem(reader);
+                    orderItems.Add(orderItem);
+                }
+                reader.Close();
+            }
+            return orderItems; 
         }
     }
 }

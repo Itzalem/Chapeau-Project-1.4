@@ -19,7 +19,6 @@ namespace Chapeau_Project_1._4.Services
         public Personell? GetByLoginCredentials(string userName, string password)
         {
 
-            // Hash the password
             string hashedPassword = HashPassword(password);
 
             // Get the user from the database

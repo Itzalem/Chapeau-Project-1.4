@@ -11,11 +11,12 @@
 </div>
 
 <ul class="nav nav-pills">
-    
+
     @foreach (var cardEnum in Model.CategoriesDictionary.Keys)
     {
         <li class="nav-item">
-            <a class="nav-link @(Model.CardFilter == cardEnum ? "active" : "")" asp-action="DisplayMenu" asp-route-cardFilter="@cardEnum">@cardEnum</a>
+            <a class="nav-link @(Model.CardFilter == cardEnum ? "active" : "")" asp-controller="Order" asp-action="TakeOrder" asp-route-cardFilter="@cardEnum"
+                asp-route-orderNumber="@ViewData["OrderNumber"]" >@cardEnum</a>
         </li>
     }
 
@@ -27,14 +28,18 @@
     <p>Choose a Category:</p>
     @foreach (var category in Model.CategoriesDictionary[Model.CardFilter])
     {
-        <button class="btn btn-primary"
-                onclick="window.location.href='@Url.Action("DisplayMenu", new { cardFilter = Model.CardFilter, categoryFilter = category })'">
+        <a class="btn btn-primary" 
+            asp-controller="Order"
+            asp-action="TakeOrder"
+            asp-route-cardFilter="@Model.CardFilter"
+           asp-route-categoryFilter="@category" asp-route-orderNumber="@ViewData["OrderNumber"]">
             @category
-        </button>
+        </a>      
+
     }
 }
 
-<div class="tab-content overflow-scroll">
+<div class="tab-content">
     <!-- ALL muestra todo el menú sin filtro -->
     <div id="All" class="tab-pane fade show active">
         @foreach (var menuItem in Model.MenuItems)
@@ -69,12 +74,26 @@
 
                     <td style="text-align: right;">€@menuItem.Price</td>
 
+                    <td>
+                        <form asp-controller="Order" asp-action="InputItemDetails" method="post">
+                            <input type="hidden" name="MenuItemId" value="@menuItem.MenuItemId" />
+                            <input type="hidden" name="MenuItemName" value="@menuItem.MenuItemName" />
+                            <input type="hidden" name="Price" value="@menuItem.Price" />
+                            <input type="hidden" name="Stock" value="@menuItem.Stock" />
+                            <input type="hidden" name="Card" value="@menuItem.Card" />
+                            <input type="hidden" name="Category" value="@menuItem.Category" />
+
+                            <input type="hidden" name="OrderNumber" value="@ViewData["OrderNumber"]" />
+
+                            <button type="submit">Add to order</button>
+                        </form>
+                    </td>
                 </tr>
 
             </table>
 
         }
-    </div>  
+    </div>
 
 
 </div>

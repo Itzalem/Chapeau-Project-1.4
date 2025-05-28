@@ -1,5 +1,7 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.ViewModel;
 using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 
 namespace Chapeau_Project_1._4.Repositories.OrderRepo
 {
@@ -7,12 +9,15 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
     {
 
         private readonly string? _connectionString;
+        
 
         public OrderRepository(IConfiguration configuration)
         {
             // get (database connectionstring from appsetings 
             _connectionString = configuration.GetConnectionString("ChapeauRestaurant");
         }
+
+
         private Order ReadOrder(SqlDataReader reader)
         {
             int OrderNumber = (int)reader["orderNumber"];
@@ -22,7 +27,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
            
             return new Order(OrderNumber, Status, OrderTime, TableNumber);
         }
-        public List<Order> DiplayOrder()
+        public List<Order> DisplayOrder()
         {
             
             List<Order> orders = new List<Order>(); 
@@ -44,6 +49,34 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
             }
             return orders;
+        }
+
+        public int AddNewOrder(int tableNumber)  
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = $"INSERT INTO ORDERS (status, tableNumber, orderTime) " +
+                                $" VALUES (@Status, @TableNumber, @OrderTime); " +
+                                $"SELECT SCOPE_IDENTITY(); ";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Status", EOrderStatus.pending);
+                command.Parameters.AddWithValue("@TableNumber", tableNumber);
+                command.Parameters.AddWithValue("@OrderTime", DateTime.Now);
+
+                command.Connection.Open();
+
+                object orderId = command.ExecuteScalar();
+                if (orderId == null || orderId == DBNull.Value)
+                {
+                    throw new Exception("Failed to get order ID");
+                }
+
+                return Convert.ToInt32(orderId);
+
+            }
+
         }
 
         public Order? GetOrderById(int id)
@@ -120,5 +153,63 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 command.ExecuteNonQuery();
             }
         }
+
+
+
+        public object GetOrderMunuItemName(int OrderNumber) 
+        {
+            
+
+            List<object> orders = new List<object>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                #region Query TXT
+                string query = @"SELECT 
+                                mi.menuItem_id,
+                                mi.menuItemName,
+                                mi.category,
+	                            mi.categoryStatus
+                            FROM 
+                                Orders o
+                            INNER JOIN 
+                              ORDER_ITEM oi ON o.orderNumber = oi.orderNumber
+                            INNER JOIN 
+                                MENU_ITEMS mi ON oi.menuItem_id = mi.menuItem_id
+                            WHERE 
+                                o.orderNumber = @OrderNumber
+                            ORDER BY o.orderTime;";
+
+                #endregion
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@OrderNumber", OrderNumber);
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    object order = ReadOrderGraph(reader);
+                    return order;
+                }
+                reader.Close();
+
+            }
+            return null;
+
+        }
+
+
+
+        private object ReadOrderGraph(SqlDataReader reader)
+        {
+            int orderItemId = (int)reader["orderItem_id"];
+            int menuItemId = (int)reader["menuItem_id"];
+            string menuItemName = (string)reader["menuItemName"];
+            string category = (string)reader["category"];
+            ECategoryStatus categoryStatus = (ECategoryStatus)Enum.Parse(typeof(ECategoryStatus), reader["categoryStatus"].ToString()!);
+
+            return new{ OrderItemId  = orderItemId  , MenuItemId = menuItemId , Category = category , CategoryStatus = categoryStatus};
+        }
+
     }
 }

@@ -153,7 +153,7 @@
             @foreach (var group in order.runningOrders.GroupBy(i => i.RunnigOrderMenuItem.OrderItemCategory))
             {
                 var groupStatus = group.All(i => i.ItemStatus == EItemStatus.ReadyToServe) ? "ReadyToServe" :
-                group.Any(i => i.ItemStatus == EItemStatus.BeingPrepared || i.ItemStatus == EItemStatus.ReadyToServe) ? "BeingPrepared" : "Pending";
+                group.Any(i => i.ItemStatus == EItemStatus.InProgress || i.ItemStatus == EItemStatus.ReadyToServe) ? "InProgress" : "Pending";
                 <form method="post" asp-controller="Kitchen" asp-action="UpdateCourseStatus">
                     <input type="hidden" name="orderNumber" value="@order.OrderNumber" />
                     <input type="hidden" name="itemStatus" value="@groupStatus" />
@@ -176,7 +176,7 @@
                             </div>
                             <select name="itemStatus" onchange="this.form.submit()">
                                 <option selected disabled>@item.ItemStatus</option>
-                                <option value="BeingPrepared">In Progress</option>
+                                <option value="InProgress">In Progress</option>
                                 <option value="ReadyToServe">Ready to Serve</option>
                             </select>
                         </div>
@@ -187,7 +187,7 @@
 
             @{
                 var overallStatus = order.runningOrders.All(i => i.ItemStatus == EItemStatus.ReadyToServe) ? "Completed"
-                : order.runningOrders.All(i => i.ItemStatus == EItemStatus.BeingPrepared) ? "InProgress"
+                : order.runningOrders.All(i => i.ItemStatus == EItemStatus.InProgress) ? "InProgress"
                 : "Pending";
             }
      

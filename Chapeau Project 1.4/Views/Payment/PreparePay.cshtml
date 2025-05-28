@@ -1,0 +1,27 @@
+﻿@model Chapeau_Project_1._4.ViewModel.FinishOrder
+
+@{
+    ViewData["Title"] = "Prepare payment";
+}
+
+<h4>Prepare payment</h4>
+
+<form action="/Payment/PreparePay" method="Post">
+    <label for="Tip">tip amount:</label>
+    <input type="number" id="Tip" name="Tip" class="form-control" required value="@Model?.Payment.Tip" />
+
+    <label for="PayType">Payment Method:</label>
+    <select type="select" id="PayType" name="PayType" class="form-control" required value="@Model?.Payment.PaymentType">
+        <option value="DebitCard">Debitcard</option>
+        <option value="CreditCard">Debitcard</option>
+        <option value="Cash">Debitcard</option>
+    </select>
+
+    <label for="Feedback">Feedback:</label>
+    <input type="text" id="Feedback" name="Feedback" class="form-control" required value="@Model?.Payment.Feedback" />
+
+    <button type="submit" class="btn btn-primary">Send</button>
+
+</form>
+
+<a href="/RestaurantTable/GetTable"> Back to list</a>

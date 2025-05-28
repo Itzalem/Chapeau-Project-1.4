@@ -62,7 +62,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@Status", EOrderStatus.pending);
+                command.Parameters.AddWithValue("@Status", EOrderStatus.onHold);
                 command.Parameters.AddWithValue("@TableNumber", tableNumber);
                 command.Parameters.AddWithValue("@OrderTime", DateTime.Now);
 

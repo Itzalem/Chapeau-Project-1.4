@@ -83,9 +83,10 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                                     FROM ORDER_ITEM
                                     INNER JOIN MENU_ITEMS as MNT
                                     ON ORDER_ITEM.menuItem_id = MNT.menuItem_id
-                                     where MNT.category in ('Starters','Mains','Desserts')
+                                    WHERE MNT.category in ('Starters','Mains','Desserts') 
+                                    AND ORDER_ITEM.itemStatus <> 'onHold'
                                     ORDER By MNT.category desc";
-
+                                    // in the where i need another filtering that states itemstatus is different in onhold so i will not catch the onhold orders 
 
                 SqlCommand command = new SqlCommand(query, connection);
                 

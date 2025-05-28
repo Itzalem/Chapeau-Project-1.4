@@ -35,7 +35,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT orderNumber, status, tableNumber, orderTime FROM ORDERS";
+                string query = @"SELECT orderNumber, status, tableNumber, orderTime 
+                                 FROM ORDERS
+                                 WHERE status <> 'onHold'";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();

@@ -79,17 +79,17 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT orderItem_id, quantity, note, menuItem_id, orderNumber, itemStatus 
-                                FROM ORDER_ITEM  WHERE orderNumber = @orderNumber ;" ;
+                //string query = @"SELECT orderItem_id, quantity, note, menuItem_id, orderNumber, itemStatus 
+                //                FROM ORDER_ITEM  WHERE orderNumber = @orderNumber ;" ;
 
 
 
-                /*string query = @"SELECT orderItem_id ,MNT.menuItem_id,MNT.menuItemName , MNT.category , MNT.categoryStatus, quantity, note, menuItemName, orderNumber, itemStatus
+                string query = @"SELECT orderItem_id ,MNT.menuItem_id,MNT.menuItemName , MNT.category , MNT.categoryStatus, quantity, note, menuItemName, orderNumber, itemStatus
                                     FROM ORDER_ITEM
                                     INNER JOIN MENU_ITEMS as MNT
                                     ON ORDER_ITEM.menuItem_id = MNT.menuItem_id
                                      where MNT.category in ('Starters','Mains','Desserts')
-                                    ORDER By MNT.category desc";*/
+                                    ORDER By MNT.category desc";
 
 
                 SqlCommand command = new SqlCommand(query, connection);

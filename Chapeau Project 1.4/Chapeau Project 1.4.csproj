@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Repositories\RestaurantTableRepo\Menu\" />
     <Folder Include="Views\Order\" />
   </ItemGroup>
 

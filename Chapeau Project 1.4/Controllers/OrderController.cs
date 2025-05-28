@@ -56,7 +56,7 @@ namespace Chapeau_Project_1._4.Controllers
             OrderItem orderItem = new OrderItem
             {
                 MenuItem = menuItem,
-                ItemStatus = EItemStatus.NotOrdered,
+                ItemStatus = EItemStatus.pending,
                 OrderNumber = OrderNumber,
             };
 

@@ -35,7 +35,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT orderNumber, status, tableNumber, orderTime FROM ORDERS";
+                string query = @"SELECT orderNumber, status, tableNumber, orderTime 
+                                 FROM ORDERS
+                                 WHERE status <> 'onHold'";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();
@@ -62,7 +64,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@Status", EOrderStatus.pending);
+                command.Parameters.AddWithValue("@Status", EOrderStatus.onHold);
                 command.Parameters.AddWithValue("@TableNumber", tableNumber);
                 command.Parameters.AddWithValue("@OrderTime", DateTime.Now);
 

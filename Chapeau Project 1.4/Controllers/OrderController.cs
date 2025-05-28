@@ -30,7 +30,7 @@ namespace Chapeau_Project_1._4.Controllers
         public IActionResult TakeOrder(int orderNumber, ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
             // Sólo pasamos a la vista los orderItems; el menú lo carga el ViewComponent
-            List <OrderItem> orderItems = _orderItemService.DisplayOrderItems(orderNumber);
+            List <OrderItem> orderItems = _orderItemService.DisplayItemsPerOrder(orderNumber);
 
             ViewData["CardFilter"] = cardFilter;
             ViewData["CategoryFilter"] = categoryFilter;

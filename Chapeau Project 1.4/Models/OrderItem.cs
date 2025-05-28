@@ -1,6 +1,6 @@
 ﻿namespace Chapeau_Project_1._4.Models
 {
-    public enum EItemStatus {NotOrdered, pending , BeingPrepared, ReadyToServe }
+    public enum EItemStatus {NotOrdered, pending , InProgress, ReadyToServe }
     public class OrderItem
     {
         public int OrderItemId { get; set; }    
@@ -17,13 +17,12 @@
 
         }
 
-        public OrderItem (int orderItemId, int quantity, string note, EItemStatus itemStatus, int menuItemId, MenuItem menuItem, int orderNumber)
+        public OrderItem (int orderItemId, int quantity, string note, EItemStatus itemStatus, MenuItem menuItem, int orderNumber)
         {
             OrderItemId = orderItemId;
             Quantity = quantity;
             Note = note;
-            ItemStatus = itemStatus;
-            MenuItemId = menuItemId;    
+            ItemStatus = itemStatus;    
             MenuItem = menuItem;
             OrderNumber = orderNumber;
         }

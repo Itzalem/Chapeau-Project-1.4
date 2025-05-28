@@ -22,9 +22,7 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpGet]
         public IActionResult AddOrder(int tableNumber)
         {
-            int newOrderNumber = _orderService.AddNewOrder(tableNumber);
-
-            
+            int newOrderNumber = _orderService.AddNewOrder(tableNumber);            
 
             return RedirectToAction("TakeOrder", new { orderNumber = newOrderNumber });
         }

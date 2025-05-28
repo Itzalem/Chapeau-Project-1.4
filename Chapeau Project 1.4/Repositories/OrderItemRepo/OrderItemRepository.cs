@@ -1,4 +1,5 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Microsoft.Data.SqlClient;
 
 namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
@@ -6,18 +7,20 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
     public class OrderItemRepository : IOrderItemRepository
     {
         private readonly string? _connectionString;
+        private readonly IMenuRepository _menuRepository;
 
-        public OrderItemRepository(IConfiguration configuration)
+        public OrderItemRepository(IConfiguration configuration, IMenuRepository menuRepository)
         {
             // get (database connectionstring from appsetings 
             _connectionString = configuration.GetConnectionString("ChapeauRestaurant");
+            _menuRepository = menuRepository;
         }
 
         private OrderItem ReadOrderItem(SqlDataReader reader)
         {
-            int OrderNumber = (int)reader["orderNumber"];
+            int orderNumber = (int)reader["orderNumber"];
             EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
-            int OrderItemId = (int)reader["orderItem_id"];
+            int orderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
             string MenuItemName = (string)reader["menuItemName"];
             string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
@@ -28,8 +31,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
 
             var orderItem = new OrderItem(
-            
-                OrderItemId,
+
+                orderItemId,
                 quantity,
                 note,
                 itemStatus,
@@ -42,7 +45,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
             return orderItem;
         }
-        public List<OrderItem> DisplayOrderItem()
+
+
+        public List<OrderItem> DisplayOrderItems(int orderNumber)
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 
@@ -55,6 +60,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                                      where MNT.category in ('Starters','Mains','Desserts')
                                     ORDER By MNT.category desc";
                 SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -69,6 +76,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
             return orderItems;
         }
+
 
         public List<OrderItem> GetByOrderNumber(int orderNumber)
         {

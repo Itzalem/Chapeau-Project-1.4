@@ -16,6 +16,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             // get (database connectionstring from appsetings 
             _connectionString = configuration.GetConnectionString("ChapeauRestaurant");
         }
+
+
         private Order ReadOrder(SqlDataReader reader)
         {
             int OrderNumber = (int)reader["orderNumber"];
@@ -49,30 +51,33 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return orders;
         }
 
-        public void CreateNewOrder(int tableNumber)
+        public int AddNewOrder(int tableNumber)  
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = $"INSERT INTO ORDERS (status, tableNumber, orderTime " +
-                                $" VALUES (@Status, @TableNumber, @OrderTime); ";
+                string query = $"INSERT INTO ORDERS (status, tableNumber, orderTime) " +
+                                $" VALUES (@Status, @TableNumber, @OrderTime); " +
+                                $"SELECT SCOPE_IDENTITY(); ";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@Status", "Draft");
+                command.Parameters.AddWithValue("@Status", EOrderStatus.pending);
                 command.Parameters.AddWithValue("@TableNumber", tableNumber);
                 command.Parameters.AddWithValue("@OrderTime", DateTime.Now);
 
                 command.Connection.Open();
-                int rowsChanged = command.ExecuteNonQuery();
-                if (rowsChanged != 1)
+
+                object orderId = command.ExecuteScalar();
+                if (orderId == null || orderId == DBNull.Value)
                 {
-                    throw new Exception("Error in creating new order");
+                    throw new Exception("Failed to get order ID");
                 }
+
+                return Convert.ToInt32(orderId);
 
             }
 
         }
-
 
         public Order? GetOrderById(int id)
         {

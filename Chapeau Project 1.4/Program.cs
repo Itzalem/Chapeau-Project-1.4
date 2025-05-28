@@ -8,7 +8,8 @@ using Chapeau_Project_1._4.Repositories.RestaurantTableRepo;
 using Chapeau_Project_1._4.Services;
 using Chapeau_Project_1._4.Services.Drinks;
 using Chapeau_Project_1._4.Services.Menu;
-using Chapeau_Project_1._4.Services.Orders;
+using Chapeau_Project_1._4.Services.Order;
+using Chapeau_Project_1._4.Services.OrderItems;
 using Chapeau_Project_1._4.Services.OrderOverview;
 using Chapeau_Project_1._4.Services.RestaurantTableService;
 
@@ -33,15 +34,15 @@ namespace Chapeau_Project_1._4
             });
 
             builder.Services.AddControllersWithViews();
-            
-            builder.Services.AddSingleton<IMenuRepository, MenuRepository>();
-            builder.Services.AddSingleton<IMenuService, MenuService>();
 
             builder.Services.AddSingleton<IOrderService, OrderService>();
             builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 
-            builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();
-            builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();
+            builder.Services.AddSingleton<IMenuRepository, MenuRepository>();
+            builder.Services.AddSingleton<IMenuService, MenuService>();
+
+            builder.Services.AddSingleton<IOrderItemService, OrderItemService>();
+            builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();           
 
             builder.Services.AddSingleton<IOrderOverviewService, OrderOverviewService>();
             builder.Services.AddSingleton<IOrderOverviewRepository, OrderOverviewRepository>();

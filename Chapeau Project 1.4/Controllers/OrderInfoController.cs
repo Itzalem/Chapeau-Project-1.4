@@ -2,7 +2,7 @@
 using Chapeau_Project_1._4.Services.Menu;
 using Chapeau_Project_1._4.Services.Drinks;
 using Microsoft.AspNetCore.Mvc;
-using Chapeau_Project_1._4.Services.Orders;
+using Chapeau_Project_1._4.Services.Order;
 using Chapeau_Project_1._4.Services.OrderItems;
 using Chapeau_Project_1._4.ViewModel;
 
@@ -23,7 +23,7 @@ namespace Chapeau_Project_1._4.Controllers
             _orderItemService = orderItemService;
         }
 
-        public IActionResult Index(int? table)
+        /*public IActionResult Index(int? table)
         {
             Order? order = _orderService.GetOrderByTable(table);
 
@@ -34,7 +34,7 @@ namespace Chapeau_Project_1._4.Controllers
 
             foreach (OrderItem orderItem in orderItems)
             {
-                MenuItem menuItem = _menuService.GetMenuById(orderItem.MenuItemId);
+                MenuItem menuItem = _menuService.GetMenuItemById(orderItem.MenuItemId);
                 menuItems.Add(menuItem);
 
                 Drink drink = _drinkService.GetDrinks(orderItem.MenuItemId);
@@ -45,6 +45,6 @@ namespace Chapeau_Project_1._4.Controllers
             OrderInfo orderInfo = new OrderInfo(order, orderItems, menuItems, drinks);
 
             return View(orderInfo);
-        }
+        }*/
     }
 }

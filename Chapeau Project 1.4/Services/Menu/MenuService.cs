@@ -47,9 +47,9 @@ namespace Chapeau_Project_1._4.Services.Menu
             return categoriesByCard;
         }
 
-        public MenuItem GetMenuById(int? menuItemId)
+        public MenuItem GetMenuItemById(int menuItemId)
         {
-            return _menuRepository.GetMenuById(menuItemId);
+            return _menuRepository.GetMenuItemById(menuItemId);
         }
     }
 }

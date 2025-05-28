@@ -22,12 +22,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
             int orderItemId = (int)reader["orderItem_id"];
             int quantity = (int)reader["quantity"];
-            //string MenuItemName = (string)reader["menuItemName"];
             string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
             int menuItemId = (int)reader["menuItem_id"];
-            //string menuItemName = (string)reader["menuItemName"];
-            //string category = (string)reader["category"];
-            //ECategoryStatus categoryStatus = (ECategoryStatus)Enum.Parse(typeof(ECategoryStatus), reader["categoryStatus"].ToString()!);
+            
 
             MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);
 
@@ -233,5 +230,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
             return orderItems; 
         }
+
     }
 }

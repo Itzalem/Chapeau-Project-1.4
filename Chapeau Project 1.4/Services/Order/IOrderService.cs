@@ -6,7 +6,7 @@ namespace Chapeau_Project_1._4.Services.Order
     {
         int AddNewOrder(int tableNumber);
 
-        //Order? GetOrderByTable(int? table);
+        Chapeau_Project_1._4.Models.Order? GetOrderByTable(int? table);
 
     }
 }

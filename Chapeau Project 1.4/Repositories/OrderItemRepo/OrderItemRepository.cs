@@ -61,7 +61,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
                 command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
                 command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
-                command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus);
+                command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus.ToString());
+
 
                 command.Connection.Open();
 

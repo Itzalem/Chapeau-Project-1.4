@@ -3,8 +3,7 @@
     public enum EOrderStatus
     {
        
-        onHold,
-        
+        onHold,        
         pending,
         inProgress, 
         prepared,

@@ -22,6 +22,13 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpGet]
         public IActionResult AddOrder(int tableNumber)
         {
+            Order order = _orderService.GetOrderByTable(tableNumber);
+
+            if (order != null)
+            {
+                return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
+            }
+
             int newOrderNumber = _orderService.AddNewOrder(tableNumber);            
 
             return RedirectToAction("TakeOrder", new { orderNumber = newOrderNumber });

@@ -18,9 +18,9 @@ namespace Chapeau_Project_1._4.Services.Order
             return _orderRepository.AddNewOrder(tableNumber);
         }
 
-        /*public Order? GetOrderByTable(int? table)
-      {
+        public Chapeau_Project_1._4.Models.Order? GetOrderByTable(int? table)
+        {
           return _orderRepository.GetOrderByTable(table);
-      }*/
+        }
     }
 }

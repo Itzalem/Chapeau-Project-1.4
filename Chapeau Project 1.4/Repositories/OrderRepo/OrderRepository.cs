@@ -21,7 +21,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         private Order ReadOrder(SqlDataReader reader)
         {
             int OrderNumber = (int)reader["orderNumber"];
-            EOrderStatus Status =(EOrderStatus)Enum.Parse(typeof(EOrderStatus) ,reader["status"].ToString()!);
+            EOrderStatus Status = (EOrderStatus)Enum.Parse(typeof(EOrderStatus), reader["status"].ToString()!, true);
             DateTime OrderTime = (DateTime)reader["orderTime"];
             int TableNumber = (int)reader["tableNumber"];
            
@@ -64,7 +64,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@Status", EOrderStatus.onHold);
+                command.Parameters.AddWithValue("@Status", EOrderStatus.onHold.ToString());
                 command.Parameters.AddWithValue("@TableNumber", tableNumber);
                 command.Parameters.AddWithValue("@OrderTime", DateTime.Now);
 
@@ -86,7 +86,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query =@"SELECT orderNumber, status, tableNumber, orderTim FROM Orders WHERE orderNumber = @id";
+                string query =@"SELECT orderNumber, status, tableNumber, orderTime FROM Orders WHERE orderNumber = @id";
 
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", id);
@@ -107,7 +107,11 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT orderNumber, status, tableNumber, orderTim FROM Orders WHERE tableNumber = @table";
+                string query = @"SELECT orderNumber, status, tableNumber, orderTime 
+                                 FROM ORDERS 
+                                 WHERE tableNumber = @table
+                                 AND status IN ('pending', 'inProgress', 'prepared')";
+                                
 
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@table", table);

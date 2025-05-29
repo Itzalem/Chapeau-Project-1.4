@@ -259,6 +259,27 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         }
 
+        public void ReduceItemStock(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = " UPDATE MENU_ITEMS SET stock = stock - @UpdatedStock " +
+                                "WHERE menuItem_id = @MenuItem_Id;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UpdatedStock", orderItem.Quantity);
+                command.Parameters.AddWithValue("@MenuItem_Id", orderItem.MenuItem.MenuItemId);
+
+                command.Connection.Open();
+                int rows = command.ExecuteNonQuery();
+                if (rows != 1)
+                {
+                    throw new Exception("Failed to reduce stock");
+                }
+            }
+        }
+
         public void UpdateItemStatus(int orderItemId, EItemStatus newStatus)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

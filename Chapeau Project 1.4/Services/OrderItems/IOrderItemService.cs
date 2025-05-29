@@ -12,5 +12,7 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         List<OrderItem> GetByOrderNumber(int orderNumber);
 
         void UpdateAllItemsStatus(EItemStatus updatedItemStatus, Chapeau_Project_1._4.Models.Order order);
+
+        void ReduceItemStock(OrderItem orderItem);
     }
 }

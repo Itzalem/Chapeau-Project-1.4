@@ -15,6 +15,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         //Change the status for every order item in the list thats onHold
         void UpdateAllItemsStatus(EItemStatus updatedItemStatus, Order order);
 
+        void ReduceItemStock(OrderItem orderItem);
+
         //Change the status for one specific order‐item
         void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
         void UpdateCourseStatus(int orderNumber, EItemStatus newStatus);

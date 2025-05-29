@@ -27,14 +27,6 @@
             OrderNumber = orderNumber;
         }
 
-        //public OrderItem(int orderItemId, int quantity, string note, EItemStatus itemStatus, int menuItemId, int orderNumber)
-        //{
-        //    OrderItemId = orderItemId;
-        //    Quantity = quantity;
-        //    Note = note;
-        //    ItemStatus = itemStatus;
-        //    MenuItemId = menuItemId;
-        //    OrderNumber = orderNumber;
-        //}
+       
     }
 }

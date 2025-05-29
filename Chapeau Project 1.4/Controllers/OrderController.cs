@@ -88,6 +88,11 @@ namespace Chapeau_Project_1._4.Controllers
 
             _orderItemService.UpdateAllItemsStatus(EItemStatus.pending, order);
 
+            foreach (OrderItem orderItem in order.OrderItems)
+            {
+                _orderItemService.ReduceItemStock(orderItem);
+            }
+
             TempData["SuccesMessage"] = "Order Sent Successfully";
 
             return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });

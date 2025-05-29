@@ -37,5 +37,10 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         {
             _orderItemRepository.UpdateAllItemsStatus(itemStatus, order);
         }
+
+        public void ReduceItemStock(OrderItem orderItem)
+        {
+            _orderItemRepository.ReduceItemStock(orderItem);
+        }
     }
 }

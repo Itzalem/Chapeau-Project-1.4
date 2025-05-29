@@ -161,7 +161,64 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             }
         }
 
+        public void CancelUnsentOrder(Order order)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @"DELETE FROM ORDER_ITEM 
+                                 WHERE itemStatus = @Status and orderNumber = @OrderNumber ";
 
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Status", EItemStatus.onHold.ToString());
+                command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
+
+                command.Connection.Open();
+                command.ExecuteNonQuery();
+
+                int itemsInList = CountItemsInOrder(order);
+
+                if (itemsInList == 0)
+                {
+                    DeleteEmptyOrder(order);
+                }
+            }
+        }
+
+        public int CountItemsInOrder (Order order)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT COUNT(*) FROM ORDER_ITEM WHERE orderNumber = @OrderNumber; ";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
+
+                command.Connection.Open();
+
+                return (int)command.ExecuteScalar();
+            }
+        }
+
+
+        public void DeleteEmptyOrder(Order order)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+
+                string query = "DELETE FROM ORDERS WHERE orderNumber = @OrderNumber";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
+
+                command.Connection.Open();
+
+                command.ExecuteNonQuery();
+
+            }
+        }              
 
         public object GetOrderMunuItemName(int OrderNumber) 
         {

@@ -49,11 +49,19 @@
             <input type="hidden" asp-for="OrderTime" />
             <input type="hidden" asp-for="TableNumber" />
 
-            <button type="submit" class="btn btn-success">Send Order</button>
+            <button type="submit" class="btn btn-success">Send</button>
         </form>
-        
-        @* <a class="btn btn-success" asp-controller="Order" asp-action="SendOrder" asp-route-orderNumber="@Model.OrderNumber">Send</a> *@
-        <a class="btn btn-danger">Cancel</a>
+
+        <form asp-controller="Order" asp-action="CancelOrder" method="post">
+
+            <input type="hidden" asp-for="OrderNumber" />
+            <input type="hidden" asp-for="Status" />
+            <input type="hidden" asp-for="OrderTime" />
+            <input type="hidden" asp-for="TableNumber" />
+
+            <button type="submit" class="btn btn-success">Cancel</button>
+        </form>
+
         <a class="btn btn-primary">Pay</a>
     </div>
 

@@ -79,9 +79,10 @@ namespace Chapeau_Project_1._4.Controllers
 
         }
 
+        [HttpPost]
         public IActionResult SendOrder(Order order) 
         {
-            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
+            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order); //to load the list in the order object
 
             //i pass only the order number because I'm reusing a kitchen method that its already expecting a status
             _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);             
@@ -97,6 +98,20 @@ namespace Chapeau_Project_1._4.Controllers
 
             return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
         }
-        
+
+        [HttpPost]
+        public IActionResult CancelOrder(Order order)
+        {
+            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);  //to load the list in the order object
+                       
+            _orderService.CancelUnsentOrder(order);                   
+
+            TempData["CancelMessage"] = "Order Canceled";
+
+            return RedirectToAction("Index", "Home");
+
+        }
+
+
     }
 }

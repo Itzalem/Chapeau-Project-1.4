@@ -7,6 +7,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         int AddNewOrder(int tableNumber);
         List<Order> DisplayOrder();
 
+        void CancelUnsentOrder(Order order);
+
         // Get a single order by its OrderNumber.
         Order? GetOrderByNumber(int orderNumber);
         // Get a single order by its tableNumber

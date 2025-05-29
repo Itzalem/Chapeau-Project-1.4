@@ -7,10 +7,10 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         void AddOrderItem(OrderItem orderItem);
 
         List<OrderItem> DisplayOrderItems();
-        List<OrderItem> DisplayItemsPerOrder(int orderNumber);
+        List<OrderItem> DisplayItemsPerOrder(Chapeau_Project_1._4.Models.Order order);
 
         List<OrderItem> GetByOrderNumber(int orderNumber);
 
-        void UpdateAllItemsStatus(EItemStatus updatedItemStatus, int orderNumber);
+        void UpdateAllItemsStatus(EItemStatus updatedItemStatus, Chapeau_Project_1._4.Models.Order order);
     }
 }

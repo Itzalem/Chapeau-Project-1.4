@@ -1,10 +1,9 @@
-﻿@model List<Chapeau_Project_1._4.Models.OrderItem>
+﻿@model Chapeau_Project_1._4.Models.Order
 
 @{
     ViewData["Title"] = "Take Order";
     ECardOptions cardFilter = (ECardOptions)ViewData["CardFilter"];
-    ECategoryOptions categoryFilter = (ECategoryOptions)ViewData["CategoryFilter"];
-    int orderNumber = (int)ViewData["OrderNumber"];  
+    ECategoryOptions categoryFilter = (ECategoryOptions)ViewData["CategoryFilter"];    
 }
 
 @if (TempData["SuccesMessage"] != null)
@@ -17,7 +16,7 @@
 <div style="display: flex; gap: 20pxc;">
 
     <div style="flex: 1; border: 1px solid #ccc; padding: 10px;">
-        @await Component.InvokeAsync("Menu", new { orderNumber = orderNumber, cardFilter = cardFilter, categoryFilter = categoryFilter })
+        @await Component.InvokeAsync("Menu", new { orderNumber = Model.OrderNumber, cardFilter = cardFilter, categoryFilter = categoryFilter })
     </div>
 
     <div style="flex: 1; border: 1px solid #ccc; padding: 10px;">
@@ -31,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.OrderItems)
                 {
                     <tr>
                         <td>@item.MenuItem.MenuItemName</td>
@@ -42,7 +41,18 @@
             </tbody>
         </table>
 
-        <a class="btn btn-success" asp-controller="Order" asp-action="SendOrder" asp-route-orderNumber="@orderNumber">Send</a>
+        
+        <form asp-controller="Order" asp-action="SendOrder" method="post">
+                
+            <input type="hidden" asp-for="OrderNumber" />
+            <input type="hidden" asp-for="Status" />
+            <input type="hidden" asp-for="OrderTime" />
+            <input type="hidden" asp-for="TableNumber" />
+
+            <button type="submit" class="btn btn-success">Send Order</button>
+        </form>
+        
+        @* <a class="btn btn-success" asp-controller="Order" asp-action="SendOrder" asp-route-orderNumber="@Model.OrderNumber">Send</a> *@
         <a class="btn btn-danger">Cancel</a>
         <a class="btn btn-primary">Pay</a>
     </div>

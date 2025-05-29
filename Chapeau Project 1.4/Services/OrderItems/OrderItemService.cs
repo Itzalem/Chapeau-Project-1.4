@@ -22,9 +22,9 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             return _orderItemRepository.DisplayOrderItems();
         }
 
-        public List<OrderItem> DisplayItemsPerOrder(int orderNumber)
+        public List<OrderItem> DisplayItemsPerOrder(Chapeau_Project_1._4.Models.Order order)
         {
-            return _orderItemRepository.DisplayItemsPerOrder(orderNumber);
+            return _orderItemRepository.DisplayItemsPerOrder(order);
         }
         
 
@@ -33,9 +33,9 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             return _orderItemRepository.GetByOrderNumber(orderNumber);
         }
 
-        public void UpdateAllItemsStatus(EItemStatus itemStatus, int orderNumber)
+        public void UpdateAllItemsStatus(EItemStatus itemStatus, Chapeau_Project_1._4.Models.Order order)
         {
-            _orderItemRepository.UpdateAllItemsStatus(itemStatus, orderNumber);
+            _orderItemRepository.UpdateAllItemsStatus(itemStatus, order);
         }
     }
 }

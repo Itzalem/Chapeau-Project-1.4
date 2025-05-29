@@ -8,7 +8,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         List<Order> DisplayOrder();
 
         // Get a single order by its OrderNumber.
-        Order? GetOrderById(int id);
+        Order? GetOrderByNumber(int orderNumber);
         // Get a single order by its tableNumber
         Order? GetOrderByTable(int? table);
         // Update all properties of an order.

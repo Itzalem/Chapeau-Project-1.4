@@ -21,30 +21,31 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddOrder(int tableNumber)
+        public IActionResult AddOrder(int tableNumber) //pass only table number because i dont have an order yet, i create it in this method
         {
-            Order order = _orderService.GetOrderByTable(tableNumber);
+            Order order = _orderService.GetOrderByTable(tableNumber); //too veryfy if the table already has an order open
 
             if (order != null)
             {
                 return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
             }
 
-            int newOrderNumber = _orderService.AddNewOrder(tableNumber);            
+            int newOrderNumber = _orderService.AddNewOrder(tableNumber); 
 
             return RedirectToAction("TakeOrder", new { orderNumber = newOrderNumber });
         }
 
+
         public IActionResult TakeOrder(int orderNumber, ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
-            // Sólo pasamos a la vista los orderItems; el menú lo carga el ViewComponent
-            List <OrderItem> orderItems = _orderItemService.DisplayItemsPerOrder(orderNumber);
+            Order order = _orderService.GetOrderByNumber(orderNumber);
+           
+            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 
             ViewData["CardFilter"] = cardFilter;
             ViewData["CategoryFilter"] = categoryFilter;
-            ViewData["OrderNumber"] = orderNumber;
-
-            return View(orderItems);
+            
+            return View(order);
         }
 
 
@@ -78,20 +79,18 @@ namespace Chapeau_Project_1._4.Controllers
 
         }
 
-        public IActionResult SendOrder(int orderNumber) 
-            //i could pass the full order objet but i would have to update
-            //the model i use in the view to recieve a full order object
-            //and change every view and method, and repositories and services
+        public IActionResult SendOrder(Order order) 
         {
+            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 
-            //i pass the status because I'm reusing a method that its already expecting a status
-            _orderService.UpdateOrderStatus(EOrderStatus.pending, orderNumber);             
+            //i pass only the order number because I'm reusing a kitchen method that its already expecting a status
+            _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);             
 
-            _orderItemService.UpdateAllItemsStatus(EItemStatus.pending, orderNumber);
+            _orderItemService.UpdateAllItemsStatus(EItemStatus.pending, order);
 
             TempData["SuccesMessage"] = "Order Sent Successfully";
 
-            return RedirectToAction("TakeOrder", new { orderNumber = orderNumber });
+            return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
         }
         
     }

@@ -82,14 +82,14 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
         }
 
-        public Order? GetOrderById(int id)
+        public Order? GetOrderByNumber(int orderNumber)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query =@"SELECT orderNumber, status, tableNumber, orderTime FROM Orders WHERE orderNumber = @id";
+                string query = @"SELECT orderNumber, status, tableNumber, orderTime FROM Orders WHERE orderNumber = @orderNumber ";
 
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
                 command.Connection.Open();
 

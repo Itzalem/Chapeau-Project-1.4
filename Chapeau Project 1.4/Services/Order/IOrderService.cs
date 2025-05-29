@@ -10,5 +10,6 @@ namespace Chapeau_Project_1._4.Services.Order
 
         void UpdateOrderStatus(EOrderStatus status, int orderNumber);
 
+        Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber);
     }
 }

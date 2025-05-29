@@ -28,5 +28,10 @@ namespace Chapeau_Project_1._4.Services.Order
             _orderRepository.UpdateOrderStatus(updatedItemStatus, orderNumber);
         }
 
+
+        public Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber)
+        {
+            return _orderRepository.GetOrderByNumber(orderNumber);
+        }
     }
 }

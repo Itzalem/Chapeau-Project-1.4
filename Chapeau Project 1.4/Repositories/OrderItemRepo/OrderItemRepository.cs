@@ -155,7 +155,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         }
 
 
-        public List<OrderItem> DisplayItemsPerOrder(Order order)
+        public List<OrderItem> DisplayItemsPerOrder(int orderNumber)
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 
@@ -167,7 +167,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@orderNumber", order.OrderNumber);
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();

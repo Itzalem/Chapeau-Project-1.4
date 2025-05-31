@@ -9,7 +9,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         //Returns all items belonging to a specific order
         List<OrderItem> GetByOrderNumber(int orderNumber);
         List<OrderItem> DisplayOrderItems();
-        List<OrderItem> DisplayItemsPerOrder(Order order);
+        List<OrderItem> DisplayItemsPerOrder(int OrderNumber);
         List<OrderItem> GetRunningItem();
 
         //Change the status for every order item in the list thats onHold

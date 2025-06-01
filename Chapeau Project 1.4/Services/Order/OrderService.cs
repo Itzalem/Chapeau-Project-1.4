@@ -38,5 +38,9 @@ namespace Chapeau_Project_1._4.Services.Order
         {
             _orderRepository.CancelUnsentOrder(order);
         }
+        public List<OrderItem> GetOrderItems(int orderNumber)
+        {
+            return _orderRepository.GetOrderItemsByOrderNumber(orderNumber);
+        }
     }
 }

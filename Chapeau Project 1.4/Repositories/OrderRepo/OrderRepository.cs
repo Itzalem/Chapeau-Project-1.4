@@ -287,6 +287,52 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return new{ OrderItemId  = orderItemId  , MenuItemId = menuItemId , Category = category , CategoryStatus = categoryStatus};
         }
 
-        
+
+        //for the overview - Lukas
+        public List<OrderItem> GetOrderItemsByOrderNumber(int orderNumber)
+        {
+            List<OrderItem> items = new List<OrderItem>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = @"SELECT oi.orderItem_id, oi.itemStatus,
+                         mi.menuItem_id, mi.menuItemName, mi.category
+                         FROM ORDER_ITEM oi
+                         INNER JOIN MENU_ITEMS mi ON oi.menuItem_id = mi.menuItem_id
+                         WHERE oi.orderNumber = @orderNumber";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@orderNumber", orderNumber);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    OrderItem item = new OrderItem
+                    {
+                        OrderItemId = (int)reader["orderItem_id"],
+                        ItemStatus = Enum.Parse<EItemStatus>(reader["itemStatus"].ToString()!),
+                        MenuItem = new MenuItem
+                        {
+                            MenuItemId = (int)reader["menuItem_id"],
+                            MenuItemName = reader["menuItemName"].ToString()!,
+                            Category = reader["category"].ToString()!, // keep string for category
+                            CategoryStatus = ECategoryStatus.pending  // default
+                        }
+                    };
+                    items.Add(item);
+                }
+            }
+
+            return items;
+        }
+
+
+
+
+
+
+
     }
 }

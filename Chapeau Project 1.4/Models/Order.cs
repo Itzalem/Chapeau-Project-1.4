@@ -24,13 +24,13 @@
             TableNumber = tableNumber;
         }
 
-        public Order(int orderNumber, EOrderStatus status, DateTime orderTime, int tableNumber, List<OrderItem> orderItems)
+        /*public Order(int orderNumber, EOrderStatus status, DateTime orderTime, int tableNumber, List<OrderItem> orderItems)
         {
             OrderNumber = orderNumber;
             Status = status;
             OrderTime = DateTime.Now;
             TableNumber = tableNumber;
             OrderItems = orderItems;
-        }
+        }*/
     }
 }

@@ -155,7 +155,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         }
 
 
-        public List<OrderItem> DisplayItemsPerOrder(int orderNumber)
+        public List<OrderItem> DisplayItemsPerOrder(Order order)
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 
@@ -167,7 +167,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@orderNumber", orderNumber);
+                command.Parameters.AddWithValue("@orderNumber", order.OrderNumber);
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -246,12 +246,13 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = " UPDATE ORDER_ITEM SET itemStatus = @UpdatedItemStatus " +
-                                "WHERE orderNumber = @OrderNumber;";
+                                "WHERE orderNumber = @OrderNumber AND itemStatus = @HoldStatus;";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@UpdatedItemStatus", updatedItemStatus.ToString());
                 command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
+                command.Parameters.AddWithValue("@HoldStatus", EItemStatus.onHold.ToString());
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
@@ -343,5 +344,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             return orderItems;
         }
 
+        
     }
 }

@@ -16,6 +16,11 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
         {
             return _repo.GetAllTables();
         }
+
+        public RestaurantTable? GetTableByNumber(int? table)
+        {
+            return _repo.GetTableByNumber(table);
+        }
     }
 
 }

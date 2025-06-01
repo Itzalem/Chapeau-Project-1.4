@@ -1,5 +1,7 @@
-﻿using Chapeau_Project_1._4.Models;
+﻿using AspNetCore;
+using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Services.Order;
+using Chapeau_Project_1._4.Services.RestaurantTableService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chapeau_Project_1._4.Controllers
@@ -7,10 +9,12 @@ namespace Chapeau_Project_1._4.Controllers
     public class PaymentController : Controller
     {
         private readonly IOrderService _orderService;
+        private readonly IRestaurantTableService _tableService;
 
-        public PaymentController(IOrderService orderService)
+        public PaymentController(IOrderService orderService, IRestaurantTableService tableService)
         {
             _orderService = orderService;
+            _tableService = tableService;
         }
 
         [HttpGet]
@@ -25,5 +29,19 @@ namespace Chapeau_Project_1._4.Controllers
 
             return View(order);
         }
+
+        [HttpGet]
+        public IActionResult PreparePay()
+        {
+            return View();
+        }
+
+        //[HttpPost]
+        //public IActionResult PreparePay(Payment payment)
+        //{
+        //    Order? order = _orderService.GetOrderByTable(payment.Bill.Table.TableNumber);
+        //    RestaurantTable? restaurantTable = _tableService.GetTableByNumber(payment.Bill.Table.TableNumber);
+        //    Bill? bill = 
+        //}
     }
 }

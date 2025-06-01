@@ -7,5 +7,12 @@ namespace Chapeau_Project_1._4.ViewModel
         public Payment Payment { get; set; }
         public Order Order { get; set; }
         public RestaurantTable Table { get; set; }
+
+        public FinishOrder(Payment payment, Order order, RestaurantTable table)
+        {
+            Payment = payment;
+            Order = order;
+            Table = table;
+        }
     }
 }

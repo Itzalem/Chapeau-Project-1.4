@@ -1,4 +1,4 @@
-﻿@model Chapeau_Project_1._4.ViewModel.FinishOrder
+﻿@model Chapeau_Project_1._4.Models.Payment
 
 @{
     ViewData["Title"] = "Prepare payment";
@@ -8,20 +8,25 @@
 
 <form action="/Payment/PreparePay" method="Post">
     <label for="Tip">tip amount:</label>
-    <input type="number" id="Tip" name="Tip" class="form-control" required value="@Model?.Payment.Tip" />
+    <input type="number" id="Tip" name="Tip" class="form-control" required value="@Model?.Tip" />
+
+    <input hidden type="number" name="Total" value="@Model?.Total" />
+
+    <input hidden type="number" name="AlcoholDrinks" value="@Model?.AlcoholDrinks" />
+
+    <input hidden type="number" name="NonAlcoholdrinks" value="@Model?.NonAlcoholDrinks" />
 
     <label for="PayType">Payment Method:</label>
-    <select type="select" id="PayType" name="PayType" class="form-control" required value="@Model?.Payment.PaymentType">
+    <select type="select" id="PayType" name="PayType" class="form-control" required value="@Model?.PaymentType">
         <option value="DebitCard">Debitcard</option>
-        <option value="CreditCard">Debitcard</option>
-        <option value="Cash">Debitcard</option>
+        <option value="CreditCard">Creditcard</option>
+        <option value="Cash">Cash</option>
     </select>
 
     <label for="Feedback">Feedback:</label>
-    <input type="text" id="Feedback" name="Feedback" class="form-control" required value="@Model?.Payment.Feedback" />
+    <input type="text" id="Feedback" name="Feedback" class="form-control" required value="@Model?.Feedback" />
 
     <button type="submit" class="btn btn-primary">Send</button>
-
 </form>
 
-<a href="/RestaurantTable/GetTable"> Back to list</a>
+<a href="/RestaurantTable/GetTable"> Back to order</a>

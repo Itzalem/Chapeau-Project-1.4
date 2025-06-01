@@ -30,7 +30,7 @@
 						<td>@item.Quantity</td>
 						<td>@item.Note</td>
 						<td>@item.MenuItem.Price</td>
-						@if (!item.MenuItem.IsAlcoholic)
+						@if (item.MenuItem.IsAlcoholic)
 						{
 							<td>21%</td>
 						}

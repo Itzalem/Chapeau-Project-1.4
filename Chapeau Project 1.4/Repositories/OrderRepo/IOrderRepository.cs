@@ -19,5 +19,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         void UpdateOrderStatus (EOrderStatus status, int id);
 
         object GetOrderMunuItemName(int OrderNumber);
+
+
+        //for the overview - Lukas
+        List<OrderItem> GetOrderItemsByOrderNumber(int orderNumber);
     }
 }

@@ -13,5 +13,7 @@ namespace Chapeau_Project_1._4.Services.Order
         Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber);
 
         void CancelUnsentOrder(Chapeau_Project_1._4.Models.Order order);
+
+        List<OrderItem> GetOrderItems(int orderNumber);
     }
 }

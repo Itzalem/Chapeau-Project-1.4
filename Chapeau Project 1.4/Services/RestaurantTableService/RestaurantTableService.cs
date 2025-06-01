@@ -81,6 +81,13 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
 
             return result;
         }
+
+        public void UpdateTableOccupancy(int tableNumber, bool isOccupied)
+        {
+            _repo.UpdateTableOccupancy(tableNumber, isOccupied);
+        }
+
+
     }
 
 }

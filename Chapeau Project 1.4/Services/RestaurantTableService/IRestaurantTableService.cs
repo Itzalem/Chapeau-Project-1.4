@@ -8,6 +8,9 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
     {
         List<RestaurantTable> GetAllTables();
         List<TableOrderViewModel> GetTablesWithOrderStatus(IOrderService orderService);
+
+        void UpdateTableOccupancy(int tableNumber, bool isOccupied);
+
     }
 
 }

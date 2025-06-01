@@ -343,7 +343,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             return orderItems;
         }
 
-        public List<OrderItem> DisplayItemsPerOrder(int orderNumber)
+        public List<OrderItem> DisplayItemsPerOrder(Order order)
         {
             throw new NotImplementedException();
         }

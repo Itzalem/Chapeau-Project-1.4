@@ -31,7 +31,7 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
                         int AmountOfGuests = reader.GetInt32(1);
                         bool IsOccupied = reader.GetBoolean(2);
 
-						tables.Add(new RestaurantTable(TableNumber, AmountOfGuests, IsOccupied));
+                        tables.Add(new RestaurantTable(TableNumber, AmountOfGuests, IsOccupied));
                     }
                 }
             }
@@ -39,18 +39,34 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
             return tables;
         }
 
-        public void UpdateTableOccupancy(int tableNumber, bool isOccupied)
+        public RestaurantTable? GetTableByNumber(int? table)
         {
+            RestaurantTable? restaurantTable = null;
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "UPDATE RESTAURANT_TABLE SET isOccupied = @isOccupied WHERE tableNumber = @tableNumber";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@isOccupied", isOccupied);
-                cmd.Parameters.AddWithValue("@tableNumber", tableNumber);
+                string query = @"SELECT tableNumber, amountOfGuests, isOccupied FROM RESTAURANT_TABLE WHERE tableNumber = @table";
 
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@table", table);
                 conn.Open();
-                cmd.ExecuteNonQuery();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        restaurantTable = new RestaurantTable
+                        {
+                            TableNumber = reader.GetInt32(0),
+                            AmountOfGuests = reader.GetInt32(1),
+                            IsOccupied = reader.GetBoolean(2)
+                        };
+
+                    }
+                }
             }
+
+            return restaurantTable;
         }
     }
 

@@ -106,7 +106,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return null;
         }
 
-        public Order? GetOrderByTable(int? table)
+        /* COMMENTED BECAUSE IT DOESN'T WORK
+         public Order? GetOrderByTable(int? table)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -141,7 +142,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             List<OrderItem> orderItems = _orderItemService.DisplayItemsPerOrder(OrderNumber);
 
             return new Order(OrderNumber, Status, OrderTime, TableNumber, orderItems);
-        }
+        }*/
 
         public void Update(Order order)
         {

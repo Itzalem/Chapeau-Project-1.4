@@ -138,9 +138,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             DateTime OrderTime = (DateTime)reader["orderTime"];
             int TableNumber = (int)reader["tableNumber"];
 
-            List<OrderItem> orderItems = _orderItemService.DisplayItemsPerOrder(OrderNumber);
+            List<OrderItem> orderItems = new List<OrderItem>();
+            Order order = new Order(OrderNumber, Status, OrderTime, TableNumber, orderItems);
 
-            return new Order(OrderNumber, Status, OrderTime, TableNumber, orderItems);
+            orderItems = _orderItemService.DisplayItemsPerOrder(order);
+
+            return order;
         }
 
         public void Update(Order order)

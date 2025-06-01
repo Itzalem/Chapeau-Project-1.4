@@ -16,13 +16,7 @@
 
         }
 
-        public Order(int orderNumber, EOrderStatus status, DateTime orderTime, int tableNumber)
-        {
-            OrderNumber = orderNumber;
-            Status = status;
-            OrderTime = DateTime.Now;
-            TableNumber = tableNumber;
-        }
+        
 
         public Order(int orderNumber, EOrderStatus status, DateTime orderTime, int tableNumber, List<OrderItem> orderItems)
         {

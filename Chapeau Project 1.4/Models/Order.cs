@@ -1,6 +1,4 @@
-﻿
-
-namespace Chapeau_Project_1._4.Models
+﻿namespace Chapeau_Project_1._4.Models
 {
     public class Order
     {
@@ -24,6 +22,15 @@ namespace Chapeau_Project_1._4.Models
             Status = status;
             OrderTime = DateTime.Now;
             TableNumber = tableNumber;
-        }   
+        }
+
+        public Order(int orderNumber, EOrderStatus status, DateTime orderTime, int tableNumber, List<OrderItem> orderItems)
+        {
+            OrderNumber = orderNumber;
+            Status = status;
+            OrderTime = DateTime.Now;
+            TableNumber = tableNumber;
+            OrderItems = orderItems;
+        }
     }
 }

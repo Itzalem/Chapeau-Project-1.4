@@ -15,7 +15,7 @@
             statusText = "Occupied";
         }
 
-        <a asp-controller="RestaurantTable" asp-action="Details" asp-route-id="@table.TableNumber" class="table-square @statusClass">
+        <a asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@table.TableNumber" class="table-square @statusClass">
             <div class="table-number">Table @table.TableNumber</div>
             <div class="table-status">@statusText</div>
             <div class="table-guests">Guests: @table.AmountOfGuests</div>

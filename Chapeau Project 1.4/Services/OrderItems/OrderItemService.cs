@@ -22,9 +22,9 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             return _orderItemRepository.DisplayOrderItems();
         }
 
-        public List<OrderItem> DisplayItemsPerOrder(Chapeau_Project_1._4.Models.Order order)
+        public List<OrderItem> DisplayItemsPerOrder(int orderNumber)
         {
-            return _orderItemRepository.DisplayItemsPerOrder(order);
+            return _orderItemRepository.DisplayItemsPerOrder(orderNumber);
         }
         
 

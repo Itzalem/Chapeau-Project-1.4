@@ -23,9 +23,10 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
 
             // Convertirt to string to dabatase can read them and convert again before filling the object
             string card = reader["menuCard"].ToString();
-            string category = reader["category"].ToString();
+			string category = reader["category"].ToString();
+			bool isAlcoholic = (bool)reader["isAlcoholic"];
 
-            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category);
+			return new MenuItem(menuItem_id, menuItemName, price, stock, card, category, isAlcoholic);
         }
 
         public List<MenuItem> GetMenuItems(ECardOptions cardFilter, ECategoryOptions categoryFilter)
@@ -34,8 +35,10 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " +
-                    " FROM MENU_ITEMS WHERE menuCard = @MenuCard ";
+                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, isAlcoholic, category " +
+                    " FROM MENU_ITEMS AS MI " +
+					" JOIN DRINK AS D ON MI.menuItem_id = D.menuItem_id " +
+					" WHERE menuCard = @MenuCard ";
 
                 if (categoryFilter != ECategoryOptions.All) 
                 {
@@ -71,8 +74,9 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category " +
-                    " FROM MENU_ITEMS WHERE menuItem_id = @menuItemId ";
+                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, isAlcoholic, category " +
+                    " FROM MENU_ITEMS " +
+                    " WHERE menuItem_id = @menuItemId ";
 
                 SqlCommand command = new SqlCommand(query, connection);
 

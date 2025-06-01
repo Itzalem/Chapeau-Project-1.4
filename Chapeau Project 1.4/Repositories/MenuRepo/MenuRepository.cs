@@ -20,13 +20,18 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
             string menuItemName = (string)reader["menuItemName"];
             decimal price = (decimal)reader["price"];
             int stock = (int)reader["stock"];
+           
 
             // Convertirt to string to dabatase can read them and convert again before filling the object
             string card = reader["menuCard"].ToString();
 			string category = reader["category"].ToString();
-			bool isAlcoholic = (bool)reader["isAlcoholic"];
 
-			return new MenuItem(menuItem_id, menuItemName, price, stock, card, category, isAlcoholic);
+            bool isAlcoholic = false;
+
+            if (card == ECardOptions.Drinks.ToString())
+                isAlcoholic = reader.GetBoolean(reader.GetOrdinal("isAlcoholic"));
+
+            return new MenuItem(menuItem_id, menuItemName, price, stock, card, category, isAlcoholic);
         }
 
         public List<MenuItem> GetMenuItems(ECardOptions cardFilter, ECategoryOptions categoryFilter)
@@ -35,17 +40,23 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, isAlcoholic, category " +
-                    " FROM MENU_ITEMS AS MI " +
-					" JOIN DRINK AS D ON MI.menuItem_id = D.menuItem_id " +
-					" WHERE menuCard = @MenuCard ";
+                string selectFields = "MI.menuItem_id, MI.menuItemName, MI.price, MI.stock, MI.menuCard, MI.category";
+                string fromClause = " FROM MENU_ITEMS AS MI";
+                string whereClause = " WHERE MI.menuCard = @MenuCard";
+                string orderClause = " ORDER BY MI.menuCard, MI.category";
 
-                if (categoryFilter != ECategoryOptions.All) 
+                if (cardFilter == ECardOptions.Drinks)
                 {
-                    query += " AND category = @Category ";
+                    selectFields += ", D.isAlcoholic";
+                    fromClause += " JOIN DRINK AS D ON MI.menuItem_id = D.menuItem_id";
                 }
 
-                query += " ORDER BY menuCard, category;";
+                if (categoryFilter != ECategoryOptions.All)
+                {
+                    whereClause += " AND MI.category = @Category";
+                }
+
+                string query = $"SELECT {selectFields}{fromClause}{whereClause}{orderClause};";
 
                 SqlCommand command = new SqlCommand(query, connection);
                 

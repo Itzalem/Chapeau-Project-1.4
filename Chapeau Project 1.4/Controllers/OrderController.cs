@@ -40,7 +40,7 @@ namespace Chapeau_Project_1._4.Controllers
         {
             Order order = _orderService.GetOrderByNumber(orderNumber);
            
-            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order.OrderNumber);
+            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 
             ViewData["CardFilter"] = cardFilter;
             ViewData["CategoryFilter"] = categoryFilter;

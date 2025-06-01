@@ -38,6 +38,22 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
 
             return tables;
         }
+
+        public void UpdateTableOccupancy(int tableNumber, bool isOccupied)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "UPDATE RESTAURANT_TABLE SET isOccupied = @isOccupied WHERE tableNumber = @tableNumber";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@isOccupied", isOccupied);
+                cmd.Parameters.AddWithValue("@tableNumber", tableNumber);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
     }
 
 }

@@ -1,6 +1,6 @@
 ﻿namespace Chapeau_Project_1._4.Models
 {
-    public enum EItemStatus {onHold, pending , BeingPrepared, ReadyToServe }
+    public enum EItemStatus {onHold, pending , InProgress, ReadyToServe }
     public class OrderItem
     {
         public int OrderItemId { get; set; }    

@@ -1,121 +1,5 @@
 ﻿@using Chapeau_Project_1._4.ViewModel
-@* @using Chapeau_Project_1._4.ViewModel
 @model List<RunningOrder>
-
-
-<h2 class="page-title">Orders</h2>
-
-<div class="view-tabs">
-    <button class="tab active" id="tab-running">
-        <i class="fa fa-list"></i> Running Orders
-    </button>
-    <button class="tab" id="tab-finished"
-            onclick="location.href='@Url.Action("FinishedOrders","Kitchen")'">
-        <i class="fa fa-clock-o"></i> Finished Today
-    </button>
-    <button class="btn-refresh" onclick="location.reload()">
-        <i class="fa fa-refresh"></i> Refresh
-    </button>
-</div>
-
-<div class="orders-container">
-    @foreach (var order in Model)
-    {
-        // decide card‐border color
-        var statusClass = order.runningOrders.All(x => x.ItemStatus == EItemStatus.ReadyToServe)
-        ? "status-completed"
-        : order.runningOrders.All(x => x.ItemStatus == EItemStatus.BeingPrepared)
-        ? "status-inprogress"
-        : "status-default";
-
-        <div class="order-card @statusClass">
-
-            <!-- HEADER -->
-            <header class="order-header">
-                <h3>
-                    <i class="fa fa-hashtag"></i>
-                    Order #@order.OrderNumber
-                    <span class="separator">–</span>
-                    Table #@order.TableNumber
-                </h3>
-                <div class="order-meta">
-                    <span>
-                        <i class="fa fa-calendar"></i>
-                        Ordered: @order.OrderTime.ToString("dd/MM/yyyy hh:mm:ss tt")
-                    </span>
-                    <span>
-                        <i class="fa fa-clock-o"></i>
-                        Waiting: @(order.WaitingTime / 60)h @(order.WaitingTime % 60)m
-                    </span>
-                </div>
-
-                <div class="status-dropdown">
-                    <button class="btn-status">
-                        <i class="fa fa-pencil"></i> Change Status
-                        <i class="fa fa-caret-down"></i>
-                    </button>
-                    <ul class="status-menu">
-                        <li onclick="UpdateOrderStatus(@order.OrderNumber,'Ordered')">
-                            Ordered
-                        </li>
-                        <li onclick="UpdateOrderStatus(@order.OrderNumber,'BeingPrepared')">
-                            Being Prepared
-                        </li>
-                        <li onclick="UpdateOrderStatus(@order.OrderNumber,'ReadyToServe')">
-                            Ready to Serve
-                        </li>
-                    </ul>
-                </div>
-            </header>
-
-            @{
-                // group your RunningOrderItems by their category string
-                var courseGroups = order.runningOrders
-                .GroupBy(i => i.RunnigOrderMenuItem.OrderItemCategory);
-            }
-
-            @foreach (var grp in order.runningOrders.GroupBy(i => i.RunnigOrderMenuItem.OrderItemCategory))
-            {
-                <section class="course-group">
-                    <h4>@grp.Key</h4>
-
-                    <form asp-action="UpdateCourseStatus" method="post" class="status-form-course">
-                        <input type="hidden" name="orderNumber" value="@order.OrderNumber" />
-                        <input type="hidden" name="category" value="@grp.Key" />
-
-                    </form>
-
-                    <ul class="course-items">
-                        @foreach (var item in grp)
-                        {
-                            <p>@item.RunnigOrderMenuItem.OrderItemCategory</p>
-                            <li class="course-item">
-                                <i class="fa fa-cutlery"></i>
-                                @item.RunnigOrderMenuItem.OrderItemName (×@item.Quantity)
-
-                                <p>@item.Note</p>
-
-                                <select name="status" onchange="this.form.submit()">
-                                    <option selected disabled>@item.ItemStatus</option>
-                                    <option value="BeingPrepared">In Progress</option>
-                                    <option value="ReadyToServe">Ready to Serve</option>
-                                </select>
-                            </li>
-
-                            <br />
-                        }
-                    </ul>
-                </section>
-            }
-        </div>
-    }
-</div>
-
- *@
-
-
- @model List<RunningOrder>
-
 
 <h2 class="page-title">Orders</h2>
 
@@ -152,14 +36,16 @@
 
             @foreach (var group in order.runningOrders.GroupBy(i => i.RunnigOrderMenuItem.OrderItemCategory))
             {
-                var groupStatus = group.All(i => i.ItemStatus == EItemStatus.ReadyToServe) ? "ReadyToServe" :
-                group.Any(i => i.ItemStatus == EItemStatus.BeingPrepared || i.ItemStatus == EItemStatus.ReadyToServe) ? "BeingPrePared" : "Pending";
                 <form method="post" asp-controller="Kitchen" asp-action="UpdateCourseStatus">
                     <input type="hidden" name="orderNumber" value="@order.OrderNumber" />
-                    <input type="hidden" name="itemStatus" value="@groupStatus" />
+                    <input type="hidden" name="itemStatus" value="@group" />
                     <div class="course-header">
                         <strong>@group.Key</strong>
-                        <span class="item-status @groupStatus.ToLower()" onchange="this.form.submit()">@groupStatus</span>
+                        <select name="groupStatus" onchange="this.form.submit()">
+                            <option value="pending">Pending</option>
+                            <option value="InProgress">In Progress</option>
+                            <option value="ReadyToServe">Ready to Serve</option>
+                        </select> 
                     </div>
                 </form>
                 @foreach (var item in group)
@@ -175,24 +61,28 @@
                                 }
                             </div>
                             <select name="itemStatus" onchange="this.form.submit()">
-                                <option selected disabled>@item.ItemStatus</option>
+                                <option value="pending" >Pending</option>
                                 <option value="InProgress">In Progress</option>
                                 <option value="ReadyToServe">Ready to Serve</option>
-                            </select>
+                            </select> 
                         </div>
                     </form>
                     
                 }
             }
 
-            @{
-                var overallStatus = order.runningOrders.All(i => i.ItemStatus == EItemStatus.ReadyToServe) ? "Completed"
-                : order.runningOrders.All(i => i.ItemStatus == EItemStatus.BeingPrepared) ? "InProgress"
-                : "Pending";
-            }
-     
-            <footer class="order-footer @overallStatus.ToLower()">
-                <strong>Order Status:</strong> @overallStatus
+            <footer class="order-footer">
+                <form method="post" asp-action="UpdateOrderStatus">
+                    <input type="hidden" name="OrderNumber" value="@order.OrderNumber" />
+                    <div class="course-header">
+                        <strong>Order Status</strong>
+                        <select name="itemStatus" onchange="this.form.submit()">
+                            <option value="pending">Pending</option>
+                            <option value="InProgress">In Progress</option>
+                            <option value="ReadyToServe">Ready to Serve</option>
+                        </select>
+                    </div>
+                </form>
             </footer>
         </div>
     }

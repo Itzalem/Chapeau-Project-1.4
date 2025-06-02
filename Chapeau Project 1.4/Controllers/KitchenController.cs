@@ -56,11 +56,11 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateItemStatus(int orderItemId , int orderNumber, EItemStatus itemStatus)
+        public IActionResult UpdateItemStatus(int orderItemId , EItemStatus groupStatus)
         {
             
             // Call into your repo to update a single item
-            _orderItemRepository.UpdateItemStatus(orderItemId, itemStatus);
+            _orderItemRepository.UpdateItemStatus(orderItemId, groupStatus);
             // Redirect back to the running-orders page so the view reloads
             return RedirectToAction("Index");
         }
@@ -69,6 +69,16 @@ namespace Chapeau_Project_1._4.Controllers
         public IActionResult UpdateCourseStatus (int orderNumber, string itemStatus)
         {
             _orderItemRepository.UpdateCourseStatus(orderNumber, (EItemStatus)Enum.Parse(typeof(EItemStatus) , itemStatus));  
+            return RedirectToAction("Index");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult UpdateOrderStatus(int orderNumber, string orderStatus)
+        {
+            _orderRepository.UpdateOrderStatus((EOrderStatus)Enum.Parse(typeof(EOrderStatus), orderStatus), orderNumber);
+            
             return RedirectToAction("Index");
         }
     }

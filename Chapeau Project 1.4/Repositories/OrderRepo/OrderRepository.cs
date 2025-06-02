@@ -147,14 +147,14 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
               
         }
 
-        public void UpdateOrderStatus(EOrderStatus status, int id)
+        public void UpdateOrderStatus(EOrderStatus status, int orderNumber)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"UPDATE Orders SET status = @status WHERE orderNumber = @id";
+                string query = @"UPDATE Orders SET status = @status WHERE orderNumber = @orderNumber";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@status", status.ToString());
-                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
                 command.Connection.Open() ; 
                 command.ExecuteNonQuery();

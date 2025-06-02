@@ -99,6 +99,7 @@ namespace Chapeau_Project_1._4.Controllers
             return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
         }
 
+
         [HttpPost]
         public IActionResult CancelOrder(Order order)
         {

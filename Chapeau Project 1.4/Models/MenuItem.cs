@@ -9,6 +9,7 @@
         public int Stock {  get; set; }
         public string Card {  get; set; }
         public string Category { get; set; }
+        public bool IsAlcoholic { get; set; }
         public ECategoryStatus CategoryStatus { get; set; } 
     
 
@@ -17,7 +18,7 @@
         }
 
         public MenuItem(int menuItemId, string menuItemName, decimal price, int stock, 
-                        string card, string category, ECategoryStatus categoryStatus = ECategoryStatus.pending)
+                        string card, string category, bool isAlcoholic, ECategoryStatus categoryStatus = ECategoryStatus.pending)
         {
             MenuItemId = menuItemId;
             MenuItemName = menuItemName;
@@ -25,6 +26,7 @@
             Stock = stock;
             Card = card;
             Category = category;
+            IsAlcoholic = isAlcoholic;
             CategoryStatus = categoryStatus;
         }
         public MenuItem(int menuItemId, string menuItemName,string category, ECategoryStatus categoryStatus = ECategoryStatus.pending)

@@ -1,12 +1,13 @@
-﻿@model List<Chapeau_Project_1._4.Models.OverviewItem>
+﻿@model Chapeau_Project_1._4.Models.Order
 
 @{
 	ViewData["Title"] = "Order";
-
 }
 
 <div class="text-center">
-	<h1 class="display-4">Le Order of table @ViewBag.TableNumber</h1>
+	<h1 class="display-4">Le Order of table @Model.TableNumber</h1>
+
+	<a href="/Payment/PreparePay?table=@Model.TableNumber">go to payment</a>
 
 	<table class="table">
 		<thead>
@@ -20,16 +21,16 @@
 		</thead>
 		<tbody>
 			@{
-				foreach (OverviewItem item in Model)
+				foreach (OrderItem item in Model.OrderItems)
 				{
 					string rowStyle = "";
 
 					<tr @rowStyle>
-						<td>@item.MenuItemName</td>
+						<td>@item.MenuItem.MenuItemName</td>
 						<td>@item.Quantity</td>
 						<td>@item.Note</td>
-						<td>@item.Price</td>
-						@if (!item.IsAlcoholic)
+						<td>@item.MenuItem.Price</td>
+						@if (item.MenuItem.IsAlcoholic)
 						{
 							<td>21%</td>
 						}
@@ -42,9 +43,9 @@
 
 				decimal total = 0;
 
-				foreach (OverviewItem item in Model)
+				foreach (OrderItem item in Model.OrderItems)
 				{
-					total += item.Price;
+					total += item.MenuItem.Price;
 				}
 
 				<tr>

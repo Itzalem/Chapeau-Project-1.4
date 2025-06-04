@@ -30,7 +30,7 @@ namespace Chapeau_Project_1._4.Controllers
                 return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
             }
 
-            int newOrderNumber = _orderService.AddNewOrder(tableNumber); 
+            int newOrderNumber = _orderService.AddNewOrder(tableNumber);
 
             return RedirectToAction("TakeOrder", new { orderNumber = newOrderNumber });
         }
@@ -39,12 +39,12 @@ namespace Chapeau_Project_1._4.Controllers
         public IActionResult TakeOrder(int orderNumber, ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
             Order order = _orderService.GetOrderByNumber(orderNumber);
-           
+
             order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 
             ViewData["CardFilter"] = cardFilter;
             ViewData["CategoryFilter"] = categoryFilter;
-            
+
             return View(order);
         }
 
@@ -80,12 +80,12 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
         [HttpPost]
-        public IActionResult SendOrder(Order order) 
+        public IActionResult SendOrder(Order order)
         {
             order.OrderItems = _orderItemService.DisplayItemsPerOrder(order); //to load the list in the order object
 
             //i pass only the order number because I'm reusing a kitchen method that its already expecting a status
-            _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);             
+            _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);
 
             _orderItemService.UpdateAllItemsStatus(order);
 
@@ -104,13 +104,22 @@ namespace Chapeau_Project_1._4.Controllers
         public IActionResult CancelOrder(Order order)
         {
             order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);  //to load the list in the order object
-                       
-            _orderService.CancelUnsentOrder(order);                   
+
+            _orderService.CancelUnsentOrder(order);
 
             TempData["CancelMessage"] = "Order Canceled";
 
             return RedirectToAction("Index", "Home");
 
+        }
+
+        [HttpPost]
+        public IActionResult IncreaseItemQuantity(OrderItem orderItem)
+        {
+            _orderItemService.
+
+
+            return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
         }
 
 

@@ -36,12 +36,12 @@
 
             @foreach (var group in order.runningOrders.GroupBy(i => i.RunnigOrderMenuItem.OrderItemCategory))
             {
+                
                 <form method="post" asp-controller="Kitchen" asp-action="UpdateCourseStatus">
                     <input type="hidden" name="orderNumber" value="@order.OrderNumber" />
-                    <input type="hidden" name="itemStatus" value="@group" />
                     <div class="course-header">
                         <strong>@group.Key</strong>
-                        <select name="groupStatus" onchange="this.form.submit()">
+                        <select name="itemStatus" onchange="this.form.submit()">
                             <option value="pending">Pending</option>
                             <option value="InProgress">In Progress</option>
                             <option value="ReadyToServe">Ready to Serve</option>
@@ -62,7 +62,7 @@
                             </div>
                             <select name="itemStatus" onchange="this.form.submit()">
                                 <option value="pending" >Pending</option>
-                                <option value="InProgress">In Progress</option>
+                                <option value="BeingPrepared">In Progress</option>
                                 <option value="ReadyToServe">Ready to Serve</option>
                             </select> 
                         </div>
@@ -76,10 +76,10 @@
                     <input type="hidden" name="OrderNumber" value="@order.OrderNumber" />
                     <div class="course-header">
                         <strong>Order Status</strong>
-                        <select name="itemStatus" onchange="this.form.submit()">
-                            <option value="pending">Pending</option>
-                            <option value="InProgress">In Progress</option>
-                            <option value="ReadyToServe">Ready to Serve</option>
+                         <select name="itemStatus" onchange="this.form.submit()">
+                            <option value="@order.Status" selected="@(order.Status == EOrderStatus.pending)">Pending</option>
+                            <option value="@order.Status" selected="@(order.Status == EOrderStatus.inProgress)">In Progress</option>
+                            <option value="@order.Status" selected="@(order.Status == EOrderStatus.prepared)">Prepared</option>
                         </select>
                     </div>
                 </form>

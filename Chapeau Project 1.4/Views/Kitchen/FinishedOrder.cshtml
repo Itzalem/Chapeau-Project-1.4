@@ -1,5 +1,38 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using Chapeau_Project_1._4.ViewModel
+@model List<RunningOrder>
+
+<h2 class="page-title">Orders</h2>
+
+<div class="view-tabs">
+    <button class="tab active" id="tab-running">
+        onclick="location.href='@Url.Action("RunningOrders", "Kitchen")'">
+        <i class="fa fa-list"></i> Running Orders
+    </button>
+    <button class="tab" id="tab-finished"
+        <i class="fa fa-clock-o"></i> Finished Today
+    </button>
+    <button class="btn-refresh" onclick="location.reload()">
+        <i class="fa fa-refresh"></i> Refresh
+    </button>
+</div>
+
+<div class="orders-container">
+    @foreach (var order in Model.OrderBy(o => o.OrderTime))
+    {
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+                    <i class="fa fa-clock-o"></i> @order.OrderTime.ToString("HH:mm")<br />
+                    Table: #@order.TableNumber
+                </div>
+                <div>
+                    Order:#@order.OrderNumber
+                </div>
+                <div>
+                    Waiting: @(order.WaitingTime / 60)h @(order.WaitingTime % 60)m
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

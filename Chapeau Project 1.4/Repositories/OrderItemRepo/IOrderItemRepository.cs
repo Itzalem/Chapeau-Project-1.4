@@ -20,6 +20,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         //Change the status for one specific order‐item
         void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
         void UpdateCourseStatus(int orderNumber, EItemStatus newStatus);
-        List<OrderItem> GetFinishedItems(DateTime date);
+        List<OrderItem> GetFinishedItems();
     }
 }

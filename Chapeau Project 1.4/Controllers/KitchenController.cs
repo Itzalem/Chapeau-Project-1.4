@@ -34,6 +34,7 @@ namespace Chapeau_Project_1._4.Controllers
                 OrderNumber = x.OrderNumber,
                 OrderTime = x.OrderTime,
                 TableNumber = x.TableNumber,
+                Status = x.Status,
                 WaitingTime = (int)(DateTime.Now - x.OrderTime).TotalMinutes,
                 runningOrders = orderItems.Where(p => p.OrderNumber == x.OrderNumber).Select(o => new RunningOrderItem
                 {
@@ -66,20 +67,26 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateCourseStatus (int orderNumber, string itemStatus)
+        public IActionResult UpdateCourseStatus (int orderNumber, EItemStatus itemStatus)
         {
-            _orderItemRepository.UpdateCourseStatus(orderNumber, (EItemStatus)Enum.Parse(typeof(EItemStatus) , itemStatus));  
+            _orderItemRepository.UpdateCourseStatus(orderNumber,  itemStatus);  
             return RedirectToAction("Index");
         }
 
 
 
         [HttpPost]
-        public IActionResult UpdateOrderStatus(int orderNumber, string orderStatus)
+        public IActionResult UpdateOrderStatus(int orderNumber, EOrderStatus orderStatus)
         {
-            _orderRepository.UpdateOrderStatus((EOrderStatus)Enum.Parse(typeof(EOrderStatus), orderStatus), orderNumber);
+            _orderRepository.UpdateOrderStatus(orderStatus, orderNumber);
             
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult GetFinishedItems()
+        {
+            return View("FinishedOrder"); 
         }
     }
 }

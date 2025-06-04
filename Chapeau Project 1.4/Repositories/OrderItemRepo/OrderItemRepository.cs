@@ -315,7 +315,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
         }
 
-        public List<OrderItem> GetFinishedItems(DateTime date)
+        public List<OrderItem> GetFinishedItems()
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 
@@ -325,11 +325,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 string query = @" SELECT orderItem_id, orderNumber, menuItem_id, quantity, note, itemStatus
                                   FROM ORDER_ITEM
                                   JOIN ORDERS ON ORDER_ITEM.orderNumber = ORDERS.orderNumber
-                                  WHERE ORDER_ITEM.itemStatus = @ready
-                                  AND CAST(ORDERS.orderTime AS DATE) = @dt;";
+                                  WHERE ORDER_ITEM.itemStatus = @ready;";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@ready", EItemStatus.ReadyToServe.ToString());
-                command.Parameters.AddWithValue("@dt", date.Date);
 
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();

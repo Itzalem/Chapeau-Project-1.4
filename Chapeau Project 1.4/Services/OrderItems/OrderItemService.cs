@@ -33,9 +33,9 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             return _orderItemRepository.GetByOrderNumber(orderNumber);
         }
 
-        public void UpdateAllItemsStatus(EItemStatus itemStatus, Chapeau_Project_1._4.Models.Order order)
+        public void UpdateAllItemsStatus(Chapeau_Project_1._4.Models.Order order)
         {
-            _orderItemRepository.UpdateAllItemsStatus(itemStatus, order);
+            _orderItemRepository.UpdateAllItemsStatus(order);
         }
 
         public void ReduceItemStock(OrderItem orderItem)

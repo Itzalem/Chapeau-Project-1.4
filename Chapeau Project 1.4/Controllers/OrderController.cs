@@ -87,7 +87,7 @@ namespace Chapeau_Project_1._4.Controllers
             //i pass only the order number because I'm reusing a kitchen method that its already expecting a status
             _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);             
 
-            _orderItemService.UpdateAllItemsStatus(EItemStatus.pending, order);
+            _orderItemService.UpdateAllItemsStatus(order);
 
             foreach (OrderItem orderItem in order.OrderItems)
             {

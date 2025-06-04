@@ -12,6 +12,30 @@ namespace Chapeau_Project_1._4.Repositories.DrinkRepo
             _connectionString = configuration.GetConnectionString("chapeaurestaurant");
         }
 
+        public List<Drink> GetDrinkOrders()
+        {
+            //List<Drink> drinks = new List<Drink>();
+            //using (SqlConnection connection = new SqlConnection(_connectionString))
+            //{
+            //    string query = @"SELECT 
+            //                     o.orderNumber,
+            //                     o.status AS orderStatus,
+            //                     o.tableNumber,
+            //                     o.orderTime,
+            //                     oi.orderItem_id,
+            //                     oi.quantity,
+            //                     oi.note,
+            //                     oi.itemStatus,
+            //                     mi.itemType
+            //                     FROM ORDERS o
+            //                     JOIN ORDER_ITEM oi ON o.orderNumber = oi.orderNumber
+            //                     JOIN MENUITEM mi ON oi.menuItem_id = mi.menuItem_id
+            //                     WHERE mi.itemType = 'drink';"; 
+            //    }
+
+            throw new NotImplementedException();    
+        }
+
         public Drink GetDrinks(int? drinkId)
         {
 
@@ -30,6 +54,11 @@ namespace Chapeau_Project_1._4.Repositories.DrinkRepo
 
                 return drink;
             }
+        }
+
+        public List<Drink> GetFinishedDrinksOrder()
+        {
+            throw new NotImplementedException();
         }
 
         private Drink ReadDrink(SqlDataReader reader)

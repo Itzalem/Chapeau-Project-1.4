@@ -23,5 +23,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
         //for the overview - Lukas
         List<OrderItem> GetOrderItemsByOrderNumber(int orderNumber);
+
+        List<Order> GetFinishedOrders();
+
     }
 }

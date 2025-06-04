@@ -116,7 +116,7 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpPost]
         public IActionResult IncreaseItemQuantity(OrderItem orderItem)
         {
-            _orderItemService.
+            
 
 
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });

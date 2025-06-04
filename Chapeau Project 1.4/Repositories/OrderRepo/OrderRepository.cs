@@ -199,23 +199,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                     DeleteEmptyOrder(order);
                 }
             }
-        }
-
-        public int CountItemsInOrder (Order order)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string query = "SELECT COUNT(*) FROM ORDER_ITEM WHERE orderNumber = @OrderNumber; ";
-
-                SqlCommand command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
-
-                command.Connection.Open();
-
-                return (int)command.ExecuteScalar();
-            }
-        }
+        }      
 
 
         public void DeleteEmptyOrder(Order order)
@@ -234,7 +218,23 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 command.ExecuteNonQuery();
 
             }
-        }              
+        }
+
+        public int CountItemsInOrder(Order order)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT COUNT(*) FROM ORDER_ITEM WHERE orderNumber = @OrderNumber; ";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
+
+                command.Connection.Open();
+
+                return (int)command.ExecuteScalar();
+            }
+        }
 
         public object GetOrderMunuItemName(int OrderNumber) 
         {

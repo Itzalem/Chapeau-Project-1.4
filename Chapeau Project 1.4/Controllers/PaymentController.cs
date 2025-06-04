@@ -1,5 +1,6 @@
 ﻿
 using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.Services.OrderItems;
 using Chapeau_Project_1._4.Services.Order;
 using Chapeau_Project_1._4.Services.RestaurantTableService;
 using Microsoft.AspNetCore.Mvc;
@@ -9,18 +10,21 @@ namespace Chapeau_Project_1._4.Controllers
     public class PaymentController : Controller
     {
         private readonly IOrderService _orderService;
+        private readonly IOrderItemService _orderItemService;
         private readonly IRestaurantTableService _tableService;
 
-        public PaymentController(IOrderService orderService, IRestaurantTableService tableService)
+        public PaymentController(IOrderService orderService, IRestaurantTableService tableService, IOrderItemService orderItemService)
         {
             _orderService = orderService;
             _tableService = tableService;
+            _orderItemService = orderItemService;
         }
 
         [HttpGet]
         public IActionResult DisplayOrder(int? table)
         {
             Order? order = _orderService.GetOrderByTable(table);
+            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 
             if (order == null)
             {

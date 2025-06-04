@@ -13,7 +13,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         List<OrderItem> GetRunningItem();
 
         //Change the status for every order item in the list thats onHold
-        void UpdateAllItemsStatus(EItemStatus updatedItemStatus, Order order);
+        void UpdateAllItemsStatus(Order order);
 
         void ReduceItemStock(OrderItem orderItem);
 

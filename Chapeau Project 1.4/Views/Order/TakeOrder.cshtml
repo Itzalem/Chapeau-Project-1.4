@@ -36,6 +36,30 @@
                         <td>@item.MenuItem.MenuItemName</td>
                         <td>@item.Quantity</td>
                         <td>@item.Note</td>
+                        <td>
+                            @if (item.ItemStatus == EItemStatus.onHold)
+                            {
+                                <details>
+                                    <summary>Edit</summary>
+                                    <div class="menu-buttons">
+                                        <form asp-controller="Order" asp-action="IncreaseItemQuantity" method="post">
+
+                                            <input type="hidden" asp-for="@item.OrderItemId" />
+                                            <input type="hidden" asp-for="@item.Quantity" />
+                                            <input type="hidden" asp-for="@item.Note" />
+                                            <input type="hidden" asp-for="@item.ItemStatus" />
+                                            <input type="hidden" asp-for="@item.MenuItem.MenuItemId" />
+                                            <input type="hidden" asp-for="@item.OrderNumber" />
+
+                                            <button type="submit" class="btn btn-success">+</button>
+                                        </form>
+                                        <button>-</button>
+                                        <button>Add comment</button>
+                                        <button>Delete</button>
+                                    </div>
+                                </details>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>

@@ -46,7 +46,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         public void AddOrderItem(OrderItem orderItem)
         {
-
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -89,7 +88,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         }
 
-        private void UpdateQuantity(SqlConnection connection, int orderItemId, int extraQuantity)
+        private void UpdateQuantity(SqlConnection connection, int existingItemId, int extraQuantity)
         {
             string query = "UPDATE ORDER_ITEM SET quantity = quantity + @ExtraQuantity " +
                             " WHERE orderItem_id = @Id ;";
@@ -97,7 +96,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@ExtraQuantity", extraQuantity);
-            command.Parameters.AddWithValue("@Id", orderItemId);
+            command.Parameters.AddWithValue("@Id", existingItemId);
             command.ExecuteNonQuery();
         }
 
@@ -241,7 +240,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             return orderItems;
         }
 
-        public void UpdateAllItemsStatus(EItemStatus updatedItemStatus, Order order)
+        public void UpdateAllItemsStatus(Order order)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -250,7 +249,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@UpdatedItemStatus", updatedItemStatus.ToString());
+                command.Parameters.AddWithValue("@UpdatedItemStatus", EItemStatus.pending.ToString());
                 command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
                 command.Parameters.AddWithValue("@HoldStatus", EItemStatus.onHold.ToString());
 

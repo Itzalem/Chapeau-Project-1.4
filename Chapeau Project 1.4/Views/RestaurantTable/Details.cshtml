@@ -12,7 +12,9 @@
     <div class="alert alert-danger">@TempData["ToggleError"]</div>
 }
 
-<a asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber" class="btn btn-secondary mt-2 mb-2">View order</a>
+<a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-tableNumber="@Model.TableNumber">Take Order</a>
+
+<a asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber" class="btn btn-secondary mt-2">View order</a>
 
 <form method="post" asp-controller="RestaurantTable" asp-action="ToggleOccupancy" asp-route-id="@Model.TableNumber">
     <button type="submit" class="btn btn-primary" @(ViewBag.CanToggle ? "" : "disabled")>

@@ -23,7 +23,6 @@
             {
                 <tr>
                     <td>@table.TableNumber</td>
-                    <td>@table.AmountOfGuests</td>
                     <td>@(table.IsOccupied ? "Occupied" : "Free")</td>
                     <td><a href="/OrderOverview/DisplayOrder?table=@table.TableNumber">Go to order</a></td>
                 </tr>

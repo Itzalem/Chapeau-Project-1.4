@@ -109,7 +109,7 @@ namespace Chapeau_Project_1._4.Controllers
 
             TempData["CancelMessage"] = "Order Canceled";
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Overview", "RestaurantTable");
 
         }
 

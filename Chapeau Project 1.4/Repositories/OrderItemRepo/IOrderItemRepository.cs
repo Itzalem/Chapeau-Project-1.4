@@ -5,6 +5,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
     public interface IOrderItemRepository
     {
         void AddOrderItem(OrderItem orderItem);
+        bool CheckDuplicateItems(OrderItem orderItem);
+
+        public OrderItem GetOrderItemById(int orderItemId);
 
         //Returns all items belonging to a specific order
         List<OrderItem> GetByOrderNumber(int orderNumber);
@@ -23,7 +26,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         List<OrderItem> GetFinishedItems(); // changed from this :  List<OrderItem> GetFinishedItems(DateTime date); because it wasnt worknig
 
-        void UpdateItemQuantity(OrderItem orderItem, int updatedQuantity);
+        public void EditItemQuantity(OrderItem orderItem);
         void DeleteSingleItem(OrderItem orderItem);
 
         void EditItemNote(OrderItem orderItem);

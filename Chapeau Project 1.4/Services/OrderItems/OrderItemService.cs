@@ -17,16 +17,26 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             _orderItemRepository.AddOrderItem(orderItem);
         }
 
+        public bool CheckDuplicateItems(OrderItem orderItem)
+        {
+            return _orderItemRepository.CheckDuplicateItems(orderItem);
+        }
+
         public List<OrderItem> DisplayOrderItems()
         {
             return _orderItemRepository.DisplayOrderItems();
+        }
+
+        public OrderItem GetOrderItemById(int orderItemId)
+        {
+            return _orderItemRepository.GetOrderItemById(orderItemId);
         }
 
         public List<OrderItem> DisplayItemsPerOrder(Chapeau_Project_1._4.Models.Order order)
         {
             return _orderItemRepository.DisplayItemsPerOrder(order);
         }
-        
+
 
         public List<OrderItem> GetByOrderNumber(int orderNumber)
         {
@@ -36,6 +46,7 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         public void UpdateAllItemsStatus(Chapeau_Project_1._4.Models.Order order)
         {
             _orderItemRepository.UpdateAllItemsStatus(order);
+
         }
 
         public void ReduceItemStock(OrderItem orderItem)
@@ -43,9 +54,23 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             _orderItemRepository.ReduceItemStock(orderItem);
         }
 
-        public void UpdateItemQuantity(OrderItem orderItem, int updatedQuantity)
+
+        public void EditItemQuantity(OrderItem orderItem, string operation)
         {
-            _orderItemRepository.UpdateItemQuantity(orderItem, updatedQuantity);
+            if (operation == "increase")
+            {
+                orderItem.Quantity++;
+                _orderItemRepository.EditItemQuantity(orderItem); ;
+            }
+            else if (operation == "decrease" && orderItem.Quantity > 1)
+            {
+                orderItem.Quantity--;
+                _orderItemRepository.EditItemQuantity(orderItem); ;
+            }
+            else 
+            {
+                DeleteSingleItem(orderItem);
+            }
         }
 
         public void DeleteSingleItem(OrderItem orderItem)

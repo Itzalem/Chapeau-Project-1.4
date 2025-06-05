@@ -44,59 +44,26 @@
                             <td>
                                 <details>
                                     <summary>Edit</summary>
-                                    <div class="menu-buttons">
-                                        @* INCREASE QUANTITY *@
-                                        <form asp-controller="Order" asp-action="IncreaseItemQuantity" method="post">
+                                    <div class="menu-buttons">                                  
+                                        <a class="btn btn-success" asp-controller="Order" asp-action="EditItemQuantity" 
+                                            asp-route-orderItemId="@item.OrderItemId" asp-route-operation="increase">+</a>
 
-                                            <input type="hidden" name="OrderItemId" value="@item.OrderItemId" />
-                                            <input type="hidden" name="Quantity" value="@item.Quantity" />
-                                            <input type="hidden" name="Note" value="@item.Note" />
-                                            <input type="hidden" name="ItemStatus" value="@item.ItemStatus" />
-                                            <input type="hidden" name="MenuItem.MenuItemId" value="@item.MenuItem.MenuItemId" />
-                                            <input type="hidden" name="OrderNumber" value="@item.OrderNumber" />
-
-                                            <button type="submit" class="btn btn-success">+</button>
-                                        </form>
-
-                                        @* DECREASE QUANTITY *@                                        
-                                        <form asp-controller="Order" asp-action="DecreaseItemQuantity" method="post">
-
-                                            <input type="hidden" name="OrderItemId" value="@item.OrderItemId" />
-                                            <input type="hidden" name="Quantity" value="@item.Quantity" />
-                                            <input type="hidden" name="Note" value="@item.Note" />
-                                            <input type="hidden" name="ItemStatus" value="@item.ItemStatus" />
-                                            <input type="hidden" name="MenuItem.MenuItemId" value="@item.MenuItem.MenuItemId" />
-                                            <input type="hidden" name="OrderNumber" value="@item.OrderNumber" />
-
-                                            <button type="submit" class="btn btn-success">-</button>
-                                        </form>
+                                        <a class="btn btn-success" asp-controller="Order" asp-action="EditItemQuantity"
+                                           asp-route-orderItemId="@item.OrderItemId" asp-route-operation="decrease">-</a>
 
                                         @* DELETE ITEM *@
-                                        <form asp-controller="Order" asp-action="DeleteSingleItem" method="post">
-
-                                            <input type="hidden" name="OrderItemId" value="@item.OrderItemId" />
-                                            <input type="hidden" name="Quantity" value="@item.Quantity" />
-                                            <input type="hidden" name="Note" value="@item.Note" />
-                                            <input type="hidden" name="ItemStatus" value="@item.ItemStatus" />
-                                            <input type="hidden" name="MenuItem.MenuItemId" value="@item.MenuItem.MenuItemId" />
-                                            <input type="hidden" name="OrderNumber" value="@item.OrderNumber" />
-
-                                            <button type="submit" class="btn btn-success">Remove</button>
-                                        </form>
+                                        <a class="btn btn-success" asp-controller="Order" asp-action="DeleteSingleItem"
+                                           asp-route-orderItemId="@item.OrderItemId">Remove</a>
 
                                         @* EDIT NOTE *@
                                         <form asp-controller="Order" asp-action="EditItemNote" method="post">
-                                            <input type="hidden" name="OrderItemId" value="@item.OrderItemId" />
-                                            <input type="hidden" name="Quantity" value="@item.Quantity" />
-                                            <input type="hidden" name="ItemStatus" value="@item.ItemStatus" />
-                                            <input type="hidden" name="MenuItem.MenuItemId" value="@item.MenuItem.MenuItemId" />
-                                            <input type="hidden" name="OrderNumber" value="@item.OrderNumber" />
+                                            <input type="hidden" name="orderItemId" value="@item.OrderItemId" />
 
                                             <details>
                                                 <summary class="btn btn-success">Note</summary>
                                                 <div class="mt-2">
-                                                    <label for="Note">Edit note:</label>
-                                                    <input type="text" name="Note" value="@item.Note" class="form-control" />
+                                                    <label for="note">Edit note:</label>
+                                                    <input type="text" name="note" value="@item.Note" class="form-control" />
                                                     <button type="submit" class="btn btn-primary mt-2">Save</button>
                                                 </div>
                                             </details>

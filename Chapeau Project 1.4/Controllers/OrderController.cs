@@ -87,10 +87,13 @@ namespace Chapeau_Project_1._4.Controllers
             //i pass only the order number because I'm reusing a kitchen method that its already expecting a status
             _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);
 
-            _orderItemService.UpdateAllItemsStatus(order);
+            _orderItemService.UpdateAllItemsStatus(order);            
 
             foreach (OrderItem orderItem in order.OrderItems)
             {
+                //check if the item is already in the order, if it is, it will not add it again
+                _orderItemService.CheckDuplicateItems(orderItem);                 
+                
                 _orderItemService.ReduceItemStock(orderItem);
             }
 
@@ -113,45 +116,32 @@ namespace Chapeau_Project_1._4.Controllers
 
         }
 
-        [HttpPost]
-        public IActionResult IncreaseItemQuantity(OrderItem orderItem)
+        [HttpGet]
+        public IActionResult EditItemQuantity(int orderItemId, string operation)
         {
-            int increasedQuantity = orderItem.Quantity + 1;
-            
-            _orderItemService.UpdateItemQuantity(orderItem, increasedQuantity);
+            OrderItem orderItem = _orderItemService.GetOrderItemById(orderItemId);
+
+            _orderItemService.EditItemQuantity(orderItem, operation);
 
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
         }
 
-        [HttpPost]
-        public IActionResult DecreaseItemQuantity(OrderItem orderItem)
+        [HttpGet]
+        public IActionResult DeleteSingleItem(int orderItemId)
         {
-            if (orderItem.Quantity > 1)
-            {
-                int decreasedQuantity = orderItem.Quantity - 1;
+            OrderItem orderItem = _orderItemService.GetOrderItemById(orderItemId);
 
-                _orderItemService.UpdateItemQuantity(orderItem, decreasedQuantity);
-            }
-                
-            else 
-            {
-                _orderItemService.DeleteSingleItem(orderItem);
-            }
-
-            return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
-        }
-
-        [HttpPost]
-        public IActionResult DeleteSingleItem(OrderItem orderItem)
-        {
             _orderItemService.DeleteSingleItem(orderItem);
 
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
         }
 
         [HttpPost]
-        public IActionResult EditItemNote(OrderItem orderItem)
+        public IActionResult EditItemNote(int orderItemId, string note)
         {
+            OrderItem orderItem = _orderItemService.GetOrderItemById(orderItemId);
+            orderItem.Note = note;
+
             _orderItemService.EditItemNote(orderItem);
 
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });

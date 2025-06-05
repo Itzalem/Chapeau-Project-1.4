@@ -1,6 +1,7 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Microsoft.Data.SqlClient;
+using System.Reflection.PortableExecutable;
 
 namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 {
@@ -50,16 +51,28 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             {
                 connection.Open();
 
+                if (!CheckDuplicateItems(orderItem))
+                { 
+                    InsertOrderItem(connection, orderItem);
+                }
+            }
+        }
+
+        public bool CheckDuplicateItems(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open(); 
+
                 int? existingItemId = FindMatchingOrderItemId(connection, orderItem);
 
                 if (existingItemId != null)
                 {
-                    UpdateQuantity(connection, existingItemId.Value, orderItem.Quantity);
+                    UpdateDuplicateItemQuantity(connection, existingItemId.Value, orderItem.Quantity);
+                    return true;
                 }
-                else
-                {
-                    InsertOrderItem(connection, orderItem);
-                }
+
+                return false;
             }
         }
 
@@ -67,13 +80,16 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         {
             string query = "SELECT orderItem_id FROM ORDER_ITEM " +
                            " WHERE orderNumber = @OrderNumber AND menuItem_id = @MenuItemId " +
-                           " AND ((note IS NULL AND @Note IS NULL) OR note = @Note)";
+                           " AND ((note IS NULL AND @Note IS NULL) OR note = @Note)" +
+                           "AND itemStatus = @ItemStatus";
 
             SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
             command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
             command.Parameters.AddWithValue("@Note", (object?)orderItem.Note ?? DBNull.Value);
+            command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus.ToString());
+
 
             object? result = command.ExecuteScalar();
 
@@ -88,16 +104,17 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         }
 
-        private void UpdateQuantity(SqlConnection connection, int existingItemId, int extraQuantity)
+        public void UpdateDuplicateItemQuantity(SqlConnection connection, int existingItemId, int extraQuantity)
         {
             string query = "UPDATE ORDER_ITEM SET quantity = quantity + @ExtraQuantity " +
-                            " WHERE orderItem_id = @Id ;";
+                        " WHERE orderItem_id = @Id;";
 
             SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@ExtraQuantity", extraQuantity);
             command.Parameters.AddWithValue("@Id", existingItemId);
             command.ExecuteNonQuery();
+
         }
 
         private void InsertOrderItem(SqlConnection connection, OrderItem orderItem)
@@ -343,7 +360,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             return orderItems;
         }
 
-        public void UpdateItemQuantity(OrderItem orderItem, int updatedQuantity)
+        public void EditItemQuantity(OrderItem orderItem)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -352,12 +369,11 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@UpdatedQuantity", updatedQuantity);
+                command.Parameters.AddWithValue("@UpdatedQuantity", orderItem.Quantity);
                 command.Parameters.AddWithValue("@OrderItem_Id", orderItem.OrderItemId);
 
                 command.Connection.Open();
 
-                Console.WriteLine($"Updating order item {orderItem.OrderItemId} to quantity {updatedQuantity}");
                 int rows = command.ExecuteNonQuery();
                 if (rows != 1)
                 {
@@ -391,7 +407,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = " UPDATE ORDER_ITEM  SET note = @Note " +
+                string query = " UPDATE ORDER_ITEM SET note = @Note " +
                                 "WHERE orderItem_id = @OrderItem_Id;"; 
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -406,6 +422,33 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                     throw new Exception("Failed to reduce stock");
                 }
             }
+
+        }
+
+        public OrderItem GetOrderItemById(int orderItemId)
+        {
+            OrderItem orderItem = new OrderItem();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @"SELECT orderItem_id, quantity, note, menuItem_id, orderNumber, itemStatus 
+                                    FROM ORDER_ITEM  WHERE orderItem_id = @OrderItemId ;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@OrderItemId", orderItemId);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    orderItem = ReadOrderItem(reader);                    
+                }
+                reader.Close();
+            }
+
+            return orderItem;
 
         }
 

@@ -28,7 +28,7 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
                     while (reader.Read())
                     {
                         int TableNumber = reader.GetInt32(0);
-                        bool IsOccupied = reader.GetBoolean(2);
+                        bool IsOccupied = reader.GetBoolean(1);
 
                         tables.Add(new RestaurantTable(TableNumber, IsOccupied));
                     }
@@ -57,7 +57,7 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
                         restaurantTable = new RestaurantTable
                         {
                             TableNumber = reader.GetInt32(0),
-                            IsOccupied = reader.GetBoolean(2)
+                            IsOccupied = reader.GetBoolean(1)
                         };
 
                     }

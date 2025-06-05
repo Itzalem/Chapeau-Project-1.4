@@ -18,7 +18,7 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT tableNumber, amountOfGuests, isOccupied FROM RESTAURANT_TABLE";
+                string query = @"SELECT tableNumber, isOccupied FROM RESTAURANT_TABLE";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
@@ -28,10 +28,9 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
                     while (reader.Read())
                     {
                         int TableNumber = reader.GetInt32(0);
-                        int AmountOfGuests = reader.GetInt32(1);
                         bool IsOccupied = reader.GetBoolean(2);
 
-                        tables.Add(new RestaurantTable(TableNumber, AmountOfGuests, IsOccupied));
+                        tables.Add(new RestaurantTable(TableNumber, IsOccupied));
                     }
                 }
             }
@@ -45,7 +44,7 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT tableNumber, amountOfGuests, isOccupied FROM RESTAURANT_TABLE WHERE tableNumber = @table";
+                string query = @"SELECT tableNumber, amountOfGuests FROM RESTAURANT_TABLE WHERE tableNumber = @table";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@table", table);
@@ -58,7 +57,6 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
                         restaurantTable = new RestaurantTable
                         {
                             TableNumber = reader.GetInt32(0),
-                            AmountOfGuests = reader.GetInt32(1),
                             IsOccupied = reader.GetBoolean(2)
                         };
 

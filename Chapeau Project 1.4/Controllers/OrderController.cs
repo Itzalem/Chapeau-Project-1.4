@@ -116,12 +116,46 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpPost]
         public IActionResult IncreaseItemQuantity(OrderItem orderItem)
         {
+            int increasedQuantity = orderItem.Quantity + 1;
             
-
+            _orderItemService.UpdateItemQuantity(orderItem, increasedQuantity);
 
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
         }
 
+        [HttpPost]
+        public IActionResult DecreaseItemQuantity(OrderItem orderItem)
+        {
+            if (orderItem.Quantity > 1)
+            {
+                int decreasedQuantity = orderItem.Quantity - 1;
+
+                _orderItemService.UpdateItemQuantity(orderItem, decreasedQuantity);
+            }
+                
+            else 
+            {
+                _orderItemService.DeleteSingleItem(orderItem);
+            }
+
+            return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteSingleItem(OrderItem orderItem)
+        {
+            _orderItemService.DeleteSingleItem(orderItem);
+
+            return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
+        }
+
+        [HttpPost]
+        public IActionResult EditItemNote(OrderItem orderItem)
+        {
+            _orderItemService.EditItemNote(orderItem);
+
+            return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
+        }
 
     }
 }

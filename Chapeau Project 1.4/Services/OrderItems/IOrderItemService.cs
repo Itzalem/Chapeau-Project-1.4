@@ -1,4 +1,5 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Chapeau_Project_1._4.Services.OrderItems
 {
@@ -14,5 +15,10 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         void UpdateAllItemsStatus(Chapeau_Project_1._4.Models.Order order);
 
         void ReduceItemStock(OrderItem orderItem);
+
+        void UpdateItemQuantity(OrderItem orderItem, int updatedQuantity);
+        void DeleteSingleItem(OrderItem orderItem);
+
+        void EditItemNote(OrderItem orderItem);
     }
 }

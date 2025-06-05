@@ -279,6 +279,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 }
             }
         }
+       
+       
 
         public void UpdateItemStatus(int orderItemId, EItemStatus newStatus)
         {
@@ -343,6 +345,71 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             return orderItems;
         }
 
-        
+        public void UpdateItemQuantity(OrderItem orderItem, int updatedQuantity)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = " UPDATE ORDER_ITEM SET quantity = @UpdatedQuantity " +
+                                "WHERE orderItem_id = @OrderItem_Id;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UpdatedQuantity", updatedQuantity);
+                command.Parameters.AddWithValue("@OrderItem_Id", orderItem.OrderItemId);
+
+                command.Connection.Open();
+
+                Console.WriteLine($"Updating order item {orderItem.OrderItemId} to quantity {updatedQuantity}");
+                int rows = command.ExecuteNonQuery();
+                if (rows != 1)
+                {
+                    throw new Exception("Failed to update quantity");
+                }
+            }
+        }
+
+        public void DeleteSingleItem(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @"DELETE FROM ORDER_ITEM 
+                                 WHERE orderItem_id = @OrderItem_Id";
+
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@OrderItem_Id", orderItem.OrderItemId);
+
+                command.Connection.Open();
+                int rows = command.ExecuteNonQuery();
+                if (rows != 1)
+                {
+                    throw new Exception("Failed to delete item");
+                }
+
+            }
+        }
+
+        public void EditItemNote(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = " UPDATE ORDER_ITEM  SET note = @Note " +
+                                "WHERE orderItem_id = @OrderItem_Id;"; 
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Note", orderItem.Note);
+                command.Parameters.AddWithValue("@OrderItem_Id", orderItem.OrderItemId);
+
+                command.Connection.Open();
+                int rows = command.ExecuteNonQuery();
+                if (rows != 1)
+                {
+                    throw new Exception("Failed to reduce stock");
+                }
+            }
+
+        }
+
     }
 }

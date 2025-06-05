@@ -21,5 +21,10 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
         void UpdateCourseStatus(int orderNumber, EItemStatus newStatus);
         List<OrderItem> GetFinishedItems(DateTime date);
+
+        void UpdateItemQuantity(OrderItem orderItem, int updatedQuantity);
+        void DeleteSingleItem(OrderItem orderItem);
+
+        void EditItemNote(OrderItem orderItem);
     }
 }

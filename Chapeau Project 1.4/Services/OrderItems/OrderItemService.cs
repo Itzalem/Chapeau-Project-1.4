@@ -42,5 +42,20 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         {
             _orderItemRepository.ReduceItemStock(orderItem);
         }
+
+        public void UpdateItemQuantity(OrderItem orderItem, int updatedQuantity)
+        {
+            _orderItemRepository.UpdateItemQuantity(orderItem, updatedQuantity);
+        }
+
+        public void DeleteSingleItem(OrderItem orderItem)
+        {
+            _orderItemRepository.DeleteSingleItem(orderItem);
+        }
+
+        public void EditItemNote(OrderItem orderItem)
+        {
+            _orderItemRepository.EditItemNote(orderItem);
+        }
     }
 }

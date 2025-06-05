@@ -87,15 +87,17 @@ namespace Chapeau_Project_1._4.Controllers
             //i pass only the order number because I'm reusing a kitchen method that its already expecting a status
             _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);
 
-            _orderItemService.UpdateAllItemsStatus(order);            
-
+            //the stock its reduced before the itemstatus is changes to avoid already
+            //sent items to reduce the stock again 
             foreach (OrderItem orderItem in order.OrderItems)
             {
-                //check if the item is already in the order, if it is, it will not add it again
-                _orderItemService.CheckDuplicateItems(orderItem);                 
-                
-                _orderItemService.ReduceItemStock(orderItem);
+                if (orderItem.ItemStatus == EItemStatus.onHold) //this is not the best way to do it, better to do it in the repo
+                { 
+                    _orderItemService.ReduceItemStock(orderItem);
+                }
             }
+
+            _orderItemService.UpdateAllItemsStatus(order);            
 
             TempData["SuccesMessage"] = "Order Sent Successfully";
 

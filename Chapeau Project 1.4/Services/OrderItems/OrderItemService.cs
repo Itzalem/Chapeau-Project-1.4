@@ -17,10 +17,10 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             _orderItemRepository.AddOrderItem(orderItem);
         }
 
-        public bool CheckDuplicateItems(OrderItem orderItem)
-        {
-            return _orderItemRepository.CheckDuplicateItems(orderItem);
-        }
+        //public bool CheckDuplicateItems(OrderItem orderItem)
+        //{
+        //    return _orderItemRepository.CheckDuplicateItems(orderItem);
+        //}
 
         public List<OrderItem> DisplayOrderItems()
         {

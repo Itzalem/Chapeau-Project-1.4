@@ -7,7 +7,7 @@ namespace Chapeau_Project_1._4.Services.OrderItems
     public interface IOrderItemService
     {
         void AddOrderItem(OrderItem orderItem);
-        bool CheckDuplicateItems(OrderItem orderItem);
+        //bool CheckDuplicateItems(OrderItem orderItem);
 
         public OrderItem GetOrderItemById(int orderItemId);
 

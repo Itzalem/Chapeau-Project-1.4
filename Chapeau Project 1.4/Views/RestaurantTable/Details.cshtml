@@ -4,7 +4,6 @@
 
 <div class="table-detail-card">
     <p><strong>Status:</strong> @(Model.IsOccupied ? "Occupied" : "Free")</p>
-    <p><strong>Guests:</strong> @Model.AmountOfGuests</p>
 </div>
 
 @if (TempData["ToggleError"] != null)

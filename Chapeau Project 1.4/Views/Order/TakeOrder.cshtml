@@ -13,6 +13,8 @@
     </div>
 }
 
+<a class="btn btn-success" href="/RestaurantTable/Overview"> Back to Tables</a>
+
 <div style="display: flex; gap: 20pxc;">
 
     <div style="flex: 1; border: 1px solid #ccc; padding: 10px;">
@@ -93,7 +95,7 @@
                                             <details>
                                                 <summary class="btn btn-success">Note</summary>
                                                 <div class="mt-2">
-                                                    <label for="Note">Editar nota:</label>
+                                                    <label for="Note">Edit note:</label>
                                                     <input type="text" name="Note" value="@item.Note" class="form-control" />
                                                     <button type="submit" class="btn btn-primary mt-2">Save</button>
                                                 </div>
@@ -136,12 +138,14 @@
             <button type="submit" class="btn btn-success">Cancel</button>
         </form>
 
-       @*  <a asp-controller="Payment" asp-action="DisplayOrder" asp-route-tableNumber="@Model.TableNumber">Pay</a> *@
+        <a class="btn btn-success" asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber">Pay</a>       
          
 
     </div>
 
 </div>
+
+
 
 
 

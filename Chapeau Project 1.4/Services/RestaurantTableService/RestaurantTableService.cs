@@ -29,7 +29,6 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
                 var viewModel = new TableOrderViewModel
                 {
                     TableNumber = table.TableNumber,
-                    AmountOfGuests = table.AmountOfGuests,
                     IsOccupied = table.IsOccupied,
                     FoodOrderStatus = "None",
                     DrinkOrderStatus = "None"

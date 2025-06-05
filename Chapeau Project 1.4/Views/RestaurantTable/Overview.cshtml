@@ -41,7 +41,6 @@
         <a asp-controller="RestaurantTable" asp-action="Details" asp-route-id="@table.TableNumber" class="table-square @statusClass">
             <div class="table-number">Table @table.TableNumber</div>
             <div class="table-status">@((table.IsOccupied) ? "Occupied" : "Free")</div>
-            <div class="table-guests">Guests: @table.AmountOfGuests</div>
 
             <div class="table-orders">
                 <div>Food order: @table.FoodOrderStatus</div>

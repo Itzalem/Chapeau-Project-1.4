@@ -163,14 +163,14 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
               
         }
 
-        public void UpdateOrderStatus(EOrderStatus status, int id)
+        public void UpdateOrderStatus(EOrderStatus status, int orderNumber)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"UPDATE Orders SET status = @status WHERE orderNumber = @id";
+                string query = @"UPDATE Orders SET status = @status WHERE orderNumber = @orderNumber";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@status", status.ToString());
-                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
                 command.Connection.Open() ; 
                 command.ExecuteNonQuery();
@@ -330,11 +330,29 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return items;
         }
 
+        public List<Order> GetFinishedOrders()
+        {
+            List<Order> orders = new List<Order>();
 
 
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @" SELECT orderNumber, status, tableNumber, orderTime
+                                  FROM ORDERS
+                                  WHERE status = 'prepared';";
+                SqlCommand command = new SqlCommand(query, connection);
 
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
 
-
-
+                while (reader.Read())
+                {
+                    Order order = ReadOrder(reader);
+                    orders.Add(order);
+                }
+                reader.Close();
+            }
+            return orders;
+        }
     }
 }

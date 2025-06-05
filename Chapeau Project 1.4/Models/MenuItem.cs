@@ -11,6 +11,7 @@
         public string Category { get; set; }
         public bool IsAlcoholic { get; set; }
         public ECategoryStatus CategoryStatus { get; set; } 
+        //public string ItemType { get; set; }    
     
 
         public MenuItem()

@@ -34,6 +34,7 @@ namespace Chapeau_Project_1._4.Controllers
                 OrderNumber = x.OrderNumber,
                 OrderTime = x.OrderTime,
                 TableNumber = x.TableNumber,
+                Status = x.Status,
                 WaitingTime = (int)(DateTime.Now - x.OrderTime).TotalMinutes,
                 runningOrders = orderItems.Where(p => p.OrderNumber == x.OrderNumber).Select(o => new RunningOrderItem
                 {
@@ -56,20 +57,36 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateItemStatus(int orderItemId , int orderNumber, EItemStatus itemStatus)
+        public IActionResult UpdateItemStatus(int orderItemId , EItemStatus groupStatus)
         {
             
             // Call into your repo to update a single item
-            _orderItemRepository.UpdateItemStatus(orderItemId, itemStatus);
+            _orderItemRepository.UpdateItemStatus(orderItemId, groupStatus);
             // Redirect back to the running-orders page so the view reloads
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult UpdateCourseStatus (int orderNumber, string itemStatus)
+        public IActionResult UpdateCourseStatus (int orderNumber, EItemStatus itemStatus)
         {
-            _orderItemRepository.UpdateCourseStatus(orderNumber, (EItemStatus)Enum.Parse(typeof(EItemStatus) , itemStatus));  
+            _orderItemRepository.UpdateCourseStatus(orderNumber,  itemStatus);  
             return RedirectToAction("Index");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult UpdateOrderStatus(int orderNumber, EOrderStatus orderStatus)
+        {
+            _orderRepository.UpdateOrderStatus(orderStatus, orderNumber);
+            
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult GetFinishedItems()
+        {
+            return View("FinishedOrder"); 
         }
     }
 }

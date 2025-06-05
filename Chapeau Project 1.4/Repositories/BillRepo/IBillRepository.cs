@@ -4,6 +4,6 @@ namespace Chapeau_Project_1._4.Repositories.BillRepo
 {
     public interface IBillRepository
     {
-        Bill CreateBill();
+        Bill CreateBill(Payment payment);
     }
 }

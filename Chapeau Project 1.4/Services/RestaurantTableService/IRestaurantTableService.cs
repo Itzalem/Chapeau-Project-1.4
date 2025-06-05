@@ -8,7 +8,7 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
     {
         List<RestaurantTable> GetAllTables();
         List<TableOrderViewModel> GetTablesWithOrderStatus(IOrderService orderService);
-
+        RestaurantTable? GetTableByNumber(int? table);
         void UpdateTableOccupancy(int tableNumber, bool isOccupied);
 
     }

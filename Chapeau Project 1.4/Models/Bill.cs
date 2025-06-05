@@ -19,5 +19,11 @@
             Order = order;
             Table = table;
         }
+
+        public Bill(Order order, RestaurantTable table)
+        {
+            Order = order;
+            Table = table;
+        }
     }
 }

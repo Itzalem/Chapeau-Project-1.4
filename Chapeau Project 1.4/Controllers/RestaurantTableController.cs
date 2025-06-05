@@ -23,14 +23,6 @@ public class RestaurantTableController : Controller
     }
 
     [HttpGet]
-    public IActionResult GetTable()
-    {
-        List<RestaurantTable> tables = _tableService.GetAllTables();
-
-        return View(tables);
-    }
-
-    [HttpGet]
     public IActionResult Details(int id)
     {
         var table = _tableService.GetAllTables().FirstOrDefault(t => t.TableNumber == id);

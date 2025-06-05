@@ -16,5 +16,11 @@
             AmountOfGuests = amountOfGuests;
             IsOccupied = isOccupied;
         }
+
+        public RestaurantTable(int tableNumber, bool isOccupied)
+        {
+            TableNumber = tableNumber;
+            IsOccupied = isOccupied;
+        }
     }
 }

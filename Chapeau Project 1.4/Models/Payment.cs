@@ -6,26 +6,47 @@
         public Bill Bill { get; set; }
         public decimal Tip { get; set; }
         public decimal Total { get; set; }
-        public int AlcoholDrinks { get; set; }
-        public int NonAlcoholDrinks { get; set; }
         public EPaymentOptions PaymentType { get; set; }
         public string Feedback { get; set; }
+
+        // calculate VAT
+        public decimal VAT
+        {
+            get
+            {
+                decimal VAT = 0;
+                foreach (OrderItem item in Bill.Order.OrderItems)
+                {
+                    if (item.MenuItem.IsAlcoholic)
+                        VAT += (item.MenuItem.Price * (decimal)0.21);
+                    else
+                        VAT += (item.MenuItem.Price * (decimal)0.09);
+                }
+                return VAT;
+            }
+            set { }
+        }
 
         public Payment()
         {
              
         }
 
-        public Payment(int paymentId, Bill bill, decimal tip, decimal total, int alcoholDrinks, int nonAlcoholDrinks, EPaymentOptions paymentType, string feedback)
+        public Payment(int paymentId, Bill bill, decimal tip, decimal total, EPaymentOptions paymentType, string feedback)
         {
             PaymentId = paymentId;
             Bill = bill;
             Tip = tip;
             Total = total;
-            AlcoholDrinks = alcoholDrinks;
-            NonAlcoholDrinks = nonAlcoholDrinks;
             PaymentType = paymentType;
             Feedback = feedback;
+        }
+
+        public Payment(Bill bill, decimal total)
+        {
+            Bill = bill;
+            Total = total;
+            Feedback = "";
         }
     }
 }

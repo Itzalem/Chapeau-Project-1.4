@@ -7,7 +7,7 @@
 <div class="text-center">
 	<h1 class="display-4">Le Order of table @Model.TableNumber</h1>
 
-	<a href="/Payment/PreparePay?table=@Model.TableNumber">go to payment</a>
+	<a href="/Payment/PreparePay?order=@Model">go to payment</a>
 
 	<table class="table">
 		<thead>
@@ -41,15 +41,8 @@
 					</tr>
 				}
 
-				decimal total = 0;
-
-				foreach (OrderItem item in Model.OrderItems)
-				{
-					total += item.MenuItem.Price;
-				}
-
 				<tr>
-					<td>total price: €@total</td>
+					<td>total price: €@Model.Total</td>
 				</tr>
 			}
 		</tbody>

@@ -33,7 +33,7 @@ namespace Chapeau_Project_1._4
                 options.Cookie.IsEssential = true;
             });
 
-            builder.Services.AddControllersWithViews();
+            //builder.Services.AddControllersWithViews();
 
             builder.Services.AddSingleton<IOrderService, OrderService>();
             builder.Services.AddSingleton<IOrderRepository, OrderRepository>();

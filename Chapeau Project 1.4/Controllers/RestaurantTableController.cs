@@ -18,7 +18,7 @@ public class RestaurantTableController : Controller
     [HttpGet]
     public IActionResult Overview()
     {
-        var viewModels = _tableService.GetTablesWithOrderStatus(_orderService);
+        var viewModels = _tableService.GetTablesWithOrderStatus();
         return View(viewModels);
     }
 

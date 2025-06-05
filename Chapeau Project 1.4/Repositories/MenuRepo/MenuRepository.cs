@@ -35,39 +35,32 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
         }
 
         public List<MenuItem> GetMenuItems(ECardOptions cardFilter, ECategoryOptions categoryFilter)
-        {         
+        {
             List<MenuItem> menu = new List<MenuItem>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string selectFields = "MI.menuItem_id, MI.menuItemName, MI.price, MI.stock, MI.menuCard, MI.category";
-                string fromClause = " FROM MENU_ITEMS AS MI";
-                string whereClause = " WHERE MI.menuCard = @MenuCard";
-                string orderClause = " ORDER BY MI.menuCard, MI.category";
-
-                if (cardFilter == ECardOptions.Drinks)
-                {
-                    selectFields += ", D.isAlcoholic";
-                    fromClause += " JOIN DRINK AS D ON MI.menuItem_id = D.menuItem_id";
-                }
+                string query = "SELECT menuItem_id, menuItemName, price, stock, menuCard, category, isAlcoholic " +
+                               "FROM MENU_ITEMS " +
+                               "WHERE menuCard = @MenuCard";
 
                 if (categoryFilter != ECategoryOptions.All)
                 {
-                    whereClause += " AND MI.category = @Category";
+                    query += " AND category = @Category";
                 }
 
-                string query = $"SELECT {selectFields}{fromClause}{whereClause}{orderClause};";
+                query += " ORDER BY menuCard, category;";
 
                 SqlCommand command = new SqlCommand(query, connection);
-                
-                command.Parameters.AddWithValue("@MenuCard", cardFilter.ToString());                          
+
+                command.Parameters.AddWithValue("@MenuCard", cardFilter.ToString());
 
                 if (categoryFilter != ECategoryOptions.All)
                 {
                     command.Parameters.AddWithValue("@Category", categoryFilter.ToString());
                 }
 
-                command.Connection.Open();
+                connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -80,6 +73,7 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
                 return menu;
             }
         }
+
 
         public MenuItem GetMenuItemById(int menuItemId)
         {
@@ -97,12 +91,11 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
                 SqlDataReader reader = command.ExecuteReader();
 
 
-                if (reader.Read()) // Verifica que hay una fila antes de leer
+                if (reader.Read()) 
                 {
-                    return ReadItem(reader); // Solo se llama si hay datos
+                    return ReadItem(reader); 
                 }
-
-                // ❗ Si no hay datos, lanza excepción clara
+                
                 throw new Exception($"No MenuItem found with ID: {menuItemId}");
             }
         }

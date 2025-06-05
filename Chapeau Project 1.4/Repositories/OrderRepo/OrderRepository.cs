@@ -132,18 +132,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return null;
         }
          
-        /* COMMENTED BECAUSE IT DOESN'T WORK, THIJMEN CHECK THIS PLEASE
-        private Order ReadOrderByTable(SqlDataReader reader)
-        {
-            int OrderNumber = (int)reader["orderNumber"];
-            EOrderStatus Status = (EOrderStatus)Enum.Parse(typeof(EOrderStatus), reader["status"].ToString()!, true);
-            DateTime OrderTime = (DateTime)reader["orderTime"];
-            int TableNumber = (int)reader["tableNumber"];
-
-            List<OrderItem> orderItems = _orderItemService.DisplayItemsPerOrder(OrderNumber);
-
-            return new Order(OrderNumber, Status, OrderTime, TableNumber, orderItems);
-        }*/
 
         public void Update(Order order)
         {

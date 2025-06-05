@@ -44,7 +44,7 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT tableNumber, amountOfGuests FROM RESTAURANT_TABLE WHERE tableNumber = @table";
+                string query = @"SELECT tableNumber, isOccupied FROM RESTAURANT_TABLE WHERE tableNumber = @table";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@table", table);

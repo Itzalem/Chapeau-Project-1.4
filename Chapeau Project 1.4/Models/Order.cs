@@ -10,6 +10,22 @@
         //the list of orderitems 
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
+        // calculate the total price of the order
+        public decimal Total
+        {
+            get
+            {
+                decimal total = 0;
+                foreach (OrderItem item in OrderItems)
+                {
+                    total += item.MenuItem.Price;
+                }
+                return total;
+            }
+        }
+
+        //add food items -> loop over OrderItems and then check if its food (if so add it?)
+        //add drink items -> loop over OrderItems and then check if its drink (if so add it?)
 
         public Order()
         {

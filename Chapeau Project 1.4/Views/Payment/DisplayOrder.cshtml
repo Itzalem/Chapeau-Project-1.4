@@ -41,15 +41,8 @@
 					</tr>
 				}
 
-				decimal total = 0;
-
-				foreach (OrderItem item in Model.OrderItems)
-				{
-					total += item.MenuItem.Price;
-				}
-
 				<tr>
-					<td>total price: €@total</td>
+					<td>total price: €@Model.Total</td>
 				</tr>
 			}
 		</tbody>

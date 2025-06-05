@@ -10,6 +10,8 @@
         //the list of orderitems 
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
+        //add food items -> loop over OrderItems and then check if its food (if so add it?)
+        //add drink items -> loop over OrderItems and then check if its drink (if so add it?)
 
         public Order()
         {

@@ -3,7 +3,7 @@
     public class Payment
     {
         public int PaymentId { get; set; }
-        public Bill Bill { get; set; }
+        public Bill Bill { get; set; } = new Bill();
         public decimal Tip { get; set; }
         public decimal Total { get; set; }
         public EPaymentOptions PaymentType { get; set; }
@@ -24,7 +24,6 @@
                 }
                 return VAT;
             }
-            set { }
         }
 
         public Payment()

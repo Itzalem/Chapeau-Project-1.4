@@ -33,16 +33,19 @@ namespace Chapeau_Project_1._4.Controllers
 
             if (order == null)
             {
-                return RedirectToAction("Overview", "RestaurantTable");
+                return RedirectToAction("RestaurantTable", "Overview");
             }
 
             return View(order);
         }
 
         [HttpGet]
-        public IActionResult PreparePay(Order order)
+        public IActionResult PreparePay(int? table)
         {
-            Bill bill = new Bill(order, _tableService.GetTableByNumber(order.TableNumber));
+            Order? order = _orderService.GetOrderByTable(table);
+            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
+
+            Bill bill = new Bill(order, _tableService.GetTableByNumber(table));
 
             Payment payment = new Payment(bill, order.Total);
             return View(payment);

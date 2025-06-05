@@ -22,7 +22,6 @@
                 }
                 return total;
             }
-            set { }
         }
 
         //add food items -> loop over OrderItems and then check if its food (if so add it?)

@@ -1,11 +1,18 @@
 ﻿@model Chapeau_Project_1._4.Models.OrderItem
 
-@if (ViewData["Error"] != null)
+@if (ViewData["QuantityError"] != null)
 {
     <div class="alert alert-danger">
-        @ViewData["Error"]
+        @ViewData["QuantityError"]
     </div>
 }
+@if (ViewData["InsufficientStockError"] != null)
+{
+    <div class="alert alert-danger">
+        @ViewData["InsufficientStockError"]
+    </div>
+}
+
 
 <form asp-controller="Order" asp-action="AddItemsToOrder" method="post">
     <input type="hidden" asp-for="MenuItem.MenuItemId" />

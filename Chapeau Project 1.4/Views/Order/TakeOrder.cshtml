@@ -44,9 +44,16 @@
                             <td>
                                 <details>
                                     <summary>Edit</summary>
-                                    <div class="menu-buttons">                                  
+                                    <div class="menu-buttons">  
+                                        @if (item.MenuItem.Stock > item.Quantity)
+                                        {
                                         <a class="btn btn-success" asp-controller="Order" asp-action="EditItemQuantity" 
                                             asp-route-orderItemId="@item.OrderItemId" asp-route-operation="increase">+</a>
+                                        }
+                                        else
+                                        {
+                                            <p style="color: red">Maximun ammount available of the item reached</p>
+                                        }
 
                                         <a class="btn btn-success" asp-controller="Order" asp-action="EditItemQuantity"
                                            asp-route-orderItemId="@item.OrderItemId" asp-route-operation="decrease">-</a>

@@ -50,22 +50,6 @@ namespace Chapeau_Project_1._4.Controllers
 
 
         [HttpPost]
-        public IActionResult AddItemsToOrder(OrderItem orderItem)
-        {
-            if (orderItem.Quantity <= 0)
-            {
-                ViewData["Error"] = "Enter a valid quantity";
-                return View("InputItemDetails", orderItem);
-            }
-
-            _orderItemService.AddOrderItem(orderItem); //add item to Db
-
-            return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
-
-        }
-
-
-        [HttpPost]
         public IActionResult InputItemDetails(MenuItem menuItem, int OrderNumber)
         {
             OrderItem orderItem = new OrderItem
@@ -78,6 +62,29 @@ namespace Chapeau_Project_1._4.Controllers
             return View(orderItem);
 
         }
+
+        [HttpPost]
+        public IActionResult AddItemsToOrder(OrderItem orderItem)
+        {
+            if (orderItem.Quantity <= 0)
+            {
+                ViewData["QuantityError"] = "Enter a valid quantity";
+                return View("InputItemDetails", orderItem);
+            }
+
+            if (orderItem.MenuItem.Stock < orderItem.Quantity)
+            {
+                ViewData["InsufficientStockError"] = $"Not enough stock of the desired product, only {orderItem.MenuItem.Stock} available";
+                return View("InputItemDetails", orderItem);
+            }
+
+            _orderItemService.AddOrderItem(orderItem); //add item to Db
+
+            return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
+
+        }
+
+
 
         [HttpPost]
         public IActionResult SendOrder(Order order)

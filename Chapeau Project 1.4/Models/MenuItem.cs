@@ -11,7 +11,8 @@
         public string Category { get; set; }
         public bool IsAlcoholic { get; set; }
         public ECategoryStatus CategoryStatus { get; set; } 
-        //public string ItemType { get; set; }    
+        
+        //public string ItemType { get; set; }  "LUKAS IF YOU USE IT LET ME KNOW". MELISSA
     
 
         public MenuItem()
@@ -28,13 +29,6 @@
             Card = card;
             Category = category;
             IsAlcoholic = isAlcoholic;
-            CategoryStatus = categoryStatus;
-        }
-        public MenuItem(int menuItemId, string menuItemName,string category, ECategoryStatus categoryStatus = ECategoryStatus.pending)
-        {
-            MenuItemId = menuItemId;
-            MenuItemName = menuItemName;
-            Category = category;
             CategoryStatus = categoryStatus;
         }
     }

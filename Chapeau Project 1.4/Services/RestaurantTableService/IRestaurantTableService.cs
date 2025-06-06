@@ -7,7 +7,7 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
     public interface IRestaurantTableService
     {
         List<RestaurantTable> GetAllTables();
-        List<TableOrderViewModel> GetTablesWithOrderStatus(IOrderService orderService);
+        List<TableOrderViewModel> GetTablesWithOrderStatus();
         RestaurantTable? GetTableByNumber(int? table);
         void UpdateTableOccupancy(int tableNumber, bool isOccupied);
 

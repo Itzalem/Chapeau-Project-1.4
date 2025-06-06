@@ -11,7 +11,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
         private readonly string? _connectionString;
         private readonly IOrderItemService _orderItemService;
-        
+
 
         public OrderRepository(IConfiguration configuration, IOrderItemService orderItemService)
         {
@@ -27,14 +27,14 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             EOrderStatus Status = (EOrderStatus)Enum.Parse(typeof(EOrderStatus), reader["status"].ToString()!, true);
             DateTime OrderTime = (DateTime)reader["orderTime"];
             int TableNumber = (int)reader["tableNumber"];
-           
+
             return new Order(OrderNumber, Status, OrderTime, TableNumber);
         }
 
         public List<Order> DisplayOrder()
         {
-            
-            List<Order> orders = new List<Order>(); 
+
+            List<Order> orders = new List<Order>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -57,7 +57,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return orders;
         }
 
-        public int AddNewOrder(int tableNumber)  
+        public int AddNewOrder(int tableNumber)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -106,16 +106,16 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return null;
         }
 
-       
-         public Order? GetOrderByTable(int? table)
+
+        public Order? GetOrderByTable(int? table)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 string query = @"SELECT orderNumber, status, tableNumber, orderTime 
                                  FROM ORDERS 
                                  WHERE tableNumber = @table
-                                 AND status IN ('pending', 'inProgress', 'prepared')";
-                                
+                                 AND status IN ('onHold', 'pending', 'inProgress', 'prepared')";
+                // lukas: i added the onHold
 
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@table", table);
@@ -131,13 +131,13 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             }
             return null;
         }
-         
+
 
         public void Update(Order order)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                
+
                 string query = @"UPDATE Orders SET status = @status, tableNumber = @tableNumber, orderTime = @orderTime WHERE orderNumber = @orderNumber";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@status", order.Status.ToString());
@@ -148,7 +148,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 command.Connection.Open();
                 command.ExecuteNonQuery();
             }
-              
+
         }
 
         public void UpdateOrderStatus(EOrderStatus status, int orderNumber)
@@ -160,7 +160,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 command.Parameters.AddWithValue("@status", status.ToString());
                 command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
-                command.Connection.Open() ; 
+                command.Connection.Open();
                 command.ExecuteNonQuery();
             }
         }
@@ -187,7 +187,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                     DeleteEmptyOrder(order);
                 }
             }
-        }      
+        }
 
 
         public void DeleteEmptyOrder(Order order)
@@ -224,8 +224,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             }
         }
 
-        public object GetOrderMunuItemName(int OrderNumber)         {
-            
+        public object GetOrderMunuItemName(int OrderNumber)
+        {
+
 
             List<object> orders = new List<object>();
 
@@ -273,7 +274,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             string category = (string)reader["category"];
             ECategoryStatus categoryStatus = (ECategoryStatus)Enum.Parse(typeof(ECategoryStatus), reader["categoryStatus"].ToString()!);
 
-            return new{ OrderItemId  = orderItemId  , MenuItemId = menuItemId , Category = category , CategoryStatus = categoryStatus};
+            return new { OrderItemId = orderItemId, MenuItemId = menuItemId, Category = category, CategoryStatus = categoryStatus };
         }
 
 
@@ -284,11 +285,24 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT oi.orderItem_id, oi.itemStatus,
-                         mi.menuItem_id, mi.menuItemName, mi.category
-                         FROM ORDER_ITEM oi
-                         INNER JOIN MENU_ITEMS mi ON oi.menuItem_id = mi.menuItem_id
-                         WHERE oi.orderNumber = @orderNumber";
+                string query = @"
+                  SELECT 
+                    oi.orderItem_id,
+                    oi.itemStatus,
+                    oi.quantity,
+                    ISNULL(oi.note, '') AS note,
+                    mi.menuItem_id,
+                    mi.menuItemName,
+                    mi.price,
+                    mi.stock,
+                    mi.menuCard,
+                    mi.category,
+                    mi.isAlcoholic
+                  FROM ORDER_ITEM oi
+                  INNER JOIN MENU_ITEMS mi 
+                    ON oi.menuItem_id = mi.menuItem_id
+                  WHERE oi.orderNumber = @orderNumber
+                ";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@orderNumber", orderNumber);
@@ -298,24 +312,36 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
                 while (reader.Read())
                 {
-                    OrderItem item = new OrderItem
+                    MenuItem menuItem = new MenuItem
+                    {
+                        MenuItemId = (int)reader["menuItem_id"],
+                        MenuItemName = reader["menuItemName"].ToString()!,
+                        Price = (decimal)reader["price"],
+                        Stock = (int)reader["stock"],
+                        Card = reader["menuCard"].ToString()!,
+                        Category = reader["category"].ToString()!,
+                        IsAlcoholic = (bool)reader["isAlcoholic"],
+                        CategoryStatus = ECategoryStatus.pending
+                    };
+
+                    OrderItem orderItem = new OrderItem
                     {
                         OrderItemId = (int)reader["orderItem_id"],
+                        Quantity = (int)reader["quantity"],
+                        Note = reader["note"].ToString()!,
                         ItemStatus = Enum.Parse<EItemStatus>(reader["itemStatus"].ToString()!),
-                        MenuItem = new MenuItem
-                        {
-                            MenuItemId = (int)reader["menuItem_id"],
-                            MenuItemName = reader["menuItemName"].ToString()!,
-                            Category = reader["category"].ToString()!, // keep string for category
-                            CategoryStatus = ECategoryStatus.pending  // default
-                        }
+                        OrderNumber = orderNumber,
+                        MenuItem = menuItem
                     };
-                    items.Add(item);
+
+                    items.Add(orderItem);
                 }
             }
 
             return items;
         }
+
+
 
         public List<Order> GetFinishedOrders()
         {

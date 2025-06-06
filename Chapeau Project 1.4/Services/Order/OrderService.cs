@@ -1,21 +1,31 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.Repositories.OrderRepo;
+using Chapeau_Project_1._4.Services.RestaurantTableService;
 
 namespace Chapeau_Project_1._4.Services.Order
 {
     public class OrderService : IOrderService
     {
-        private IOrderRepository _orderRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IRestaurantTableService _tableService; 
 
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(
+            IOrderRepository orderRepository,
+            IRestaurantTableService tableService)
         {
             _orderRepository = orderRepository;
+            _tableService = tableService;
         }
 
         public int AddNewOrder(int tableNumber)
         {
-            return _orderRepository.AddNewOrder(tableNumber);
+            //return _orderRepository.AddNewOrder(tableNumber);
+
+            //lukas - i added this
+            int newOrderNumber = _orderRepository.AddNewOrder(tableNumber);
+            _tableService.UpdateTableOccupancy(tableNumber, true);
+            return newOrderNumber;
         }
 
         public Chapeau_Project_1._4.Models.Order? GetOrderByTable(int? table)

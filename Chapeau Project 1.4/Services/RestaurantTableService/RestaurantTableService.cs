@@ -56,43 +56,40 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
                 OrderModel? order = _orderRepo.GetOrderByTable(table.TableNumber);
                 if (order != null)
                 {
-                    var items = _orderRepo.GetOrderItemsByOrderNumber(order.OrderNumber);
+                    // Fetch that order’s items
+                    List<OrderItem> items = _orderRepo.GetOrderItemsByOrderNumber(order.OrderNumber);
 
-                   // First, look for any ReadyToServe or BeingPrepared
-                   bool foodHasReady = false, foodHasPreparing = false, foodHasServed = false;
-                   bool drinkHasReady = false, drinkHasPreparing = false, drinkHasServed = false;
+                    foreach (var item in items)
+                    {
+                        bool isDrink =
+                            item.MenuItem.Card != null
+                            && item.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase);
 
-                   foreach (var item in items)
-                   {
-                      bool isDrink = 
-                          item.MenuItem.Card != null 
-                          && item.MenuItem.Card.Equals("Drinks", System.StringComparison.OrdinalIgnoreCase);
-
-                      if (item.ItemStatus == EItemStatus.ReadyToServe)
-                      {
-                         if (isDrink)    drinkHasReady = true;
-                          else            foodHasReady  = true;
-                      }
-                      else if (item.ItemStatus == EItemStatus.BeingPrepared)
-                      {
-                           if (isDrink)    drinkHasPreparing = true;
-                           else            foodHasPreparing  = true;
-                      }
-                      else if (item.ItemStatus == EItemStatus.Served)
-                      {
-                          if (isDrink)    drinkHasServed = true;
-                          else            foodHasServed  = true;
-                      }
-                   }
-
-                   // Assign final statuses with priority: ReadyToServe > BeingPrepared > Served > None
-                   if (foodHasReady)      vm.FoodOrderStatus = "ReadyToServe";
-                   else if (foodHasPreparing) vm.FoodOrderStatus = "BeingPrepared";
-                   else if (foodHasServed)    vm.FoodOrderStatus = "Served";
-
-                   if (drinkHasReady)      vm.DrinkOrderStatus = "ReadyToServe";
-                   else if (drinkHasPreparing) vm.DrinkOrderStatus = "BeingPrepared";
-                   else if (drinkHasServed)    vm.DrinkOrderStatus = "Served";
+                        // 1) If any single item is ReadyToServe → that category = "ReadyToServe"
+                        if (item.ItemStatus == EItemStatus.ReadyToServe)
+                        {
+                            if (isDrink)
+                                vm.DrinkOrderStatus = "ReadyToServe";
+                            else
+                                vm.FoodOrderStatus = "ReadyToServe";
+                        }
+                        // 2) Else if any single item is BeingPrepared (and we haven't already set ReadyToServe)
+                        else if (item.ItemStatus == EItemStatus.BeingPrepared)
+                        {
+                            if (isDrink && vm.DrinkOrderStatus != "ReadyToServe")
+                                vm.DrinkOrderStatus = "Being-Prepared";
+                            if (!isDrink && vm.FoodOrderStatus != "ReadyToServe")
+                                vm.FoodOrderStatus = "Being-Prepared";
+                        }
+                        // 3) Else if any single item is pending (and we haven't set a higher state already)
+                        else if (item.ItemStatus == EItemStatus.pending)
+                        {
+                            if (isDrink && vm.DrinkOrderStatus == "None")
+                                vm.DrinkOrderStatus = "Ordered";
+                            if (!isDrink && vm.FoodOrderStatus == "None")
+                                vm.FoodOrderStatus = "Ordered";
+                        }
+                    }
                 }
 
                 result.Add(vm);

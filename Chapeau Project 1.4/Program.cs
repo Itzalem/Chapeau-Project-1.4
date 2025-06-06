@@ -35,6 +35,10 @@ namespace Chapeau_Project_1._4
 
             //builder.Services.AddControllersWithViews();
 
+            //Added by Lukas
+            builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();
+            builder.Services.AddSingleton<IOrderItemService, OrderItemService>();
+
             builder.Services.AddSingleton<IOrderService, OrderService>();
             builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 

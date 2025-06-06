@@ -31,8 +31,18 @@ public class RestaurantTableController : Controller
 
         var order = _orderService.GetOrderByTable(id);
         bool canBeFreed = !table.IsOccupied || order == null || order.Status == EOrderStatus.paid;
-
         ViewBag.CanToggle = canBeFreed;
+
+        // NEW: detect if any item is ReadyToServe
+        bool hasReady = false;
+        if (order != null)
+        {
+            var items = _orderService.GetOrderItems(order.OrderNumber);
+            hasReady = items.Any(i => i.ItemStatus == EItemStatus.ReadyToServe);
+        }
+        ViewBag.HasReady = hasReady;
+        ViewBag.TableNumber = id;
+
         return View(table);
     }
 
@@ -53,7 +63,6 @@ public class RestaurantTableController : Controller
         _tableService.UpdateTableOccupancy(id, !table.IsOccupied);
         return RedirectToAction("Overview");
     }
-
 
 }
 

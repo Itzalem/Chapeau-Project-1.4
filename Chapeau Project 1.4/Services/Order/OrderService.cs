@@ -1,21 +1,26 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.Repositories.OrderRepo;
+using Chapeau_Project_1._4.Repositories.OrderItemRepo;
 using Chapeau_Project_1._4.Services.RestaurantTableService;
+using Chapeau_Project_1._4.Services.OrderItems;
 
 namespace Chapeau_Project_1._4.Services.Order
 {
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly IRestaurantTableService _tableService; 
+        private readonly IRestaurantTableService _tableService;
+        private readonly IOrderItemService _orderItemService;
 
         public OrderService(
             IOrderRepository orderRepository,
-            IRestaurantTableService tableService)
+            IRestaurantTableService tableService,
+            IOrderItemService orderItemService)
         {
             _orderRepository = orderRepository;
             _tableService = tableService;
+            _orderItemService = orderItemService;
         }
 
         public int AddNewOrder(int tableNumber)
@@ -52,5 +57,6 @@ namespace Chapeau_Project_1._4.Services.Order
         {
             return _orderRepository.GetOrderItemsByOrderNumber(orderNumber);
         }
+
     }
 }

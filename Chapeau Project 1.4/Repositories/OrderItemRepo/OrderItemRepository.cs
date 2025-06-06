@@ -47,36 +47,45 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         public void AddOrderItem(OrderItem orderItem)
         {
-            try
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
+                connection.Open();
+
+                if (!CheckDuplicateItems(orderItem))
                 {
-                    connection.Open();
-
-                    int? existingItemId = FindMatchingOrderItemId(connection, orderItem);
-
-                    if (existingItemId != null)
-                    {
-                        UpdateQuantity(connection, existingItemId.Value, orderItem.Quantity);
-                    }
-                    else
-                    {
-                        InsertOrderItem(connection, orderItem);
-                    }
+                    InsertOrderItem(connection, orderItem);
                 }
-            }
-            catch (SqlException ex)
-            {
-                throw new Exception("Connection to database went wrong", ex);
             }
         }
 
-        private int? FindMatchingOrderItemId(SqlConnection connection, OrderItem orderItem)
+        public bool CheckDuplicateItems(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                int? existingItemId = FindMatchingOrderItem(connection, orderItem);
+
+                if (existingItemId != null && existingItemId != orderItem.OrderItemId)
+                {
+                    UpdateQuantity(connection, existingItemId.Value, orderItem.Quantity);
+                    DeleteDuplicateItem(connection, orderItem.OrderItemId); // delete the new duplicate, keep the existing one
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }          
+        }
+
+        private int? FindMatchingOrderItem(SqlConnection connection, OrderItem orderItem)
         {
             string query = "SELECT orderItem_id FROM ORDER_ITEM " +
                            " WHERE orderNumber = @OrderNumber AND menuItem_id = @MenuItemId " +
-                           " AND ((note IS NULL AND @Note IS NULL) OR note = @Note)" +
-                           "AND itemStatus = @OrderItemStatus";
+                           " AND ((note IS NULL AND @Note IS NULL) OR note = @Note)  " +
+                           " AND itemStatus = @OrderItemStatus " +
+                           " AND orderItem_id<> @CurrentItemId ;"; //if its in a loop it will exclude itself
 
             SqlCommand command = new SqlCommand(query, connection);
 
@@ -84,6 +93,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
             command.Parameters.AddWithValue("@Note", (object?)orderItem.Note ?? DBNull.Value);
             command.Parameters.AddWithValue("@OrderItemStatus", orderItem.ItemStatus.ToString());
+            command.Parameters.AddWithValue("@CurrentItemId", orderItem.OrderItemId); 
 
             object? result = command.ExecuteScalar();
 
@@ -108,6 +118,17 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             command.Parameters.AddWithValue("@ExtraQuantity", extraQuantity);
             command.Parameters.AddWithValue("@Id", existingItemId);
             command.ExecuteNonQuery();
+        }
+
+        private void DeleteDuplicateItem(SqlConnection connection, int duplicateItemId)
+        {
+            string query = "DELETE FROM ORDER_ITEM WHERE orderItem_id = @ExistingId ";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@ExistingId", duplicateItemId);
+            command.ExecuteNonQuery();
+
         }
 
         private void InsertOrderItem(SqlConnection connection, OrderItem orderItem)
@@ -192,6 +213,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
             return orderItems;
         }
+
 
 
         public List<OrderItem> GetByOrderNumber(int orderNumber)

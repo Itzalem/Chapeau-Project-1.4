@@ -80,6 +80,7 @@ namespace Chapeau_Project_1._4.Controllers
 
             _orderItemService.AddOrderItem(orderItem); //add item to Db
 
+
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
 
         }
@@ -104,7 +105,15 @@ namespace Chapeau_Project_1._4.Controllers
                 }
             }
 
-            _orderItemService.UpdateAllItemsStatus(order);            
+            _orderItemService.UpdateAllItemsStatus(order);
+
+            foreach (OrderItem orderItem in order.OrderItems)
+            {
+                if (orderItem.ItemStatus == EItemStatus.pending)
+                {
+                    _orderItemService.CheckDuplicateItems(orderItem);
+                }
+            }
 
             TempData["SuccesMessage"] = "Order Sent Successfully";
 
@@ -124,6 +133,7 @@ namespace Chapeau_Project_1._4.Controllers
             return RedirectToAction("Overview", "RestaurantTable");
 
         }
+
 
         [HttpGet]
         public IActionResult EditItemQuantity(int orderItemId, string operation)

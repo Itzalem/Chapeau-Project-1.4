@@ -52,44 +52,66 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
                     DrinkOrderStatus = "None"
                 };
 
-                // Fetch the active Order (status pending/inProgress/prepared) for this table
+                // Get active order
                 OrderModel? order = _orderRepo.GetOrderByTable(table.TableNumber);
                 if (order != null)
                 {
-                    // Fetch that order’s items
-                    List<OrderItem> items = _orderRepo.GetOrderItemsByOrderNumber(order.OrderNumber);
+                    var items = _orderRepo.GetOrderItemsByOrderNumber(order.OrderNumber);
+
+                    bool hasFood = false, allFoodServed = true;
+                    bool hasDrink = false, allDrinkServed = true;
 
                     foreach (var item in items)
                     {
-                        bool isDrink =
-                            item.MenuItem.Card != null
-                            && item.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase);
+                        bool isDrink = item.MenuItem.Card != null &&
+                                       item.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase);
 
-                        // 1) If any single item is ReadyToServe → that category = "ReadyToServe"
-                        if (item.ItemStatus == EItemStatus.ReadyToServe)
+                        if (isDrink)
                         {
-                            if (isDrink)
+                            hasDrink = true;
+                            if (item.ItemStatus == EItemStatus.ReadyToServe && vm.DrinkOrderStatus != "ReadyToServe")
                                 vm.DrinkOrderStatus = "ReadyToServe";
-                            else
-                                vm.FoodOrderStatus = "ReadyToServe";
-                        }
-                        // 2) Else if any single item is BeingPrepared (and we haven't already set ReadyToServe)
-                        else if (item.ItemStatus == EItemStatus.BeingPrepared)
-                        {
-                            if (isDrink && vm.DrinkOrderStatus != "ReadyToServe")
+                            else if (item.ItemStatus == EItemStatus.BeingPrepared && vm.DrinkOrderStatus == "None")
                                 vm.DrinkOrderStatus = "Being-Prepared";
-                            if (!isDrink && vm.FoodOrderStatus != "ReadyToServe")
-                                vm.FoodOrderStatus = "Being-Prepared";
-                        }
-                        // 3) Else if any single item is pending (and we haven't set a higher state already)
-                        else if (item.ItemStatus == EItemStatus.pending)
-                        {
-                            if (isDrink && vm.DrinkOrderStatus == "None")
+                            else if (item.ItemStatus == EItemStatus.pending && vm.DrinkOrderStatus == "None")
                                 vm.DrinkOrderStatus = "Ordered";
-                            if (!isDrink && vm.FoodOrderStatus == "None")
+
+                            if (item.ItemStatus != EItemStatus.Served)
+                                allDrinkServed = false;
+                        }
+                        else
+                        {
+                            hasFood = true;
+                            if (item.ItemStatus == EItemStatus.ReadyToServe && vm.FoodOrderStatus != "ReadyToServe")
+                                vm.FoodOrderStatus = "ReadyToServe";
+                            else if (item.ItemStatus == EItemStatus.BeingPrepared && vm.FoodOrderStatus == "None")
+                                vm.FoodOrderStatus = "Being-Prepared";
+                            else if (item.ItemStatus == EItemStatus.pending && vm.FoodOrderStatus == "None")
                                 vm.FoodOrderStatus = "Ordered";
+
+                            if (item.ItemStatus != EItemStatus.Served)
+                                allFoodServed = false;
                         }
                     }
+
+                    if (hasFood && allFoodServed)
+                        vm.FoodOrderStatus = "Served";
+                    if (hasDrink && allDrinkServed)
+                        vm.DrinkOrderStatus = "Served";
+                }
+                else
+                {
+                    // No active order → reset status
+                    vm.FoodOrderStatus = "None";
+                    vm.DrinkOrderStatus = "None";
+                }
+
+                // Check if there is no order at all for this table (everything paid)
+                bool hasActiveOrder = _orderRepo.GetOrderByTable(table.TableNumber) != null;
+                if (!hasActiveOrder && table.IsOccupied)
+                {
+                    _tableRepo.UpdateTableOccupancy(table.TableNumber, false); // Mark table as free
+                    vm.IsOccupied = false;
                 }
 
                 result.Add(vm);
@@ -97,5 +119,6 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
 
             return result;
         }
+
     }
 }

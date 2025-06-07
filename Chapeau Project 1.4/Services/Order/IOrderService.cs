@@ -16,5 +16,9 @@ namespace Chapeau_Project_1._4.Services.Order
 
         List<OrderItem> GetOrderItems(int orderNumber);
 
+        //Lukas
+        List<OrderItem> GetItemsForServing(int orderNumber);
+        void ServeFoodItems(int orderNumber);
+        void ServeDrinkItems(int orderNumber);
     }
 }

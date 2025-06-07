@@ -83,5 +83,42 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             _orderItemRepository.EditItemNote(orderItem);
         }
 
+
+        //Lukas
+        public List<OrderItem> GetItemsForServing(int orderNumber)
+        {
+            return _orderItemRepository.GetOrderItemsForServing(orderNumber);
+        }
+
+
+        //Lukas
+        public void ServeFoodItems(int orderNumber)
+        {
+            List<OrderItem> items = _orderItemRepository.GetOrderItemsForServing(orderNumber);
+            foreach (var item in items)
+            {
+                if (!item.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase) &&
+                    item.ItemStatus == EItemStatus.ReadyToServe)
+                {
+                    _orderItemRepository.UpdateItemStatus(item.OrderItemId, EItemStatus.Served);
+                }
+            }
+        }
+
+        //Lukas
+        public void ServeDrinkItems(int orderNumber)
+        {
+            List<OrderItem> items = _orderItemRepository.GetOrderItemsForServing(orderNumber);
+            foreach (var item in items)
+            {
+                if (item.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase) &&
+                    item.ItemStatus == EItemStatus.ReadyToServe)
+                {
+                    _orderItemRepository.UpdateItemStatus(item.OrderItemId, EItemStatus.Served);
+                }
+            }
+        }
+
+
     }
 }

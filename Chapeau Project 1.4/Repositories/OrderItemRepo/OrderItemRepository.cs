@@ -26,7 +26,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
             int menuItemId = (int)reader["menuItem_id"];
 
-
             MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);
 
             var orderItem = new OrderItem(
@@ -468,5 +467,52 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         }
 
-     }
+
+        //Lukas
+        public List<OrderItem> GetOrderItemsForServing(int orderNumber)
+        {
+            List<OrderItem> orderItems = new List<OrderItem>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @"SELECT 
+                            oi.orderItem_id,
+                            oi.orderNumber,
+                            oi.menuItem_id AS oi_menuItem_id,
+                            oi.quantity,
+                            oi.note,
+                            oi.itemStatus
+                         FROM ORDER_ITEM oi
+                         WHERE oi.orderNumber = @orderNumber;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    //implementing all this to not intefere with exisiting code because it did not work...
+                    int orderItemId = (int)reader["orderItem_id"];
+                    int quantity = (int)reader["quantity"];
+                    string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
+                    int menuItemId = (int)reader["oi_menuItem_id"];
+                    EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
+                    int orderNum = (int)reader["orderNumber"];
+
+                    MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);
+
+                    var orderItem = new OrderItem(orderItemId, quantity, note, itemStatus, menuItem, orderNum);
+                    orderItems.Add(orderItem);
+                }
+
+                reader.Close();
+            }
+
+            return orderItems;
+        }
+
+
+    }
 }

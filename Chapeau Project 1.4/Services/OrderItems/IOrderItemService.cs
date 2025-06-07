@@ -23,5 +23,10 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         void DeleteSingleItem(OrderItem orderItem);
 
         void EditItemNote(OrderItem orderItem);
+
+        //Lukas
+        List<OrderItem> GetItemsForServing(int orderNumber);
+        void ServeDrinkItems(int orderNumber);
+        void ServeFoodItems(int orderNumber);
     }
 }

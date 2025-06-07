@@ -108,16 +108,22 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
 
                 // Check if there is no order at all for this table (everything paid)
                 bool hasActiveOrder = _orderRepo.GetOrderByTable(table.TableNumber) != null;
-                if (!hasActiveOrder && table.IsOccupied)
+                if (!hasActiveOrder && table.IsOccupied && !table.WasManuallyFreed)
                 {
-                    _tableRepo.UpdateTableOccupancy(table.TableNumber, false); // Mark table as free
+                    _tableRepo.UpdateTableOccupancy(table.TableNumber, false); //mark table as free
+                    _tableRepo.SetManualFreed(table.TableNumber, false); // reset manual flag
                     vm.IsOccupied = false;
                 }
+
 
                 result.Add(vm);
             }
 
             return result;
+        }
+        public void SetManualFreed(int tableNumber, bool wasFreed)
+        {
+            _tableRepo.SetManualFreed(tableNumber, wasFreed);
         }
 
     }

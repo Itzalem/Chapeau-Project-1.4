@@ -57,7 +57,11 @@ public class RestaurantTableController : Controller
             return RedirectToAction("Details", new { id });
         }
 
-        _tableService.UpdateTableOccupancy(id, !table.IsOccupied);
+        bool newStatus = !table.IsOccupied;
+
+        _tableService.SetManualFreed(id, !newStatus); //if we're freeing it, set flag to true
+        _tableService.UpdateTableOccupancy(id, newStatus);
+
         return RedirectToAction("Overview");
     }
 

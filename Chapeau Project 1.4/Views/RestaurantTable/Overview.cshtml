@@ -31,6 +31,11 @@
 
 @model List<Chapeau_Project_1._4.ViewModel.TableOrderViewModel>
 
+@{
+    string cancelMessage = TempData["CancelMessage"]?.ToString();
+}
+<partial name="_SucessMessage" model="cancelMessage" />
+
 <h2>Restaurant Table Layout with Order Status</h2>
 
 <div class="table-grid">

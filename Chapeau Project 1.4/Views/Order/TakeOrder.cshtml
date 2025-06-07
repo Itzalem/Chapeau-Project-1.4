@@ -6,12 +6,11 @@
     ECategoryOptions categoryFilter = (ECategoryOptions)ViewData["CategoryFilter"];    
 }
 
-@if (TempData["SuccesMessage"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["SuccesMessage"]
-    </div>
+@{
+    string sucessMessage = TempData["SuccessMessage"]?.ToString();
 }
+<partial name="_SucessMessage" model="sucessMessage" />
+
 
 <a class="btn btn-success" href="/RestaurantTable/Overview"> Back to Tables</a>
 

@@ -115,7 +115,7 @@ namespace Chapeau_Project_1._4.Controllers
                 }
             }
 
-            TempData["SuccesMessage"] = "Order Sent Successfully";
+            TempData["SuccessMessage"] = "Order Sent Successfully";
 
             return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
         }

@@ -1,21 +1,36 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.Repositories.OrderRepo;
+using Chapeau_Project_1._4.Repositories.OrderItemRepo;
+using Chapeau_Project_1._4.Services.RestaurantTableService;
+using Chapeau_Project_1._4.Services.OrderItems;
 
 namespace Chapeau_Project_1._4.Services.Order
 {
     public class OrderService : IOrderService
     {
-        private IOrderRepository _orderRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IRestaurantTableService _tableService;
+        private readonly IOrderItemService _orderItemService;
 
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(
+            IOrderRepository orderRepository,
+            IRestaurantTableService tableService,
+            IOrderItemService orderItemService)
         {
             _orderRepository = orderRepository;
+            _tableService = tableService;
+            _orderItemService = orderItemService;
         }
 
         public int AddNewOrder(int tableNumber)
         {
-            return _orderRepository.AddNewOrder(tableNumber);
+            //return _orderRepository.AddNewOrder(tableNumber);
+
+            //lukas - i added this
+            int newOrderNumber = _orderRepository.AddNewOrder(tableNumber);
+            _tableService.UpdateTableOccupancy(tableNumber, true);
+            return newOrderNumber;
         }
 
         public Chapeau_Project_1._4.Models.Order? GetOrderByTable(int? table)
@@ -42,5 +57,25 @@ namespace Chapeau_Project_1._4.Services.Order
         {
             return _orderRepository.GetOrderItemsByOrderNumber(orderNumber);
         }
+
+        //Lukas
+        public List<OrderItem> GetItemsForServing(int orderNumber)
+        {
+            return _orderItemService.GetItemsForServing(orderNumber);
+        }
+
+        //Lukas
+        public void ServeFoodItems(int orderNumber)
+        {
+            _orderItemService.ServeFoodItems(orderNumber);
+        }
+
+        //Lukas
+        public void ServeDrinkItems(int orderNumber)
+        {
+            _orderItemService.ServeDrinkItems(orderNumber);
+        }
+
+
     }
 }

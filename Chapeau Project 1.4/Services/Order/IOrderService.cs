@@ -15,5 +15,10 @@ namespace Chapeau_Project_1._4.Services.Order
         void CancelUnsentOrder(Chapeau_Project_1._4.Models.Order order);
 
         List<OrderItem> GetOrderItems(int orderNumber);
+
+        //Lukas
+        List<OrderItem> GetItemsForServing(int orderNumber);
+        void ServeFoodItems(int orderNumber);
+        void ServeDrinkItems(int orderNumber);
     }
 }

@@ -4,6 +4,9 @@ using Chapeau_Project_1._4.Services.OrderItems;
 using Chapeau_Project_1._4.Services.Order;
 using Chapeau_Project_1._4.Services.RestaurantTableService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient.DataClassification;
+using System.Reflection;
+using Chapeau_Project_1._4.Services.Bill;
 
 namespace Chapeau_Project_1._4.Controllers
 {
@@ -12,12 +15,14 @@ namespace Chapeau_Project_1._4.Controllers
         private readonly IOrderService _orderService;
         private readonly IOrderItemService _orderItemService;
         private readonly IRestaurantTableService _tableService;
+        private readonly IBillService _billService;
 
-        public PaymentController(IOrderService orderService, IRestaurantTableService tableService, IOrderItemService orderItemService)
+        public PaymentController(IOrderService orderService, IRestaurantTableService tableService, IOrderItemService orderItemService, IBillService billService)
         {
             _orderService = orderService;
             _tableService = tableService;
             _orderItemService = orderItemService;
+            _billService = billService;
         }
 
         [HttpGet]
@@ -28,24 +33,29 @@ namespace Chapeau_Project_1._4.Controllers
 
             if (order == null)
             {
-                return RedirectToAction("Overview", "RestaurantTable");
+                return RedirectToAction("RestaurantTable", "Overview");
             }
 
             return View(order);
         }
 
         [HttpGet]
-        public IActionResult PreparePay()
+        public IActionResult PreparePay(int? table)
         {
-            return View();
+            Order? order = _orderService.GetOrderByTable(table);
+            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
+
+            Bill bill = new Bill(order, _tableService.GetTableByNumber(table));
+
+            Payment payment = new Payment(bill, order.Total);
+            return View(payment);
         }
 
-        //[HttpPost]
-        //public IActionResult PreparePay(Payment payment)
-        //{
-        //    Order? order = _orderService.GetOrderByTable(payment.Bill.Table.TableNumber);
-        //    RestaurantTable? restaurantTable = _tableService.GetTableByNumber(payment.Bill.Table.TableNumber);
-        //    Bill? bill = 
-        //}
+        [HttpPost]
+        public IActionResult PreparePay(Payment payment)
+        {
+            _billService.CreateBill(payment);
+            return RedirectToAction("RestaurantTable", "Overview");
+        }
     }
 }

@@ -18,16 +18,8 @@ public class RestaurantTableController : Controller
     [HttpGet]
     public IActionResult Overview()
     {
-        var viewModels = _tableService.GetTablesWithOrderStatus(_orderService);
+        var viewModels = _tableService.GetTablesWithOrderStatus();
         return View(viewModels);
-    }
-
-    [HttpGet]
-    public IActionResult GetTable()
-    {
-        List<RestaurantTable> tables = _tableService.GetAllTables();
-
-        return View(tables);
     }
 
     [HttpGet]
@@ -39,8 +31,15 @@ public class RestaurantTableController : Controller
 
         var order = _orderService.GetOrderByTable(id);
         bool canBeFreed = !table.IsOccupied || order == null || order.Status == EOrderStatus.paid;
-
         ViewBag.CanToggle = canBeFreed;
+        ViewBag.TableNumber = id;
+
+        if (order != null)
+        {
+            order.OrderItems = _orderService.GetOrderItems(order.OrderNumber);
+            ViewBag.Order = order;
+        }
+
         return View(table);
     }
 
@@ -58,8 +57,34 @@ public class RestaurantTableController : Controller
             return RedirectToAction("Details", new { id });
         }
 
-        _tableService.UpdateTableOccupancy(id, !table.IsOccupied);
+        bool newStatus = !table.IsOccupied;
+
+        _tableService.SetManualFreed(id, !newStatus); //if we're freeing it, set flag to true
+        _tableService.UpdateTableOccupancy(id, newStatus);
+
         return RedirectToAction("Overview");
+    }
+
+    [HttpPost]
+    public IActionResult ServeFood(int id)
+    {
+        var order = _orderService.GetOrderByTable(id);
+        if (order != null)
+        {
+            _orderService.ServeFoodItems(order.OrderNumber);
+        }
+        return RedirectToAction("Details", new { id });
+    }
+
+    [HttpPost]
+    public IActionResult ServeDrinks(int id)
+    {
+        var order = _orderService.GetOrderByTable(id);
+        if (order != null)
+        {
+            _orderService.ServeDrinkItems(order.OrderNumber);
+        }
+        return RedirectToAction("Details", new { id });
     }
 
 

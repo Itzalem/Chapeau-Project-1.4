@@ -6,12 +6,13 @@
     ECategoryOptions categoryFilter = (ECategoryOptions)ViewData["CategoryFilter"];    
 }
 
-@if (TempData["SuccesMessage"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["SuccesMessage"]
-    </div>
+@{
+    string sucessMessage = TempData["SuccessMessage"]?.ToString();
 }
+<partial name="_SucessMessage" model="sucessMessage" />
+
+
+<a class="btn btn-success" href="/RestaurantTable/Overview"> Back to Tables</a>
 
 <div style="display: flex; gap: 20pxc;">
 
@@ -35,31 +36,55 @@
                     <tr>
                         <td>@item.MenuItem.MenuItemName</td>
                         <td>@item.Quantity</td>
-                        <td>@item.Note</td>
-                        <td>
-                            @if (item.ItemStatus == EItemStatus.onHold)
-                            {
+                        <td>@item.Note</td>                        
+                        
+                        @if (item.ItemStatus == EItemStatus.onHold)
+                        {
+                            <td>
                                 <details>
                                     <summary>Edit</summary>
-                                    <div class="menu-buttons">
-                                        <form asp-controller="Order" asp-action="IncreaseItemQuantity" method="post">
+                                    <div class="menu-buttons">  
+                                        @if (item.MenuItem.Stock > item.Quantity)
+                                        {
+                                        <a class="btn btn-success" asp-controller="Order" asp-action="EditItemQuantity" 
+                                            asp-route-orderItemId="@item.OrderItemId" asp-route-operation="increase">+</a>
+                                        }
+                                        else
+                                        {
+                                            <p style="color: red">Maximun ammount available of the item reached</p>
+                                        }
 
-                                            <input type="hidden" asp-for="@item.OrderItemId" />
-                                            <input type="hidden" asp-for="@item.Quantity" />
-                                            <input type="hidden" asp-for="@item.Note" />
-                                            <input type="hidden" asp-for="@item.ItemStatus" />
-                                            <input type="hidden" asp-for="@item.MenuItem.MenuItemId" />
-                                            <input type="hidden" asp-for="@item.OrderNumber" />
+                                        <a class="btn btn-success" asp-controller="Order" asp-action="EditItemQuantity"
+                                           asp-route-orderItemId="@item.OrderItemId" asp-route-operation="decrease">-</a>
 
-                                            <button type="submit" class="btn btn-success">+</button>
+                                        @* DELETE ITEM *@
+                                        <a class="btn btn-success" asp-controller="Order" asp-action="DeleteSingleItem"
+                                           asp-route-orderItemId="@item.OrderItemId">Remove</a>
+
+                                        @* EDIT NOTE *@
+                                        <form asp-controller="Order" asp-action="EditItemNote" method="post">
+                                            <input type="hidden" name="orderItemId" value="@item.OrderItemId" />
+
+                                            <details>
+                                                <summary class="btn btn-success">Note</summary>
+                                                <div class="mt-2">
+                                                    <label for="note">Edit note:</label>
+                                                    <input type="text" name="note" value="@item.Note" class="form-control" />
+                                                    <button type="submit" class="btn btn-primary mt-2">Save</button>
+                                                </div>
+                                            </details>
                                         </form>
-                                        <button>-</button>
-                                        <button>Add comment</button>
-                                        <button>Delete</button>
+
                                     </div>
                                 </details>
-                            }
-                        </td>
+                            </td>
+                        }
+                        else
+                        {
+                           <td>
+                               <i style="background-color:lightgreen"> Sent</i>
+                           </td> 
+                        }
                     </tr>
                 }
             </tbody>
@@ -86,10 +111,14 @@
             <button type="submit" class="btn btn-success">Cancel</button>
         </form>
 
-        <a class="btn btn-primary">Pay</a>
+        <a class="btn btn-success" asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber">Pay</a>       
+         
+
     </div>
 
 </div>
+
+
 
 
 

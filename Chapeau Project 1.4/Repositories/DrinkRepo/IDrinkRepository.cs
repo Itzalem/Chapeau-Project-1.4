@@ -9,7 +9,7 @@ namespace Chapeau_Project_1._4.Repositories.DrinkRepo
         List<RunningOrder> GetDrinkOrders(); 
         List<Drink> GetFinishedDrinksOrder(); 
 
-        // there are also the update status methods, however we already implemented them in the orderItem and order class 
+//        // there are also the update status methods, however we already implemented them in the orderItem and order class 
 
-    }
-}
+//    }
+//}

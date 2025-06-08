@@ -5,6 +5,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
     public interface IOrderItemRepository
     {
         void AddOrderItem(OrderItem orderItem);
+        bool CheckDuplicateItems(OrderItem orderItem);
+
+        public OrderItem GetOrderItemById(int orderItemId);
 
         //Returns all items belonging to a specific order
         List<OrderItem> GetByOrderNumber(int orderNumber);
@@ -20,6 +23,15 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         //Change the status for one specific order‐item
         void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
         void UpdateCourseStatus(int orderNumber, EItemStatus newStatus);
-        List<OrderItem> GetFinishedItems();
+
+        List<OrderItem> GetFinishedItems(); // changed from this :  List<OrderItem> GetFinishedItems(DateTime date); because it wasnt worknig
+
+        public void EditItemQuantity(OrderItem orderItem);
+        void DeleteSingleItem(OrderItem orderItem);
+
+        void EditItemNote(OrderItem orderItem);
+
+        //Lukas
+        List<OrderItem> GetOrderItemsForServing(int orderNumber);
     }
 }

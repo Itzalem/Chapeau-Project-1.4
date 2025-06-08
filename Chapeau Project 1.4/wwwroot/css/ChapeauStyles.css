@@ -266,9 +266,13 @@
     font-weight: bold;
     text-decoration: none;
     color: white;
-    font-size: 1.1rem;
+    font-size: 0.6rem;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease-in-out;
+    padding: 0.5rem; 
+    text-align: center;
+    word-wrap: break-word;
+    overflow: hidden;
 }
 
 .table-square:hover {

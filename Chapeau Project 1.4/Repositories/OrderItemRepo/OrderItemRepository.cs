@@ -1,6 +1,7 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Microsoft.Data.SqlClient;
+using System.Reflection.PortableExecutable;
 
 namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 {
@@ -24,7 +25,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             int quantity = (int)reader["quantity"];
             string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
             int menuItemId = (int)reader["menuItem_id"];
-
 
             MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);
 
@@ -50,30 +50,49 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             {
                 connection.Open();
 
-                int? existingItemId = FindMatchingOrderItemId(connection, orderItem);
-
-                if (existingItemId != null)
-                {
-                    UpdateQuantity(connection, existingItemId.Value, orderItem.Quantity);
-                }
-                else
+                if (!CheckDuplicateItems(orderItem))
                 {
                     InsertOrderItem(connection, orderItem);
                 }
             }
         }
 
-        private int? FindMatchingOrderItemId(SqlConnection connection, OrderItem orderItem)
+        public bool CheckDuplicateItems(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                int? existingItemId = FindMatchingOrderItem(connection, orderItem);
+
+                if (existingItemId != null && existingItemId != orderItem.OrderItemId)
+                {
+                    UpdateQuantity(connection, existingItemId.Value, orderItem.Quantity);
+                    DeleteDuplicateItem(connection, orderItem.OrderItemId); // delete the new duplicate, keep the existing one
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }          
+        }
+
+        private int? FindMatchingOrderItem(SqlConnection connection, OrderItem orderItem)
         {
             string query = "SELECT orderItem_id FROM ORDER_ITEM " +
                            " WHERE orderNumber = @OrderNumber AND menuItem_id = @MenuItemId " +
-                           " AND ((note IS NULL AND @Note IS NULL) OR note = @Note)";
+                           " AND ((note IS NULL AND @Note IS NULL) OR note = @Note)  " +
+                           " AND itemStatus = @OrderItemStatus " +
+                           " AND orderItem_id<> @CurrentItemId ;"; //if its in a loop it will exclude itself
 
             SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
             command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
             command.Parameters.AddWithValue("@Note", (object?)orderItem.Note ?? DBNull.Value);
+            command.Parameters.AddWithValue("@OrderItemStatus", orderItem.ItemStatus.ToString());
+            command.Parameters.AddWithValue("@CurrentItemId", orderItem.OrderItemId); 
 
             object? result = command.ExecuteScalar();
 
@@ -98,6 +117,17 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             command.Parameters.AddWithValue("@ExtraQuantity", extraQuantity);
             command.Parameters.AddWithValue("@Id", existingItemId);
             command.ExecuteNonQuery();
+        }
+
+        private void DeleteDuplicateItem(SqlConnection connection, int duplicateItemId)
+        {
+            string query = "DELETE FROM ORDER_ITEM WHERE orderItem_id = @ExistingId ";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@ExistingId", duplicateItemId);
+            command.ExecuteNonQuery();
+
         }
 
         private void InsertOrderItem(SqlConnection connection, OrderItem orderItem)
@@ -154,6 +184,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         }
 
 
+
         public List<OrderItem> DisplayItemsPerOrder(Order order)
         {
             List<OrderItem> orderItems = new List<OrderItem>();
@@ -181,6 +212,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
             return orderItems;
         }
+
 
 
         public List<OrderItem> GetByOrderNumber(int orderNumber)
@@ -280,6 +312,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
         }
 
+
+
         public void UpdateItemStatus(int orderItemId, EItemStatus newStatus)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -341,6 +375,144 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             return orderItems;
         }
 
-        
+        public void EditItemQuantity(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = " UPDATE ORDER_ITEM SET quantity = @UpdatedQuantity " +
+                                "WHERE orderItem_id = @OrderItem_Id;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UpdatedQuantity", orderItem.Quantity);
+                command.Parameters.AddWithValue("@OrderItem_Id", orderItem.OrderItemId);
+
+                command.Connection.Open();
+
+                int rows = command.ExecuteNonQuery();
+                if (rows != 1)
+                {
+                    throw new Exception("Failed to update quantity");
+                }
+            }
+        }
+
+        public void DeleteSingleItem(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @"DELETE FROM ORDER_ITEM 
+                                 WHERE orderItem_id = @OrderItem_Id";
+
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@OrderItem_Id", orderItem.OrderItemId);
+
+                command.Connection.Open();
+                int rows = command.ExecuteNonQuery();
+                if (rows != 1)
+                {
+                    throw new Exception("Failed to delete item");
+                }
+
+            }
+        }
+
+        public void EditItemNote(OrderItem orderItem)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = " UPDATE ORDER_ITEM SET note = @Note " +
+                                "WHERE orderItem_id = @OrderItem_Id;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Note", orderItem.Note);
+                command.Parameters.AddWithValue("@OrderItem_Id", orderItem.OrderItemId);
+
+                command.Connection.Open();
+                int rows = command.ExecuteNonQuery();
+                if (rows != 1)
+                {
+                    throw new Exception("Failed to reduce stock");
+                }
+            }
+
+        }
+
+        public OrderItem GetOrderItemById(int orderItemId)
+        {
+            OrderItem orderItem = new OrderItem();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @"SELECT orderItem_id, quantity, note, menuItem_id, orderNumber, itemStatus 
+                                    FROM ORDER_ITEM  WHERE orderItem_id = @OrderItemId ;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@OrderItemId", orderItemId);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    orderItem = ReadOrderItem(reader);
+                }
+                reader.Close();
+            }
+
+            return orderItem;
+
+        }
+
+
+        //Lukas
+        public List<OrderItem> GetOrderItemsForServing(int orderNumber)
+        {
+            List<OrderItem> orderItems = new List<OrderItem>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = @"SELECT 
+                            oi.orderItem_id,
+                            oi.orderNumber,
+                            oi.menuItem_id AS oi_menuItem_id,
+                            oi.quantity,
+                            oi.note,
+                            oi.itemStatus
+                         FROM ORDER_ITEM oi
+                         WHERE oi.orderNumber = @orderNumber;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    //implementing all this to not intefere with exisiting code because it did not work...
+                    int orderItemId = (int)reader["orderItem_id"];
+                    int quantity = (int)reader["quantity"];
+                    string note = reader["note"] == DBNull.Value ? "" : (string)reader["note"];
+                    int menuItemId = (int)reader["oi_menuItem_id"];
+                    EItemStatus itemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader["itemStatus"].ToString()!);
+                    int orderNum = (int)reader["orderNumber"];
+
+                    MenuItem menuItem = _menuRepository.GetMenuItemById(menuItemId);
+
+                    var orderItem = new OrderItem(orderItemId, quantity, note, itemStatus, menuItem, orderNum);
+                    orderItems.Add(orderItem);
+                }
+
+                reader.Close();
+            }
+
+            return orderItems;
+        }
+
+
     }
 }

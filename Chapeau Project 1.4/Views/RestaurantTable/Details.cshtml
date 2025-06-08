@@ -1,10 +1,10 @@
-﻿@model Chapeau_Project_1._4.Models.RestaurantTable
+﻿@*
+@model Chapeau_Project_1._4.Models.RestaurantTable
 
 <h2>Table @Model.TableNumber Details</h2>
 
 <div class="table-detail-card">
     <p><strong>Status:</strong> @(Model.IsOccupied ? "Occupied" : "Free")</p>
-    <p><strong>Guests:</strong> @Model.AmountOfGuests</p>
 </div>
 
 @if (TempData["ToggleError"] != null)
@@ -23,3 +23,67 @@
 </form>
 
 <a asp-controller="RestaurantTable" asp-action="Overview" class="btn btn-secondary mt-2">Back to Overview</a>
+*@
+
+@model Chapeau_Project_1._4.Models.RestaurantTable
+
+<h2>Table @Model.TableNumber Details</h2>
+
+<div class="table-detail-card">
+    <p><strong>Status:</strong> @(Model.IsOccupied ? "Occupied" : "Free")</p>
+</div>
+
+@if (TempData["ToggleError"] != null)
+{
+    <div class="alert alert-danger">@TempData["ToggleError"]</div>
+}
+
+<a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-tableNumber="@Model.TableNumber">Take Order</a>
+
+<a asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber" class="btn btn-secondary mt-2 mb-2">View order</a>
+
+<form method="post" asp-controller="RestaurantTable" asp-action="ToggleOccupancy" asp-route-id="@Model.TableNumber">
+    <button type="submit" class="btn btn-primary" @(ViewBag.CanToggle ? "" : "disabled")>
+        Toggle Occupancy
+    </button>
+</form>
+
+<a asp-controller="RestaurantTable" asp-action="Overview" class="btn btn-secondary mt-2">Back to Overview</a>
+
+<hr />
+
+@{
+    var order = ViewBag.Order as Chapeau_Project_1._4.Models.Order;
+    var items = order?.OrderItems ?? new List<Chapeau_Project_1._4.Models.OrderItem>();
+
+    var foodItems = items.Where(i => !i.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase)).ToList();
+    var drinkItems = items.Where(i => i.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase)).ToList();
+
+    bool canServeFood = foodItems.Any(i => i.ItemStatus == Chapeau_Project_1._4.Models.EItemStatus.ReadyToServe);
+    bool canServeDrinks = drinkItems.Any(i => i.ItemStatus == Chapeau_Project_1._4.Models.EItemStatus.ReadyToServe);
+}
+
+@if (order != null)
+{
+    <h3>Food Items</h3>
+    <ul>
+        @foreach (var item in foodItems)
+        {
+            <li>@item.MenuItem.MenuItemName - @item.ItemStatus</li>
+        }
+    </ul>
+    <form method="post" asp-action="ServeFood" asp-route-id="@order.TableNumber">
+        <button type="submit" class="btn btn-success" @(canServeFood ? "" : "disabled")>Serve Food</button>
+    </form>
+
+    <h3 class="mt-4">Drink Items</h3>
+    <ul>
+        @foreach (var item in drinkItems)
+        {
+            <li>@item.MenuItem.MenuItemName - @item.ItemStatus</li>
+        }
+    </ul>
+    <form method="post" asp-action="ServeDrinks" asp-route-id="@order.TableNumber">
+        <button type="submit" class="btn btn-info" @(canServeDrinks ? "" : "disabled")>Serve Drinks</button>
+    </form>
+}

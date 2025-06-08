@@ -29,7 +29,10 @@
                     Order:#@order.OrderNumber
                 </div>
                 <div>
-                    Waiting: @(order.WaitingTime / 60)h @(order.WaitingTime % 60)m
+                    @{
+                        var waitingTimeResult = DateTime.Now - order.OrderTime;
+                    }
+                    Waiting: @waitingTimeResult.Hours:@waitingTimeResult.Minutes:@waitingTimeResult.Seconds
                 </div>
             </div>
         </div>

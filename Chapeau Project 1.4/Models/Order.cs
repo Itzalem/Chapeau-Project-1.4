@@ -20,17 +20,9 @@
         {
             OrderNumber = orderNumber;
             Status = status;
-            OrderTime = DateTime.Now;
+            OrderTime = orderTime;
             TableNumber = tableNumber;
         }
 
-        /*public Order(int orderNumber, EOrderStatus status, DateTime orderTime, int tableNumber, List<OrderItem> orderItems)
-        {
-            OrderNumber = orderNumber;
-            Status = status;
-            OrderTime = DateTime.Now;
-            TableNumber = tableNumber;
-            OrderItems = orderItems;
-        }*/
     }
 }

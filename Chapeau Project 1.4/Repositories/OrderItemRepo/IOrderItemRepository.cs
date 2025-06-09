@@ -31,6 +31,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         void EditItemNote(OrderItem orderItem);
 
-        
+        //Lukas
+        List<OrderItem> GetOrderItemsForServing(int orderNumber);
     }
 }

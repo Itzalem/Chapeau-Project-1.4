@@ -18,7 +18,7 @@
 
 
 <div class="orders-container">
-    @foreach (var order in Model.OrderBy(o => o.OrderTime))
+    @foreach (var order in Model)
     {
         <div class="order-card">
             <div class="order-header">
@@ -30,7 +30,9 @@
                     Order:#@order.OrderNumber
                 </div>
                 <div>
-                    Waiting: @(order.WaitingTime / 60)h @(order.WaitingTime % 60)m
+
+                    Waiting: @order.WaitingTime.Hours:@order.WaitingTime.Minutes:@order.WaitingTime.Seconds
+
                 </div>
             </div>
 

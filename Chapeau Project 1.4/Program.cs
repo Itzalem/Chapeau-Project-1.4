@@ -1,4 +1,6 @@
 using Chapeau_Project_1._4.Repositories.BillRepo;
+using Chapeau_Project_1._4.Repositories.DrinkRepo;
+
 //using Chapeau_Project_1._4.Repositories.DrinkRepo;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.Repositories.OrderItemRepo;
@@ -55,7 +57,7 @@ namespace Chapeau_Project_1._4
             builder.Services.AddSingleton<IRestaurantTableRepository, RestaurantTableRepository>();
 
             //builder.Services.AddSingleton<IDrinkService, DrinkService>();
-            //builder.Services.AddSingleton<IDrinkRepository, DrinkRepository>();
+            builder.Services.AddSingleton<IDrinkRepository,DrinkRepository>();
 
             builder.Services.AddSingleton<IBillService, BillService>();
             builder.Services.AddSingleton<IBillRepository, BillRepository>();

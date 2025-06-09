@@ -25,22 +25,17 @@ namespace Chapeau_Project_1._4.Controllers
             var orders = _orderRepository.DisplayOrder();
             var orderItems = _orderItemRepository.DisplayOrderItems(); 
 
-            //in order to fill in the order, I need to have OrderItemName and OrderItemCategory,
-            //a method must be created to fetch these two and give it to me and the outcome must be RunningOrderMenuCategory
-            //var x = _repositoy.getData();
-
             var OrderViewModelResult = orders.Select(x => new RunningOrder
             {
                 OrderNumber = x.OrderNumber,
                 OrderTime = x.OrderTime,
                 TableNumber = x.TableNumber,
                 Status = x.Status,
-                WaitingTime = (int)(DateTime.Now - x.OrderTime).TotalMinutes,
+                WaitingTime = DateTime.Now - x.OrderTime,
                 runningOrders = orderItems.Where(p => p.OrderNumber == x.OrderNumber).Select(o => new RunningOrderItem
                 {
                     ItemStatus = o.ItemStatus,
                    
-                    // RunningOrderItemCategory = x.
                     RunnigOrderMenuItem = new RunnigOrderMenuItem
                     {
                         OrderItemName =o.MenuItem.MenuItemName,

@@ -8,5 +8,6 @@ namespace Chapeau_Project_1._4.Repositories.RestaurantTableRepo
         RestaurantTable? GetTableByNumber(int? table);
 
         void UpdateTableOccupancy(int tableNumber, bool isOccupied);
+        void SetManualFreed(int tableNumber, bool wasFreed);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace Chapeau_Project_1._4.Controllers
 {
@@ -6,7 +7,10 @@ namespace Chapeau_Project_1._4.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            
+            return View("RunningOrder");
         }
+
+
     }
 }

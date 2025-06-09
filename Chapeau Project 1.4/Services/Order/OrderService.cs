@@ -58,5 +58,24 @@ namespace Chapeau_Project_1._4.Services.Order
             return _orderRepository.GetOrderItemsByOrderNumber(orderNumber);
         }
 
+        //Lukas
+        public List<OrderItem> GetItemsForServing(int orderNumber)
+        {
+            return _orderItemService.GetItemsForServing(orderNumber);
+        }
+
+        //Lukas
+        public void ServeFoodItems(int orderNumber)
+        {
+            _orderItemService.ServeFoodItems(orderNumber);
+        }
+
+        //Lukas
+        public void ServeDrinkItems(int orderNumber)
+        {
+            _orderItemService.ServeDrinkItems(orderNumber);
+        }
+
+
     }
 }

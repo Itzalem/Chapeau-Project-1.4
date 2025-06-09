@@ -11,8 +11,7 @@
         public string Category { get; set; }
         public bool IsAlcoholic { get; set; }
         public ECategoryStatus CategoryStatus { get; set; } 
-        
-        //public string ItemType { get; set; }  "LUKAS IF YOU USE IT LET ME KNOW". MELISSA
+        public string ItemType { get; set; }    
     
 
         public MenuItem()
@@ -20,7 +19,7 @@
         }
 
         public MenuItem(int menuItemId, string menuItemName, decimal price, int stock, 
-                        string card, string category, bool isAlcoholic, ECategoryStatus categoryStatus = ECategoryStatus.pending)
+                        string card, string category, bool isAlcoholic, ECategoryStatus categoryStatus = ECategoryStatus.pending , string itemType="")
         {
             MenuItemId = menuItemId;
             MenuItemName = menuItemName;
@@ -30,6 +29,15 @@
             Category = category;
             IsAlcoholic = isAlcoholic;
             CategoryStatus = categoryStatus;
+            ItemType = itemType;
+        }
+        public MenuItem(int menuItemId, string menuItemName,string category, ECategoryStatus categoryStatus = ECategoryStatus.pending , string itemType = "")
+        {
+            MenuItemId = menuItemId;
+            MenuItemName = menuItemName;
+            Category = category;
+            CategoryStatus = categoryStatus;
+            ItemType = itemType;
         }
     }
 }

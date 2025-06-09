@@ -11,6 +11,8 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
         RestaurantTable? GetTableByNumber(int? table);
         void UpdateTableOccupancy(int tableNumber, bool isOccupied);
 
+        void SetManualFreed(int tableNumber, bool wasFreed);
+
     }
 
 }

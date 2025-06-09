@@ -32,16 +32,13 @@ public class RestaurantTableController : Controller
         var order = _orderService.GetOrderByTable(id);
         bool canBeFreed = !table.IsOccupied || order == null || order.Status == EOrderStatus.paid;
         ViewBag.CanToggle = canBeFreed;
+        ViewBag.TableNumber = id;
 
-        // NEW: detect if any item is ReadyToServe
-        bool hasReady = false;
         if (order != null)
         {
-            var items = _orderService.GetOrderItems(order.OrderNumber);
-            hasReady = items.Any(i => i.ItemStatus == EItemStatus.ReadyToServe);
+            order.OrderItems = _orderService.GetOrderItems(order.OrderNumber);
+            ViewBag.Order = order;
         }
-        ViewBag.HasReady = hasReady;
-        ViewBag.TableNumber = id;
 
         return View(table);
     }
@@ -60,9 +57,36 @@ public class RestaurantTableController : Controller
             return RedirectToAction("Details", new { id });
         }
 
-        _tableService.UpdateTableOccupancy(id, !table.IsOccupied);
+        bool newStatus = !table.IsOccupied;
+
+        _tableService.SetManualFreed(id, !newStatus); //if we're freeing it, set flag to true
+        _tableService.UpdateTableOccupancy(id, newStatus);
+
         return RedirectToAction("Overview");
     }
+
+    [HttpPost]
+    public IActionResult ServeFood(int id)
+    {
+        var order = _orderService.GetOrderByTable(id);
+        if (order != null)
+        {
+            _orderService.ServeFoodItems(order.OrderNumber);
+        }
+        return RedirectToAction("Details", new { id });
+    }
+
+    [HttpPost]
+    public IActionResult ServeDrinks(int id)
+    {
+        var order = _orderService.GetOrderByTable(id);
+        if (order != null)
+        {
+            _orderService.ServeDrinkItems(order.OrderNumber);
+        }
+        return RedirectToAction("Details", new { id });
+    }
+
 
 }
 

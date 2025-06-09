@@ -38,9 +38,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT orderNumber, status, tableNumber, orderTime 
-                                 FROM ORDERS
-                                 WHERE status <> 'onHold'";
+                string query = @"SELECT orderNumber, status, orderTime ,tableNumber 
+                                 FROM ORDERS 
+                                 WHERE status <> 'onHold' ORDER BY orderTime ASC";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();
@@ -48,7 +48,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
                 while (reader.Read())
                 {
-                    Order order = ReadOrder(reader);
+                    Order order = new(
+                        reader.GetInt32(0),
+                        (EOrderStatus)(Enum.Parse(typeof(EOrderStatus) , reader.GetString(1))),
+                        reader.GetDateTime(2), 
+                        reader.GetInt32(3)
+                        );// ReadOrder(reader);
                     orders.Add(order);
                 }
                 reader.Close();

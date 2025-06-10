@@ -64,9 +64,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             {
                 connection.Open();
 
-                Console.WriteLine($"Buscando duplicado para OrderNumber={orderItem.OrderNumber}, MenuItemId={orderItem.MenuItem.MenuItemId}, Note='{orderItem.Note}', Status='{orderItem.ItemStatus}', CurrentId={orderItem.OrderItemId}");
-                int? existingItemId = FindMatchingOrderItem(connection, orderItem);
-                Console.WriteLine($"Encontré existingId={existingItemId}");
+                int? existingItemId = FindMatchingOrderItem(connection, orderItem);          
 
 
                 //int? existingItemId = FindMatchingOrderItem(connection, orderItem);

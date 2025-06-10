@@ -17,7 +17,6 @@ namespace Chapeau_Project_1._4.ViewComponents.Menu
             _orderItemService = orderItemService;
         }
 
-        // recibe opcionalmente filtros desde la llamada
         public async Task<IViewComponentResult> InvokeAsync(int orderNumber, ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
             var menuItems = _menuService.GetMenuItems(cardFilter, categoryFilter);

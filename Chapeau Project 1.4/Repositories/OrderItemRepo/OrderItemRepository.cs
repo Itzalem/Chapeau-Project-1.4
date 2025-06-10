@@ -1,6 +1,7 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 using System.Reflection.PortableExecutable;
 
 namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
@@ -63,7 +64,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             {
                 connection.Open();
 
+                Console.WriteLine($"Buscando duplicado para OrderNumber={orderItem.OrderNumber}, MenuItemId={orderItem.MenuItem.MenuItemId}, Note='{orderItem.Note}', Status='{orderItem.ItemStatus}', CurrentId={orderItem.OrderItemId}");
                 int? existingItemId = FindMatchingOrderItem(connection, orderItem);
+                Console.WriteLine($"Encontré existingId={existingItemId}");
+
+
+                //int? existingItemId = FindMatchingOrderItem(connection, orderItem);
 
                 if (existingItemId != null && existingItemId != orderItem.OrderItemId)
                 {
@@ -90,7 +96,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
             command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
             command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
-            command.Parameters.AddWithValue("@Note", (object?)orderItem.Note ?? DBNull.Value);
+            //value note normalization 
+            command.Parameters.AddWithValue("@Note", string.IsNullOrWhiteSpace(orderItem.Note) ? DBNull.Value : orderItem.Note);
             command.Parameters.AddWithValue("@OrderItemStatus", orderItem.ItemStatus.ToString());
             command.Parameters.AddWithValue("@CurrentItemId", orderItem.OrderItemId); 
 

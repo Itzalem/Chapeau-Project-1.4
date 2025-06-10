@@ -10,13 +10,14 @@
     <h1 class="display-4">Le Menu</h1>
 </div>
 
+<div>
 <ul class="nav nav-pills">
 
     @foreach (var cardEnum in Model.CategoriesDictionary.Keys)
     {
         <li class="nav-item">
-            <a class="nav-link @(Model.CardFilter == cardEnum ? "active" : "")" asp-controller="Order" asp-action="TakeOrder" asp-route-cardFilter="@cardEnum"
-                asp-route-orderNumber="@ViewData["OrderNumber"]" >@cardEnum</a>
+            <a class="nav-link @(Model.CardFilter == cardEnum ? "active" : "brown-border")" asp-controller="Order" asp-action="TakeOrder" asp-route-cardFilter="@cardEnum"
+               asp-route-orderNumber="@ViewData["OrderNumber"]"><strong>@cardEnum</strong></a>
         </li>
     }
 
@@ -28,16 +29,17 @@
     <p>Choose a Category:</p>
     @foreach (var category in Model.CategoriesDictionary[Model.CardFilter])
     {
-        <a class="btn btn-primary" 
-            asp-controller="Order"
+        <a class="btn btn-brown"
+           asp-controller="Order"
             asp-action="TakeOrder"
             asp-route-cardFilter="@Model.CardFilter"
            asp-route-categoryFilter="@category" asp-route-orderNumber="@ViewData["OrderNumber"]">
-            @category
+            <strong>@category</strong>
         </a>      
 
     }
 }
+</div>
 
 <div class="tab-content">
     <!-- show menu -->

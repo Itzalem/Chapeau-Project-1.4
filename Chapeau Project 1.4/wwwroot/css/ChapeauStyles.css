@@ -376,9 +376,40 @@
     margin-bottom: 6px;
 }
 
+/*ORDER VIEW STYLE (menu and order list)*/
+.menu {
+    flex: 1; 
+    border-radius: 40px;
+    border: 1px solid #ccc;
+    padding: 10px; 
+    background-color: #ece7c8e7;
+    margin-right: 10px;
+}
+
+/*menu list buttons*/
+.btn-brown {
+    background-color: #5C4033; 
+    color: white;
+    border: none;
+}
+
+    .btn-brown:hover {
+        background-color: #4a3329;
+    }
+
+.nav-link.brown-border {
+    border: 2px solid #5C4033;
+    color: black;
+}
+
+.nav-link.active {
+    background-color: #5C4033 !important;
+    color: white !important;
+    border: none !important;
+}
 
 /*item options*/
-summary {
+.summary {
     cursor: pointer;
     padding: 10px 20px;
     background-color: #3498db;
@@ -387,14 +418,14 @@ summary {
     border: none;
 }
 
-.menu-buttons {
+.edit-buttons {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-    .menu-buttons button {
+    .edit-buttons button {
         padding: 10px;
         border: none;
         border-radius: 5px;
@@ -403,6 +434,6 @@ summary {
         cursor: pointer;
     }
 
-        .menu-buttons button:hover {
+        .edit-buttons button:hover {
             background-color: #27ae60;
         }

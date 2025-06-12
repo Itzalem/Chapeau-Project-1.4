@@ -44,6 +44,7 @@
         public Payment(Bill bill, decimal total)
         {
             Bill = bill;
+            Tip = 0;
             Total = total;
             Feedback = "";
         }

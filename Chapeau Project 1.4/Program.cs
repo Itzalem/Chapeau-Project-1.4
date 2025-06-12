@@ -1,6 +1,4 @@
-using Chapeau_Project_1._4.Repositories.BillRepo;
-using Chapeau_Project_1._4.Repositories.DrinkRepo;
-
+using Chapeau_Project_1._4.Repositories.PaymentRepo;
 //using Chapeau_Project_1._4.Repositories.DrinkRepo;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.Repositories.OrderItemRepo;
@@ -8,7 +6,7 @@ using Chapeau_Project_1._4.Repositories.OrderRepo;
 using Chapeau_Project_1._4.Repositories.PersonellRepo;
 using Chapeau_Project_1._4.Repositories.RestaurantTableRepo;
 using Chapeau_Project_1._4.Services;
-using Chapeau_Project_1._4.Services.Bill;
+using Chapeau_Project_1._4.Services.Payment;
 //using Chapeau_Project_1._4.Services.Drinks;
 using Chapeau_Project_1._4.Services.Menu;
 using Chapeau_Project_1._4.Services.Order;
@@ -35,11 +33,7 @@ namespace Chapeau_Project_1._4
                 options.Cookie.IsEssential = true;
             });
 
-            //builder.Services.AddControllersWithViews();
-
-            //Added by Lukas
-            builder.Services.AddSingleton<IOrderItemRepository, OrderItemRepository>();
-            builder.Services.AddSingleton<IOrderItemService, OrderItemService>();
+            builder.Services.AddControllersWithViews();
 
             builder.Services.AddSingleton<IOrderService, OrderService>();
             builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
@@ -57,10 +51,10 @@ namespace Chapeau_Project_1._4
             builder.Services.AddSingleton<IRestaurantTableRepository, RestaurantTableRepository>();
 
             //builder.Services.AddSingleton<IDrinkService, DrinkService>();
-            builder.Services.AddSingleton<IDrinkRepository,DrinkRepository>();
+            //builder.Services.AddSingleton<IDrinkRepository, DrinkRepository>();
 
-            builder.Services.AddSingleton<IBillService, BillService>();
-            builder.Services.AddSingleton<IBillRepository, BillRepository>();
+            builder.Services.AddSingleton<IPaymentService, PaymentService>();
+            builder.Services.AddSingleton<IPaymentRepository, PaymentRepository>();
 
             var app = builder.Build();
 

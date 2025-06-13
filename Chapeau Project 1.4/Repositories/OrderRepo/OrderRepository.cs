@@ -46,14 +46,16 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
+                // for each row in the orders table, it converts it into an object  
                 while (reader.Read())
                 {
-                    Order order = new(
-                        reader.GetInt32(0),
-                        (EOrderStatus)(Enum.Parse(typeof(EOrderStatus) , reader.GetString(1))),
-                        reader.GetDateTime(2), 
-                        reader.GetInt32(3)
-                        );// ReadOrder(reader);
+                    //Order order = new(
+                    //    reader.GetInt32(0),
+                    //    (EOrderStatus)(Enum.Parse(typeof(EOrderStatus) , reader.GetString(1))),
+                    //    reader.GetDateTime(2), 
+                    //    reader.GetInt32(3)
+                    //    );
+                    var order = ReadOrder(reader);
                     orders.Add(order);
                 }
                 reader.Close();
@@ -160,9 +162,10 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @"UPDATE Orders SET status = @status WHERE orderNumber = @orderNumber";
+                string query = @"UPDATE Orders SET status = @status , finishOrderTime = @finishTime WHERE orderNumber = @orderNumber";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@status", status.ToString());
+                command.Parameters.AddWithValue("@finishTime", DateTime.Now);
                 command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
                 command.Connection.Open();
@@ -229,10 +232,10 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             }
         }
 
+        
+        // To get the name of each orderItem from the MenuItems 
         public object GetOrderMunuItemName(int OrderNumber)
         {
-
-
             List<object> orders = new List<object>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -267,10 +270,11 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 reader.Close();
 
             }
-            return null;
+            return orders;
 
         }
 
+        //To read MenuItemName and the category - Mania 
         private object ReadOrderGraph(SqlDataReader reader)
         {
             int orderItemId = (int)reader["orderItem_id"];
@@ -372,5 +376,84 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             }
             return orders;
         }
+
+
+
+
+
+        public List<RunningOrderWithItemsViewModel> GetOrdersWithItems()
+        {
+            var orders = new List<RunningOrderWithItemsViewModel>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var command = new SqlCommand(@"
+                    SELECT 
+                         o.orderNumber, o.status, o.tableNumber, o.orderTime, o.finishOrderTime,
+                         oi.orderItem_id, oi.quantity, oi.note, oi.itemStatus,
+                         mi.menuItem_id, mi.menuItemName, mi.category , mi.categoryStatus
+                     FROM ORDERS o
+                     JOIN ORDER_ITEM oi ON o.orderNumber = oi.orderNumber
+                     JOIN MENU_ITEMS mi ON oi.menuItem_id = mi.menuItem_id
+                     WHERE status <> 'onHold' AND oi.itemStatus <> 'onHold' AND mi.category in ('Starters','Mains','Desserts')  
+                     ORDER BY o.orderNumber, oi.orderItem_id
+        ", connection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    int lastOrderNumber = -1;
+                    RunningOrderWithItemsViewModel currentOrder = null!;
+
+                    while (reader.Read())
+                    {
+                        int orderNumber = reader.GetInt32(reader.GetOrdinal("orderNumber"));
+
+                        // اگه وارد سفارش جدید شدیم
+                        if (orderNumber != lastOrderNumber)
+                        {
+                            currentOrder = new RunningOrderWithItemsViewModel
+                            {
+                                OrderNumber = orderNumber,
+                                Status = (EOrderStatus)Enum.Parse(typeof(EOrderStatus) , reader.GetString(reader.GetOrdinal("status"))),
+                                TableNumber = reader.GetInt32(reader.GetOrdinal("tableNumber")),
+                                OrderTime = reader.GetDateTime(reader.GetOrdinal("orderTime")),
+                                FinishOrderTime = reader.IsDBNull(reader.GetOrdinal("finishOrderTime"))
+                                    ? (DateTime?)null
+                                    : reader.GetDateTime(reader.GetOrdinal("finishOrderTime")),
+                            
+                            };
+
+                            orders.Add(currentOrder);
+                            lastOrderNumber = orderNumber;
+                        }
+
+                        // آیتم‌های سفارش را اضافه کن
+                        var orderItem = new RunningOrderItemWithMenuItemViewModel
+                        {
+                            OrderItemId = reader.GetInt32(reader.GetOrdinal("orderItem_id")),
+                            Quantity = reader.GetInt32(reader.GetOrdinal("quantity")),
+                            Note = reader.IsDBNull(reader.GetOrdinal("note"))
+                                    ? (string?)null
+                                    : reader.GetString(reader.GetOrdinal("note")),
+
+                            ItemStatus = (EItemStatus)Enum.Parse(typeof(EItemStatus), reader.GetString(reader.GetOrdinal("itemStatus"))),
+
+                            MenuItemId = reader.GetInt32(reader.GetOrdinal("menuItem_id")),
+                            MenuItemName = reader.GetString(reader.GetOrdinal("menuItemName")),
+                            OrderItemCategory = reader.GetString(reader.GetOrdinal("category")),
+                            MenuItemCategoryStatus = (ECategoryStatus)Enum.Parse(typeof(ECategoryStatus), reader.GetString(reader.GetOrdinal("categoryStatus"))),
+
+                        };
+
+                        currentOrder.runningOrderItems.Add(orderItem);
+                    }
+                }
+            }
+
+            return orders;
+        }
+
     }
 }

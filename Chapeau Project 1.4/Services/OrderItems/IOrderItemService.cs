@@ -9,11 +9,17 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         void AddOrderItem(OrderItem orderItem);
         bool CheckDuplicateItems(OrderItem orderItem);
         public OrderItem GetOrderItemById(int orderItemId);
-
-        List<OrderItem> DisplayOrderItems();
+        List<OrderItem> GetByOrderNumber(int orderNumber);
         List<OrderItem> DisplayItemsPerOrder(Chapeau_Project_1._4.Models.Order order);
 
-        List<OrderItem> GetByOrderNumber(int orderNumber);
+        
+        List<OrderItem> DisplayOrderItems();
+        List<OrderItem> GetRunningItem();
+        void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
+        void UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus);
+        List<OrderItem> GetFinishedItems();
+        
+
 
         void UpdateAllItemsStatus(Chapeau_Project_1._4.Models.Order order);
 

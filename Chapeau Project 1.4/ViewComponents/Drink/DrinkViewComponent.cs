@@ -24,7 +24,7 @@ namespace Chapeau_Project_1._4.ViewComponents.Drink
 
         public IViewComponentResult Invoke()
         {
-            var drinks = _drinkRepository.GetDrinkOrders();
+            var drinks = new List<string>();//_drinkRepository.GetDrinkOrders();
             return View(drinks);
         }
     }

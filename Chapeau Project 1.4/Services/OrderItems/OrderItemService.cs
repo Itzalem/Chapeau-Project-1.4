@@ -1,5 +1,6 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Repositories.OrderItemRepo;
+using Chapeau_Project_1._4.ViewModel;
 
 namespace Chapeau_Project_1._4.Services.OrderItems
 {
@@ -20,11 +21,6 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         public bool CheckDuplicateItems(OrderItem orderItem)
         {
             return _orderItemRepository.CheckDuplicateItems(orderItem);
-        }
-
-        public List<OrderItem> DisplayOrderItems()
-        {
-            return _orderItemRepository.DisplayOrderItems();
         }
 
         public OrderItem GetOrderItemById(int orderItemId)
@@ -120,5 +116,29 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         }
 
 
+        public List<OrderItem> DisplayOrderItems()
+        {
+            return _orderItemRepository.DisplayOrderItems();
+        }
+
+        public List<OrderItem> GetRunningItem()
+        {
+            return _orderItemRepository.GetRunningItem();   
+        }
+
+        public void UpdateItemStatus(int orderItemId, EItemStatus newStatus)
+        {
+            _orderItemRepository.UpdateItemStatus(orderItemId, newStatus);  
+        }
+
+        public void UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus)
+        {
+            _orderItemRepository.UpdateCourseStatus(orderNumber, category, categoryCourseStatus);    
+        }
+
+        public List<OrderItem> GetFinishedItems()
+        {
+            return _orderItemRepository.GetFinishedItems();
+        }
     }
 }

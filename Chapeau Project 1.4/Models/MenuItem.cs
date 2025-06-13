@@ -1,6 +1,6 @@
 ﻿namespace Chapeau_Project_1._4.Models
 {
-    public enum ECategoryStatus { pending, InProcess, Completed } 
+    public enum ECategoryStatus { pending, InProcess, Completed , ReadyToServe } 
     public class MenuItem
     {
         public int MenuItemId { get; set; }

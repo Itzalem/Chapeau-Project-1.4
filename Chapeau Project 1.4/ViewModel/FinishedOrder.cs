@@ -9,7 +9,7 @@ namespace Chapeau_Project_1._4.ViewModel
         public DateTime OrderTime { get; set; }
         public int WaitingTime { get; set; }  // in minutes
         public EOrderStatus Status { get; set; }
-        List<FinishedOrderItem> finishedOrders { get; set; } = new List<FinishedOrderItem>(); 
+        public List<FinishedOrderItem> finishedOrders { get; set; } = new List<FinishedOrderItem>(); 
     }
 
     public class FinishedOrderItem

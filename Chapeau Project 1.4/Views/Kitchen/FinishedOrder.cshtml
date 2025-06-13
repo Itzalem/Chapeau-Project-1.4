@@ -1,14 +1,14 @@
-﻿@using Chapeau_Project_1._4.ViewModel
+﻿@* @using Chapeau_Project_1._4.ViewModel
 @model List<RunningOrder>
 
 <h2 class="page-title">Orders</h2>
 
 <div class="view-tabs">
-    <button class="tab active" id="tab-running">
+    <button class="tab active" id="tab-running"
         onclick="location.href='@Url.Action("RunningOrders", "Kitchen")'">
         <i class="fa fa-list"></i> Running Orders
     </button>
-    <button class="tab" id="tab-finished"
+    <button class="tab" id="tab-finished">
         <i class="fa fa-clock-o"></i> Finished Today
     </button>
     <button class="btn-refresh" onclick="location.reload()">
@@ -37,4 +37,4 @@
             </div>
         </div>
     }
-</div>
+</div> *@

@@ -1,4 +1,5 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.ViewModel;
 
 namespace Chapeau_Project_1._4.Repositories.OrderRepo
 {
@@ -25,6 +26,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         List<OrderItem> GetOrderItemsByOrderNumber(int orderNumber);
 
         List<Order> GetFinishedOrders();
+
+        List<RunningOrderWithItemsViewModel> GetOrdersWithItems();
 
     }
 }

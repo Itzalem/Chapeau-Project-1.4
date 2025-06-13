@@ -1,4 +1,4 @@
-﻿@model List<RunningOrder>
+﻿@* @model List<RunningOrder>
 
 
 <div class="orders-container m-4">
@@ -32,15 +32,8 @@
                                         --@drinkItem.Note
                                     </div>
                                 }
-                                else
-                                {
-                                    <div class="item-note">
-                                        --No Note
-                                    </div>
-
-                                }
                             </div>
-                            <select name="itemStatus" onchange="this.form.submit()">
+                            <select name="groupStatus" onchange="this.form.submit()">
                                 <option value="pending">Pending</option>
                                 <option value="BeingPrepared">In Progress</option>
                                 <option value="ReadyToServe">Ready to Serve</option>
@@ -54,14 +47,14 @@
                     <input type="hidden" name="OrderNumber" value="@drink.OrderNumber" />
                     <div class="course-header">
                         <strong>Order Status</strong>
-                        <select name="itemStatus" onchange="this.form.submit()">
-                            <option value="@drink.Status" selected="@(drink.Status == EOrderStatus.pending)">Pending</option>
-                            <option value="@drink.Status" selected="@(drink.Status == EOrderStatus.inProgress)">In Progress</option>
-                            <option value="@drink.Status" selected="@(drink.Status == EOrderStatus.prepared)">Prepared</option>
+                        <select name="orderStatus" onchange="this.form.submit()">
+                            <option value="pending" selected="@(drink.Status == EOrderStatus.pending)">Pending</option>
+                            <option value="inprogress" selected="@(drink.Status == EOrderStatus.inProgress)">In Progress</option>
+                            <option value="prepared" selected="@(drink.Status == EOrderStatus.prepared)">Prepared</option>
                         </select>
                     </div>
                 </form>
             </footer>
         </div> 
     }
-</div>
+</div> *@

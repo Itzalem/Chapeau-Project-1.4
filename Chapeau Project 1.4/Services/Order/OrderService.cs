@@ -1,9 +1,8 @@
 ﻿using Chapeau_Project_1._4.Models;
-using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.Repositories.OrderRepo;
-using Chapeau_Project_1._4.Repositories.OrderItemRepo;
-using Chapeau_Project_1._4.Services.RestaurantTableService;
 using Chapeau_Project_1._4.Services.OrderItems;
+using Chapeau_Project_1._4.Services.RestaurantTableService;
+using Chapeau_Project_1._4.ViewModel;
 
 namespace Chapeau_Project_1._4.Services.Order
 {
@@ -35,18 +34,7 @@ namespace Chapeau_Project_1._4.Services.Order
 
         public Chapeau_Project_1._4.Models.Order? GetOrderByTable(int? table)
         {
-          return _orderRepository.GetOrderByTable(table);
-        }
-
-        public void UpdateOrderStatus(EOrderStatus updatedItemStatus, int orderNumber)
-        {
-            _orderRepository.UpdateOrderStatus(updatedItemStatus, orderNumber);
-        }
-
-
-        public Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber)
-        {
-            return _orderRepository.GetOrderByNumber(orderNumber);
+            return _orderRepository.GetOrderByTable(table);
         }
 
         public void CancelUnsentOrder(Chapeau_Project_1._4.Models.Order order)
@@ -76,6 +64,70 @@ namespace Chapeau_Project_1._4.Services.Order
             _orderItemService.ServeDrinkItems(orderNumber);
         }
 
+        public List<Chapeau_Project_1._4.Models.Order> DisplayOrder(string tabName = "RunningOrders")
+        {
+            var queryResutl = _orderRepository.DisplayOrder();
+            List<Chapeau_Project_1._4.Models.Order> orders = new List<Chapeau_Project_1._4.Models.Order>();
 
+            switch (tabName)
+            {
+                case "RunningOrders":
+                    orders = queryResutl
+                        .Where(x => x.Status != EOrderStatus.prepared).ToList();
+                    break;
+                case "FinishedOrders":
+                    orders = queryResutl
+                         .Where(x => x.Status == EOrderStatus.prepared).ToList();
+                    break;
+                default:
+                    throw new NullReferenceException("Orders Is Not Find.");
+                   
+            }
+            return orders;
+        }
+
+        
+        //Mania 
+        public object GetOrderMunuItemName(int OrderNumber)
+        {
+            return _orderRepository.GetOrderMunuItemName(OrderNumber);  
+        }
+
+        public List<Chapeau_Project_1._4.Models.Order> GetFinishedOrders()
+        {
+            return _orderRepository.GetFinishedOrders();    
+        }
+
+        public Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber)
+        {
+            return _orderRepository.GetOrderByNumber(orderNumber);
+        }
+
+        public void UpdateOrderStatus(EOrderStatus updatedItemStatus, int orderNumber)
+        {
+            _orderRepository.UpdateOrderStatus(updatedItemStatus, orderNumber);
+        }
+
+        public List<RunningOrderWithItemsViewModel> GetOrdersWithItems(string tabName = "RunningOrders")
+        {
+            var queryResutl = _orderRepository.GetOrdersWithItems().ToList();
+            List<RunningOrderWithItemsViewModel> orders = new();
+
+            switch (tabName)
+            {
+                case "RunningOrders":
+                    orders = queryResutl
+                        .Where(x => x.Status != EOrderStatus.prepared).ToList();
+                    break;
+                case "FinishedOrders":
+                    orders = queryResutl
+                         .Where(x => x.Status == EOrderStatus.prepared).ToList();
+                    break;
+                default:
+                    throw new NullReferenceException("Orders Is Not Find.");
+
+            }
+            return orders;
+        }
     }
 }

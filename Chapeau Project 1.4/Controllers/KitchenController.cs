@@ -1,87 +1,58 @@
 ﻿using Chapeau_Project_1._4.Models;
-using Chapeau_Project_1._4.Repositories.MenuRepo;
-using Chapeau_Project_1._4.Repositories.OrderItemRepo;
-using Chapeau_Project_1._4.Repositories.OrderRepo;
+using Chapeau_Project_1._4.Services.Menu;
+using Chapeau_Project_1._4.Services.Order;
+using Chapeau_Project_1._4.Services.OrderItems;
 using Chapeau_Project_1._4.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace Chapeau_Project_1._4.Controllers
 {
     public class KitchenController : Controller
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly IOrderItemRepository _orderItemRepository;
-        private readonly IMenuRepository _menuRepository;
-        
-        public KitchenController(IOrderRepository orderRepository, IOrderItemRepository orderItemRepository, IMenuRepository menuRepository)
+        private readonly IOrderService _orderService;
+        private readonly IOrderItemService _orderItemService;
+        private readonly IMenuService _menuService;
+
+        public KitchenController(IOrderService orderService, IOrderItemService orderItemService, IMenuService menuService)
         {
-            _orderRepository = orderRepository; 
-            _orderItemRepository = orderItemRepository; 
-            _menuRepository = menuRepository;
+            _orderService = orderService;
+            _orderItemService = orderItemService;
+            _menuService = menuService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string tab)
         {
-            var orders = _orderRepository.DisplayOrder();
-            var orderItems = _orderItemRepository.DisplayOrderItems(); 
-
-            var OrderViewModelResult = orders.Select(x => new RunningOrder
-            {
-                OrderNumber = x.OrderNumber,
-                OrderTime = x.OrderTime,
-                TableNumber = x.TableNumber,
-                Status = x.Status,
-                WaitingTime = DateTime.Now - x.OrderTime,
-                runningOrders = orderItems.Where(p => p.OrderNumber == x.OrderNumber).Select(o => new RunningOrderItem
-                {
-                    ItemStatus = o.ItemStatus,
-                   
-                    RunnigOrderMenuItem = new RunnigOrderMenuItem
-                    {
-                        OrderItemName =o.MenuItem.MenuItemName,
-                        OrderItemCategory = o.MenuItem.Category,
-                    },
-                    Note = o.Note,
-                    OrderItemId = o.OrderItemId,
-                    Quantity = o.Quantity,
-                }).ToList()
-            }).ToList();
-
-
-            return View("RunningOrder", OrderViewModelResult);   
+            var orderWithItemsQueryResult = _orderService.GetOrdersWithItems(tab == null ? "RunningOrders" : tab);
+            return View("RunningOrder", orderWithItemsQueryResult);
         }
 
         [HttpPost]
-        public IActionResult UpdateItemStatus(int orderItemId , EItemStatus groupStatus)
+        public IActionResult UpdateItemStatus(int orderItemId, EItemStatus itemStatus)
         {
-            
+
             // Call into your repo to update a single item
-            _orderItemRepository.UpdateItemStatus(orderItemId, groupStatus);
+            _orderItemService.UpdateItemStatus(orderItemId, itemStatus);
             // Redirect back to the running-orders page so the view reloads
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult UpdateCourseStatus (int orderNumber, EItemStatus itemStatus)
+        public IActionResult UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus)
         {
-            _orderItemRepository.UpdateCourseStatus(orderNumber,  itemStatus);  
+            _orderItemService.UpdateCourseStatus(orderNumber, category, categoryCourseStatus);
             return RedirectToAction("Index");
         }
 
 
 
         [HttpPost]
-        public IActionResult UpdateOrderStatus(int orderNumber, EOrderStatus orderStatus)
+        public IActionResult UpdateOrderStatus(int orderNumber, EOrderStatus orderStatus /*string orderStatus*/)
         {
-            _orderRepository.UpdateOrderStatus(orderStatus, orderNumber);
-            
+            _orderService.UpdateOrderStatus(orderStatus, orderNumber);
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public IActionResult GetFinishedItems()
-        {
-            return View("FinishedOrder"); 
-        }
+        
     }
 }

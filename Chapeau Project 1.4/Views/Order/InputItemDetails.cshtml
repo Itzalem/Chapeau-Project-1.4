@@ -1,18 +1,5 @@
 ﻿@model Chapeau_Project_1._4.Models.OrderItem
 
-@if (ViewData["QuantityError"] != null)
-{
-    <div class="alert alert-danger">
-        @ViewData["QuantityError"]
-    </div>
-}
-@if (ViewData["InsufficientStockError"] != null)
-{
-    <div class="alert alert-danger">
-        @ViewData["InsufficientStockError"]
-    </div>
-}
-
 @{
     string quantityErrorMessage = ViewData["QuantityError"]?.ToString();    
 }

@@ -36,6 +36,11 @@
 }
 <partial name="_SucessMessage" model="cancelMessage" />
 
+@{
+    string paySucessMessage = TempData["paySuccessMessage"]?.ToString();
+}
+<partial name="_SucessMessage" model="paySucessMessage" />
+
 <h2>Restaurant Table Layout with Order Status</h2>
 
 <div class="table-grid">

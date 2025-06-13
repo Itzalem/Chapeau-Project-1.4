@@ -2,6 +2,7 @@
 using Chapeau_Project_1._4.Repositories.MenuRepo;
 using Chapeau_Project_1._4.ViewModel;
 using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 using System.Reflection.PortableExecutable;
 
 namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
@@ -65,7 +66,10 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             {
                 connection.Open();
 
-                int? existingItemId = FindMatchingOrderItem(connection, orderItem);
+                int? existingItemId = FindMatchingOrderItem(connection, orderItem);          
+
+
+                //int? existingItemId = FindMatchingOrderItem(connection, orderItem);
 
                 if (existingItemId != null && existingItemId != orderItem.OrderItemId)
                 {
@@ -92,7 +96,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
             command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
             command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
-            command.Parameters.AddWithValue("@Note", (object?)orderItem.Note ?? DBNull.Value);
+            //value note normalization 
+            command.Parameters.AddWithValue("@Note", string.IsNullOrWhiteSpace(orderItem.Note) ? DBNull.Value : orderItem.Note);
             command.Parameters.AddWithValue("@OrderItemStatus", orderItem.ItemStatus.ToString());
             command.Parameters.AddWithValue("@CurrentItemId", orderItem.OrderItemId); 
 

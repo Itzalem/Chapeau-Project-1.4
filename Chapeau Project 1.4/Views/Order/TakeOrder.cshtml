@@ -16,7 +16,7 @@
 
 <div style="display: flex; gap: 20pxc;">
 
-    <div style="flex: 1; border: 1px solid #ccc; padding: 10px;">
+    <div class="menu">
         @await Component.InvokeAsync("Menu", new { orderNumber = Model.OrderNumber, cardFilter = cardFilter, categoryFilter = categoryFilter })
     </div>
 
@@ -43,7 +43,8 @@
                             <td>
                                 <details>
                                     <summary>Edit</summary>
-                                    <div class="menu-buttons">  
+                                    <div class="edit-buttons">
+                                        @* INCREASE AND DECREASE ITEM QUANTITY*@
                                         @if (item.MenuItem.Stock > item.Quantity)
                                         {
                                         <a class="btn btn-success" asp-controller="Order" asp-action="EditItemQuantity" 
@@ -90,7 +91,7 @@
             </tbody>
         </table>
 
-        
+        <div style="display: flex; gap: 15px;">
         <form asp-controller="Order" asp-action="SendOrder" method="post">
                 
             <input type="hidden" asp-for="OrderNumber" />
@@ -108,11 +109,11 @@
             <input type="hidden" asp-for="OrderTime" />
             <input type="hidden" asp-for="TableNumber" />
 
-            <button type="submit" class="btn btn-success">Cancel</button>
+            <button type="submit" class="btn btn-danger">Cancel</button>
         </form>
 
-        <a class="btn btn-success" asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber">Pay</a>       
-         
+        <a class="btn btn-primary" asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber">Pay</a>       
+        </div>
 
     </div>
 

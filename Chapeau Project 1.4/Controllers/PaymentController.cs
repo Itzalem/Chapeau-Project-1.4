@@ -32,7 +32,7 @@ namespace Chapeau_Project_1._4.Controllers
 			try
 			{
 				Order? order = _orderService.GetOrderByTable(table);
-                if (order == null)
+				if (order == null)
 					return RedirectToAction("Overview", "RestaurantTable");
 				order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 

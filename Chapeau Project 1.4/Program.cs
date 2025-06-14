@@ -79,7 +79,7 @@ namespace Chapeau_Project_1._4
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Personell}/{action=Login}/{id?}");
 
             app.Run();
         }

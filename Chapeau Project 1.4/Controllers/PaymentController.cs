@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient.DataClassification;
 using System.Reflection;
 using Chapeau_Project_1._4.Services.Payment;
+using Chapeau_Project_1._4.ViewModel;
 
 namespace Chapeau_Project_1._4.Controllers
 {
@@ -28,28 +29,38 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpGet]
         public IActionResult DisplayOrder(int? table)
         {
-            Order? order = _orderService.GetOrderByTable(table);
-            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
+			try
+			{
+				Order? order = _orderService.GetOrderByTable(table);
+                if (order == null)
+					return RedirectToAction("Overview", "RestaurantTable");
+				order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 
-            if (order == null)
-            {
-                return RedirectToAction("Overview", "RestaurantTable");
-            }
-
-            return View(order);
+				return View(order);
+			}
+			catch
+			{
+				return RedirectToAction("Overview", "RestaurantTable");
+			}
         }
+
+        private Payment GetPayment(int? table)
+        {
+			Order? order = _orderService.GetOrderByTable(table);
+			order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
+
+			Bill bill = new Bill(order, _tableService.GetTableByNumber(table));
+
+			return new Payment(bill, order.Total);
+		}
 
         [HttpGet]
-        public IActionResult PreparePay(int? table)
+        private IActionResult PreparePay(int? table)
         {
-            Order? order = _orderService.GetOrderByTable(table);
-            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
+			Payment payment = GetPayment(table);
 
-            Bill bill = new Bill(order, _tableService.GetTableByNumber(table));
-
-            Payment payment = new Payment(bill, order.Total);
-            return View(payment);
-        }
+			return View(payment);
+		}
 
         [HttpPost]
         public IActionResult PreparePay(Payment payment, int table)
@@ -75,5 +86,35 @@ namespace Chapeau_Project_1._4.Controllers
 
             return RedirectToAction("Overview", "RestaurantTable");
         }
-    }
+
+        [HttpGet]
+        public IActionResult SplitAmount(int? table)
+        {
+            return View(table);
+        }
+
+        [HttpPost]
+        public IActionResult SplitAmount(int payments, int? table)
+        {
+            return RedirectToAction("SplitEqualPay", "Payment", new { payments = payments, table = table });
+        }
+
+        [HttpGet]
+        public void SplitEqualPay(int payments, int? table)
+        {
+            Payment payment = GetPayment(table);
+            SplitBill splitBill = new SplitBill(payment, payments);
+
+            for (int i = 0; i < payments; i++)
+            {
+                GoToSplitEqual(splitBill);
+            }
+        }
+
+		private IActionResult GoToSplitEqual(SplitBill splitBill)
+        {
+            return View(splitBill);
+        }
+
+	}
 }

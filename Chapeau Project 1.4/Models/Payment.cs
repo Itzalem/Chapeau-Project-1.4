@@ -18,9 +18,9 @@
                 foreach (OrderItem item in Bill.Order.OrderItems)
                 {
                     if (item.MenuItem.IsAlcoholic)
-                        VAT += (item.MenuItem.Price * (decimal)0.21);
+                        VAT += (item.MenuItem.Price * item.Quantity * (decimal)0.21);
                     else
-                        VAT += (item.MenuItem.Price * (decimal)0.09);
+                        VAT += (item.MenuItem.Price * item.Quantity * (decimal)0.09);
                 }
                 return VAT;
             }

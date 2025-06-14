@@ -5,36 +5,14 @@ namespace Chapeau_Project_1._4.ViewModel
 	public class SplitBill
 	{
 		public Payment Payment { get; set; }
-		public int Payments { get; set; }
-		public int PaymentsLeft
-		{
-			get
-			{
-				return Payments;
-			}
-			set { } 
-		}
-		public decimal AmountLeft 
-		{ 
-			get
-			{
-				return Payment.Bill.Order.Total;
-			}
-			set { }
-		}
-		public decimal VAT
-		{ 
-			get
-			{
-				return (Payment.VAT / Payments);
-			} 
-			set { }
-		}
+		public int TotalPay { get; set; }
+		public int CurrentPay {  get; set; }
 
-		public SplitBill(Payment payment, int payments)
-		{
-			Payment = payment;
-			Payments = payments;
-		}
+        public SplitBill(Payment payment, int totalPay, int currentPay)
+        {
+            Payment = payment;
+			TotalPay = totalPay;
+			CurrentPay = currentPay;
+        }
 	}
 }

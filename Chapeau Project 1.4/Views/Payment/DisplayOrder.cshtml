@@ -7,7 +7,7 @@
 <div class="text-center">
 	<h1 class="display-4">Le Order of table @Model.TableNumber</h1>
 
-	<a asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber" class="btn btn-secondary mt-2 mb-2">Pay together</a>
+	<a asp-controller="Payment" asp-action="PreparePay" asp-route-table="@Model.TableNumber" class="btn btn-secondary mt-2 mb-2">Pay together</a>
 	<a asp-controller="Payment" asp-action="SplitAmount" asp-route-table="@Model.TableNumber" class="btn btn-secondary mt-2 mb-2">Split bill (equally)</a>
 	<a asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber" class="btn btn-secondary mt-2 mb-2">Split bill (choose amount)</a>
 

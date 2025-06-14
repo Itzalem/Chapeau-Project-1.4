@@ -44,18 +44,22 @@ namespace Chapeau_Project_1._4.Controllers
 			}
         }
 
-        private Payment GetPayment(int? table)
-        {
+		private Bill GetBill(int? table)
+		{
 			Order? order = _orderService.GetOrderByTable(table);
 			order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 
-			Bill bill = new Bill(order, _tableService.GetTableByNumber(table));
+			return new Bill(order, _tableService.GetTableByNumber(table));
+		}
 
-			return new Payment(bill, order.Total);
+        private Payment GetPayment(int? table)
+        {
+			Bill bill = GetBill(table);
+			return new Payment(bill, bill.Order.Total);
 		}
 
         [HttpGet]
-        private IActionResult PreparePay(int? table)
+        public IActionResult PreparePay(int? table)
         {
 			Payment payment = GetPayment(table);
 
@@ -66,10 +70,7 @@ namespace Chapeau_Project_1._4.Controllers
         public IActionResult PreparePay(Payment payment, int table)
         {
             //enter the bill, order and table in the payment
-			Order? order = _orderService.GetOrderByTable(table);
-			order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
-			Bill bill = new Bill(order, _tableService.GetTableByNumber(table));
-            payment.Bill = bill;
+            payment.Bill = GetBill(table);
 
 			//create the bill in the database
 			_paymentService.CreateBill(payment);
@@ -90,31 +91,57 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpGet]
         public IActionResult SplitAmount(int? table)
         {
-            return View(table);
+            return View(GetPayment(table));
         }
 
         [HttpPost]
-        public IActionResult SplitAmount(int payments, int? table)
+        public IActionResult SplitAmount(int totalPay, int? table)
         {
-            return RedirectToAction("SplitEqualPay", "Payment", new { payments = payments, table = table });
+            return RedirectToAction("SplitEqualPay", "Payment", new { totalPay = totalPay, table = table, currentPay = 1});
         }
 
-        [HttpGet]
-        public void SplitEqualPay(int payments, int? table)
-        {
-            Payment payment = GetPayment(table);
-            SplitBill splitBill = new SplitBill(payment, payments);
+		[HttpGet]
+		public IActionResult SplitEqualPay(int? table, int totalPay, int currentPay)
+		{
+			Payment payment = GetPayment(table);
+			payment = _paymentService.SplitAmountsEqual(payment, totalPay);
 
-            for (int i = 0; i < payments; i++)
-            {
-                GoToSplitEqual(splitBill);
-            }
-        }
+			SplitBill splitBill = new SplitBill(payment, totalPay, currentPay);
 
-		private IActionResult GoToSplitEqual(SplitBill splitBill)
-        {
-            return View(splitBill);
-        }
+			return View(splitBill); 
+		}
+
+		[HttpPost]
+		public IActionResult SplitEqualPay(Payment payment, int table, int totalPay, int currentPay)
+		{
+			//enter the bill, order and table in the payment
+			payment.Bill = GetBill(table);
+
+			//create the bill in the database
+			_paymentService.CreateBill(payment);
+
+			//create the payment in the database. use the new Bill, with BillId
+			payment.Bill = _paymentService.GetBill(payment);
+			_paymentService.CreatePayment(payment);
+
+			if (currentPay < totalPay)
+			{
+				currentPay++;
+				TempData["paySuccessMessage"] = "Payment Went Through Successfully";
+				return RedirectToAction("SplitEqualPay", new { table = payment.Bill.Table.TableNumber, totalPay = totalPay, currentPay = currentPay });
+			}
+			else
+			{
+				//update the orderstatus to paid and table occupation to free
+				_paymentService.UpdateOrderStatus(payment);
+				_paymentService.UpdateTableStatus(payment);
+
+				TempData["paySuccessMessage"] = "Payment Finished Successfully";
+
+				return RedirectToAction("Overview", "RestaurantTable");
+			}
+		}
+
 
 	}
 }

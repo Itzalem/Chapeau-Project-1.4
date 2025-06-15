@@ -64,38 +64,15 @@ namespace Chapeau_Project_1._4.Services.Order
             _orderItemService.ServeDrinkItems(orderNumber);
         }
 
-        public List<Chapeau_Project_1._4.Models.Order> DisplayOrder(string tabName = "RunningOrders")
+        public List<Chapeau_Project_1._4.Models.Order> DisplayOrder()
         {
-            var queryResutl = _orderRepository.DisplayOrder();
-            List<Chapeau_Project_1._4.Models.Order> orders = new List<Chapeau_Project_1._4.Models.Order>();
-
-            switch (tabName)
-            {
-                case "RunningOrders":
-                    orders = queryResutl
-                        .Where(x => x.Status != EOrderStatus.prepared).ToList();
-                    break;
-                case "FinishedOrders":
-                    orders = queryResutl
-                         .Where(x => x.Status == EOrderStatus.prepared).ToList();
-                    break;
-                default:
-                    throw new NullReferenceException("Orders Is Not Find.");
-                   
-            }
-            return orders;
+            return _orderRepository.DisplayOrder();    
         }
 
-        
         //Mania 
         public object GetOrderMunuItemName(int OrderNumber)
         {
             return _orderRepository.GetOrderMunuItemName(OrderNumber);  
-        }
-
-        public List<Chapeau_Project_1._4.Models.Order> GetFinishedOrders()
-        {
-            return _orderRepository.GetFinishedOrders();    
         }
 
         public Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber)
@@ -108,9 +85,9 @@ namespace Chapeau_Project_1._4.Services.Order
             _orderRepository.UpdateOrderStatus(updatedItemStatus, orderNumber);
         }
 
-        public List<RunningOrderWithItemsViewModel> GetOrdersWithItems(string tabName = "RunningOrders")
+        public List<RunningOrderWithItemsViewModel> GetOrdersWithItems(bool IsDrink ,string tabName = "RunningOrders")
         {
-            var queryResutl = _orderRepository.GetOrdersWithItems().ToList();
+            var queryResutl = _orderRepository.GetOrdersWithItems(IsDrink).ToList();
             List<RunningOrderWithItemsViewModel> orders = new();
 
             switch (tabName)
@@ -124,7 +101,9 @@ namespace Chapeau_Project_1._4.Services.Order
                          .Where(x => x.Status == EOrderStatus.prepared).ToList();
                     break;
                 default:
-                    throw new NullReferenceException("Orders Is Not Find.");
+                    orders = queryResutl
+                        .Where(x => x.Status != EOrderStatus.prepared).ToList();
+                    break;
 
             }
             return orders;

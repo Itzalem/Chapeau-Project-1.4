@@ -1,29 +1,51 @@
 ﻿@using Chapeau_Project_1._4.ViewModel
-@model List<RunningOrderWithItemsViewModel>
+@model FoodOrDrinkRecognizerViewModel
+
+@{
+    var currentLinkTab = Context.Request.Query["linkTab"].ToString() ?? "food";
+}
 
 <h2 class="page-title">Orders</h2>
 
 <div class="view-tabs">
     <form method="get" action="@Url.Action("Index","Kitchen")">
-        <input type="hidden" name ="tab" value="RunningOrders" />
-        <button class="tab active" >
+        <input type="hidden" name="filterValue" value="RunningOrders" />
+        <input type="hidden" name="linkTab" value="@currentLinkTab" />
+        <button class="tab @(Context.Request.Query["filterValue"] == "RunningOrders" ? "active" : "")">
             <i class="fa fa-list"></i> Running Orders
         </button>
     </form>
+   
     <form method="get" action="@Url.Action("Index","Kitchen")">
-        <input type="hidden" name="tab" value="FinishedOrders" />
+        <input type="hidden" name="filterValue" value="FinishedOrders" />
+        <input type="hidden" name="linkTab" value="@currentLinkTab" />
 
-        <button class="tab">
+        <button class="tab @(Context.Request.Query["filterValue"] == "FinishedOrders" ? "active" : "")">
             <i class="fa fa-clock-o"></i> Finished Today
         </button>
     </form>
+
     <form method="get" action="@Url.Action("Index","Kitchen")">
-        <button class="btn-refresh" name="tab" value="RunningOrders">
+        <input type="hidden" name="filterValue" value="RunningOrders" />
+        <button class="btn-refresh">
             <i class="fa fa-refresh"></i> Refresh
         </button>
     </form>
 </div>
 
 <div class="orders-container">
-    <partial name="_OrderListPartial" data="Model"></partial>
+
+    @{
+        var filterValue = Context.Request.Query["filterValue"].ToString() ?? "RunningOrders";
+    }
+    @if (Model.IsDrink)
+    {
+        @await Component.InvokeAsync("Drink" , new {filterValue})
+    }
+    else
+    {
+        @await Component.InvokeAsync("Food" , new {filterValue})
+
+    }
+    
 </div>

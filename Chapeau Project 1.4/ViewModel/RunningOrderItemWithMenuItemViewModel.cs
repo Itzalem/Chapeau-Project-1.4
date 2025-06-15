@@ -2,9 +2,6 @@
 
 namespace Chapeau_Project_1._4.ViewModel
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class RunningOrderItemWithMenuItemViewModel
     {
         public int OrderItemId { get; set; }

@@ -17,7 +17,6 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         List<OrderItem> GetRunningItem();
         void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
         void UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus);
-        List<OrderItem> GetFinishedItems();
         
 
 

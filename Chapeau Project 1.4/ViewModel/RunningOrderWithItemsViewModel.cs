@@ -11,6 +11,6 @@ namespace Chapeau_Project_1._4.ViewModel
         public DateTime? FinishOrderTime { get; set; }
         public EOrderStatus Status { get; set; }
         public List<RunningOrderItemWithMenuItemViewModel> runningOrderItems { get; set; } = new List<RunningOrderItemWithMenuItemViewModel>();
-        // Constructor is domain based, we don't need it in the viewmodel (UI) 
+        public bool ShowCourse { get; set; } = true;   // if food = true 
     }
 }

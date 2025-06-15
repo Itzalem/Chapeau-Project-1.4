@@ -50,9 +50,6 @@ namespace Chapeau_Project_1._4
             builder.Services.AddSingleton<IRestaurantTableService, RestaurantTableService>();
             builder.Services.AddSingleton<IRestaurantTableRepository, RestaurantTableRepository>();
 
-            //builder.Services.AddSingleton<IDrinkService, DrinkService>();
-            //builder.Services.AddSingleton<IDrinkRepository, DrinkRepository>();
-
             builder.Services.AddSingleton<IPaymentService, PaymentService>();
             builder.Services.AddSingleton<IPaymentRepository, PaymentRepository>();
 

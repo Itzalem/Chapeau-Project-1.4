@@ -1,0 +1,19 @@
+﻿@model Chapeau_Project_1._4.Models.Payment
+
+@{
+	ViewData["Title"] = "Split bill";
+}
+
+<h4>Split bill</h4>
+
+<form action="/Payment/SplitAmount" method="Post">
+	<label for="totalPay">Between how many people does the bill need to split?</label>
+	<input type="number" id="totalPay" name="totalPay" class="form-control"/>
+
+	<!--extra parameter table-->
+	<input type="hidden" name="table" value="@Model.Bill.Table.TableNumber" />
+
+	<button type="submit" class="btn mt-2 btn-primary">Go to payment</button>
+</form>
+
+<a href="/RestaurantTable/Overview"> Back to restaurant overview</a>

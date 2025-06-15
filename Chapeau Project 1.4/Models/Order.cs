@@ -19,7 +19,7 @@
                 decimal total = 0;
                 foreach (OrderItem item in OrderItems)
                 {
-                    total += item.MenuItem.Price;
+                    total += (item.MenuItem.Price * item.Quantity);
                 }
                 return total;
             }

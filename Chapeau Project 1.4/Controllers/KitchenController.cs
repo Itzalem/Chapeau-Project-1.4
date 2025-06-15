@@ -21,10 +21,15 @@ namespace Chapeau_Project_1._4.Controllers
             _menuService = menuService;
         }
 
-        public IActionResult Index(string tab)
+        public IActionResult Index(string linkTab , string filterValue = "RunningOrders")
         {
-            var orderWithItemsQueryResult = _orderService.GetOrdersWithItems(tab == null ? "RunningOrders" : tab);
-            return View("RunningOrder", orderWithItemsQueryResult);
+            bool isDrink = linkTab != "food";
+            var queryResult = new FoodOrDrinkRecognizerViewModel
+            {
+                IsDrink = isDrink,
+                FilterValue = filterValue
+            };
+            return View("RunningOrder", queryResult);
         }
 
         [HttpPost]

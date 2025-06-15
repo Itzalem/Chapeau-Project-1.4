@@ -339,25 +339,27 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         public void UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus)
         {
-            using (var connection = new SqlConnection("Data Source=chapeaurestaurant.database.windows.net; Initial Catalog=chapeaurestaurant; User ID=LukasWarnecke; Password=Auge71%Ha; TrustServerCertificate=True;"))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
 
                 // پیدا کردن MenuItemId های مربوط به سفارش و دسته مورد نظر
-                var getMenuItemIdsCmd = new SqlCommand(@"
-            SELECT DISTINCT mi.menuItem_id,oi.orderNumber
-            FROM ORDER_ITEM oi
-            JOIN MENU_ITEMS mi ON oi.menuItem_id = mi.menuItem_id
-            WHERE oi.orderNumber = @orderNumber AND mi.category = @category
-        ", connection);
+                string query = @"
+                                    SELECT DISTINCT mi.menuItem_id,oi.orderNumber
+                                    FROM ORDER_ITEM oi
+                                    JOIN MENU_ITEMS mi ON oi.menuItem_id = mi.menuItem_id
+                                    WHERE oi.orderNumber = @orderNumber AND mi.category = @category" ;
 
-                getMenuItemIdsCmd.Parameters.AddWithValue("@orderNumber", orderNumber);
-                getMenuItemIdsCmd.Parameters.AddWithValue("@category", category);
+
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
+                command.Parameters.AddWithValue("@category", category);
+
+                command.Connection.Open();
 
                 var menuItemIds = new List<int>();
                 int orderNumberId = 0;
 
-                using (var reader = getMenuItemIdsCmd.ExecuteReader())
+                using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -371,11 +373,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 {
                     if (orderNumber == orderNumberId)
                     {
-                        var updateCmd = new SqlCommand(@"
+                        string queryUpdate = @"
                             UPDATE MENU_ITEMS
                             SET categoryStatus = @groupStatus
                             WHERE menuItem_id = @menuItemId
-                        ", connection);
+                        ";
+                        SqlCommand updateCmd = new SqlCommand(queryUpdate, connection);
 
                         updateCmd.Parameters.AddWithValue("@groupStatus", categoryCourseStatus.ToString());
                         updateCmd.Parameters.AddWithValue("@menuItemId", menuItemId);
@@ -387,33 +390,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
                 connection.Close();
             }
-        }
-
-        public List<OrderItem> GetFinishedItems()
-        {
-            List<OrderItem> finishOrderItems = new List<OrderItem>();
-
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string query = @" SELECT orderItem_id, menuItem_id, quantity, note, itemStatus , OI.orderNumber
-                                  FROM ORDER_ITEM as OI
-                                  JOIN ORDERS ON OI.orderNumber = ORDERS.orderNumber
-                                  WHERE OI.itemStatus = @ready";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@ready", EItemStatus.ReadyToServe.ToString());
-
-                command.Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    OrderItem orderItem = ReadOrderItem(reader);
-                    finishOrderItems.Add(orderItem);
-                }
-                reader.Close();
-            }
-            return finishOrderItems;
         }
 
         public void EditItemQuantity(OrderItem orderItem)

@@ -10,14 +10,12 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
     {
 
         private readonly string? _connectionString;
-        private readonly IOrderItemService _orderItemService;
 
 
         public OrderRepository(IConfiguration configuration, IOrderItemService orderItemService)
         {
             // get (database connectionstring from appsetings 
             _connectionString = configuration.GetConnectionString("ChapeauRestaurant");
-            _orderItemService = orderItemService;
         }
 
 

@@ -97,23 +97,15 @@ namespace Chapeau_Project_1._4.Controllers
 
             //the stock its reduced before the itemstatus is changes to avoid already
             //sent items to reduce the stock again 
-            foreach (OrderItem orderItem in order.OrderItems)
-            {
-                if (orderItem.ItemStatus == EItemStatus.onHold) //this is not the best way to do it, better to do it in the repo
-                { 
-                    _orderItemService.ReduceItemStock(orderItem);
-                }
-            }
+            
+            _orderItemService.ReduceItemStock(order);
+             
 
             _orderItemService.UpdateAllItemsStatus(order);
 
-            foreach (OrderItem orderItem in order.OrderItems)
-            {
-                if (orderItem.ItemStatus == EItemStatus.pending)
-                {
-                    _orderItemService.CheckDuplicateItems(orderItem);
-                }
-            }
+           
+                    _orderItemService.CheckDuplicateItems(order);
+               
 
             TempData["SuccessMessage"] = "Order Sent Successfully";
 

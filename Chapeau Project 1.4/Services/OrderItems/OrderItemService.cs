@@ -18,9 +18,15 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             _orderItemRepository.AddOrderItem(orderItem);
         }
 
-        public bool CheckDuplicateItems(OrderItem orderItem)
+        public void CheckDuplicateItems(Chapeau_Project_1._4.Models.Order order)
         {
-            return _orderItemRepository.CheckDuplicateItems(orderItem);
+            foreach (OrderItem orderItem in order.OrderItems)
+            {
+                if (orderItem.ItemStatus == EItemStatus.pending)
+                {
+                    _orderItemRepository.CheckDuplicateItems(orderItem);
+                }
+            }
         }
 
         public OrderItem GetOrderItemById(int orderItemId)
@@ -45,9 +51,16 @@ namespace Chapeau_Project_1._4.Services.OrderItems
 
         }
 
-        public void ReduceItemStock(OrderItem orderItem)
+        public void ReduceItemStock(Chapeau_Project_1._4.Models.Order order)
         {
-            _orderItemRepository.ReduceItemStock(orderItem);
+            foreach (OrderItem orderItem in order.OrderItems)
+            {
+                if (orderItem.ItemStatus == EItemStatus.onHold) //this is not the best way to do it, better to do it in the repo
+                {
+                    _orderItemRepository.ReduceItemStock(orderItem);
+                }
+            }
+            
         }
 
 

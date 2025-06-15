@@ -7,6 +7,7 @@
         public decimal Tip { get; set; }
         public decimal Total { get; set; }
         public decimal SplitTotal { get; set; }
+        public decimal AmountPayed { get; set; }
         public EPaymentOptions PaymentType { get; set; }
         public string Feedback { get; set; }
 

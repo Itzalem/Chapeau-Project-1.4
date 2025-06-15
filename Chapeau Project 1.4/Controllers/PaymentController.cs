@@ -58,6 +58,21 @@ namespace Chapeau_Project_1._4.Controllers
 			return new Payment(bill, bill.Order.Total);
 		}
 
+		private Payment InsertBillAndPayment(Payment payment, int table)
+		{
+			//enter the bill, order and table in the payment
+			payment.Bill = GetBill(table);
+
+			//create the bill in the database
+			_paymentService.CreateBill(payment);
+
+			//create the payment in the database. use the new Bill, with BillId
+			payment.Bill = _paymentService.GetBill(payment);
+			_paymentService.CreatePayment(payment);
+
+			return payment;
+		}
+
         [HttpGet]
         public IActionResult PreparePay(int? table)
         {
@@ -69,15 +84,7 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpPost]
         public IActionResult PreparePay(Payment payment, int table)
         {
-            //enter the bill, order and table in the payment
-            payment.Bill = GetBill(table);
-
-			//create the bill in the database
-			_paymentService.CreateBill(payment);
-
-            //create the payment in the database. use the new Bill, with BillId
-            payment.Bill = _paymentService.GetBill(payment);
-            _paymentService.CreatePayment(payment);
+			payment = InsertBillAndPayment(payment, table);
 
             //update the orderstatus to paid and table occupation to free
             _paymentService.UpdateOrderStatus(payment);
@@ -114,15 +121,7 @@ namespace Chapeau_Project_1._4.Controllers
 		[HttpPost]
 		public IActionResult SplitEqualPay(Payment payment, int table, int totalPay, int currentPay)
 		{
-			//enter the bill, order and table in the payment
-			payment.Bill = GetBill(table);
-
-			//create the bill in the database
-			_paymentService.CreateBill(payment);
-
-			//create the payment in the database. use the new Bill, with BillId
-			payment.Bill = _paymentService.GetBill(payment);
-			_paymentService.CreatePayment(payment);
+			payment = InsertBillAndPayment(payment, table);
 
 			if (currentPay < totalPay)
 			{
@@ -142,6 +141,43 @@ namespace Chapeau_Project_1._4.Controllers
 			}
 		}
 
+		[HttpGet]
+		public IActionResult SplitChooseAmount(int? table, decimal alreadyPayed)
+		{
+			Payment payment = GetPayment(table);
 
+			SplitBill splitBill = new SplitBill(payment, alreadyPayed);
+
+			return View(splitBill);
+		}
+
+		[HttpPost]
+		public IActionResult SplitChooseAmount(Payment payment, int table, decimal alreadyPayed)
+		{
+			payment = InsertBillAndPayment(payment, table);
+
+			//update the total amount that was payed
+			alreadyPayed = _paymentService.UpdatePayed(payment, alreadyPayed);
+
+			if (alreadyPayed < payment.Total)
+			{
+				//go to the next payment
+				TempData["paySuccessMessage"] = "Payment Went Through Successfully";
+				return RedirectToAction("SplitChooseAmount", new { table = payment.Bill.Table.TableNumber, alreadyPayed = alreadyPayed });
+			}
+			else
+			{
+				//update the orderstatus to paid and table occupation to free
+				_paymentService.UpdateOrderStatus(payment);
+				_paymentService.UpdateTableStatus(payment);
+
+				if (alreadyPayed == payment.Total)
+					TempData["paySuccessMessage"] = "Payment Finished Successfully";
+				else
+					TempData["paySuccessMessage"] = $"Payment Finished Successfully. The Extra €{alreadyPayed - payment.Total} Payed Has Been Deposited Back";
+
+				return RedirectToAction("Overview", "RestaurantTable");
+			}
+		}
 	}
 }

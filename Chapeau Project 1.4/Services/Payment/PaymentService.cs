@@ -51,5 +51,13 @@ namespace Chapeau_Project_1._4.Services.Payment
 
             return payment;
         }
+
+        public decimal UpdatePayed(Models.Payment payment, decimal alreadyPayed)
+        {
+            alreadyPayed += payment.AmountPayed;
+            if (alreadyPayed > payment.Total)
+                payment.AmountPayed = payment.Total - (alreadyPayed - payment.AmountPayed);
+			return alreadyPayed;
+        }
 	}
 }

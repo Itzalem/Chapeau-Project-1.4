@@ -7,9 +7,14 @@
 <partial name="_SucessMessage" model="cancelMessage" />
 
 @{
-    string paySucessMessage = TempData["paySuccessMessage"]?.ToString();
+    string PaySuccessMessage = TempData["PaySuccessMessage"]?.ToString();
 }
-<partial name="_SucessMessage" model="paySucessMessage" />
+<partial name="_SucessMessage" model="PaySuccessMessage" />
+
+@{
+    string SomethingWrongMessage = TempData["SomethingWrongMessage"]?.ToString();
+}
+<partial name="_ErrorMessage" model="SomethingWrongMessage" />
 
 <h2>Restaurant Table Layout with Order Status</h2>
 

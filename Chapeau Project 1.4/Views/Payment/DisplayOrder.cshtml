@@ -4,6 +4,11 @@
 	ViewData["Title"] = "Order";
 }
 
+@{
+	string PaymentWrongMessage = TempData["PaymentWrongMessage"]?.ToString();
+}
+<partial name="_ErrorMessage" model="PaymentWrongMessage" />
+
 <div class="text-center">
 	<h1 class="display-4">Le Order of table @Model.TableNumber</h1>
 

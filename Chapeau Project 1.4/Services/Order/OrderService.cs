@@ -3,6 +3,7 @@ using Chapeau_Project_1._4.Repositories.OrderRepo;
 using Chapeau_Project_1._4.Services.OrderItems;
 using Chapeau_Project_1._4.Services.RestaurantTableService;
 using Chapeau_Project_1._4.ViewModel;
+using System.Diagnostics;
 
 namespace Chapeau_Project_1._4.Services.Order
 {
@@ -49,25 +50,52 @@ namespace Chapeau_Project_1._4.Services.Order
         //Lukas
         public List<OrderItem> GetItemsForServing(int orderNumber)
         {
-            // Calls the service layer to retrieve all items in the order that are ready or eligible to be served.
-            return _orderItemService.GetItemsForServing(orderNumber);
+            try
+            {
+                // Calls the service layer to retrieve all items in the order 
+                // that are ready or eligible to be served.
+                return _orderItemService.GetItemsForServing(orderNumber);
+            }
+            catch (Exception ex)
+            {
+                // Log the error or handle it (for now we just output to debug)
+                Debug.WriteLine($"[GetItemsForServing Error] {ex.Message}");
+                return new List<OrderItem>(); // Return empty list on failure
+            }
         }
 
         //Lukas
         public void ServeFoodItems(int orderNumber)
         {
-            // Delegates the action to the service layer, which will:
-            // - Find all food items (non-drinks) in the order
-            // - Mark them as 'Served' if they are 'ReadyToServe'
-            _orderItemService.ServeFoodItems(orderNumber);
+            try
+            {
+                // Delegates the action to the service layer, which will:
+                // - Find all food items (non-drinks) in the order
+                // - Mark them as 'Served' if they are 'ReadyToServe'
+                _orderItemService.ServeFoodItems(orderNumber);
+            }
+            catch (Exception ex)
+            {
+                // Log the error or handle it appropriately
+                Debug.WriteLine($"[ServeFoodItems Error] {ex.Message}");
+            }
         }
 
         //Lukas
         public void ServeDrinkItems(int orderNumber)
         {
-            //same as servefooditems just for drinks
-            _orderItemService.ServeDrinkItems(orderNumber);
+            try
+            {
+                //same as ServeFoodItems but for Drinks
+                _orderItemService.ServeDrinkItems(orderNumber);
+            }
+            catch (Exception ex)
+            {
+                // Log the error or handle it appropriately
+                Debug.WriteLine($"[ServeDrinkItems Error] {ex.Message}");
+            }
         }
+
 
 
         public List<Chapeau_Project_1._4.Models.Order> DisplayOrder()

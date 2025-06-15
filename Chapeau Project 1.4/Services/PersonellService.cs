@@ -24,45 +24,63 @@ namespace Chapeau_Project_1._4.Services
             redirectController = "Personell";
             redirectAction = "Login";
 
-            // Hash the entered password to match what's stored in the database
-            string hashedPassword = HashPassword(password);
-
-            // Check the credentials against the database
-            Personell personell = _personellRepository.GetByLoginCredentials(username, hashedPassword);
-
-            // If not found, return null and keep default redirect
-            if (personell == null)
+            try
             {
+                // Hash the entered password to match what's stored in the database
+                string hashedPassword = HashPassword(password);
+
+                // Check the credentials against the database
+                Personell personell = _personellRepository.GetByLoginCredentials(username, hashedPassword);
+
+                // If not found, return null and keep default redirect
+                if (personell == null)
+                {
+                    return null;
+                }
+
+                // Based on the user's role, decide where to redirect
+                if (personell.Role == "waiter")
+                {
+                    redirectController = "RestaurantTable";
+                    redirectAction = "Overview";
+                }
+                else if (personell.Role == "kitchen")
+                {
+                    redirectController = "Kitchen";
+                    redirectAction = "Index";
+                }
+                else if (personell.Role == "bar")
+                {
+                    redirectController = "Bar";
+                    redirectAction = "Index";
+                }
+
+                // Return the logged-in personell
+                return personell;
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the error if needed (can be extended later)
+                Debug.WriteLine($"[Login Error] {ex.Message}");
                 return null;
             }
-
-            // Based on the user's role, decide where to redirect
-            if (personell.Role == "waiter")
-            {
-                redirectController = "RestaurantTable";
-                redirectAction = "Overview";
-            }
-            else if (personell.Role == "kitchen")
-            {
-                redirectController = "Kitchen";
-                redirectAction = "Index";
-            }
-            else if (personell.Role == "bar")
-            {
-                redirectController = "Bar";
-                redirectAction = "Index";
-            }
-
-            // Return the logged-in personell
-            return personell;
         }
 
         private string HashPassword(string password)
         {
-            using (SHA256 sha256 = SHA256.Create())
+            try
             {
-                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return Convert.ToBase64String(hashBytes);
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                    return Convert.ToBase64String(hashBytes);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the error if hashing fails
+                Debug.WriteLine($"[Hashing Error] {ex.Message}");
+                return string.Empty;
             }
         }
     }

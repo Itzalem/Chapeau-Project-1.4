@@ -19,6 +19,7 @@ namespace Chapeau_Project_1._4.Services.Payment
 
         public void CreatePayment(Models.Payment payment)
         {
+            //feedback cannot be null
             if (payment.Feedback == null)
             {
 				payment.Feedback = "no feedback";
@@ -43,9 +44,11 @@ namespace Chapeau_Project_1._4.Services.Payment
 
         public Models.Payment SplitAmountsEqual(Models.Payment payment, int totalPay)
         {
-            if (totalPay == 0)
+            //at least 1 payment
+            if (totalPay < 1)
                 totalPay = 1;
 
+            //split the Total and VAT between the customres
             payment.SplitTotal = payment.Total / totalPay;
             payment.SplitVAT = payment.VAT / totalPay;
 
@@ -54,9 +57,12 @@ namespace Chapeau_Project_1._4.Services.Payment
 
         public decimal UpdatePayed(Models.Payment payment, decimal alreadyPayed)
         {
+            //update the amount payed up until this moment
             alreadyPayed += payment.AmountPayed;
-            if (alreadyPayed > payment.Total)
+			//get back extra money if someone overpayed
+			if (alreadyPayed > payment.Total)
                 payment.AmountPayed = payment.Total - (alreadyPayed - payment.AmountPayed);
+
 			return alreadyPayed;
         }
 	}

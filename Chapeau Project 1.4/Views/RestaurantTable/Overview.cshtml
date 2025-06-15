@@ -6,11 +6,13 @@
 }
 <partial name="_SucessMessage" model="cancelMessage" />
 
+<!--get an success message if getting the entire payment went correct-->
 @{
     string PaySuccessMessage = TempData["PaySuccessMessage"]?.ToString();
 }
 <partial name="_SucessMessage" model="PaySuccessMessage" />
 
+<!--get an error message something unknown went wrong-->
 @{
     string SomethingWrongMessage = TempData["SomethingWrongMessage"]?.ToString();
 }

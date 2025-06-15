@@ -1,10 +1,12 @@
 ﻿@model Chapeau_Project_1._4.ViewModel.SplitBill
+<!--use the globalization to convert the comma used in Dutch decimals to a universal dot-->
 @using System.Globalization
 
 @{
 	ViewData["Title"] = "Prepare payment";
 }
 
+<!--get an success message if the previous payment went right-->
 @{
 	string paySucessMessage = TempData["paySuccessMessage"]?.ToString();
 }
@@ -12,13 +14,16 @@
 
 <h4>Payment @Model.CurrentPay out of @Model.TotalPay</h4>
 
+<!--fill in the properties of Payment-->
 <form action="/Payment/SplitEqualPay" method="Post">
 	<label for="Tip">tip amount:</label>
 	<input type="number" id="Tip" name="Tip" class="form-control" step=".01" required value="@Model?.Payment.Tip" />
 
+	<!--extra field Total to show to the user-->
 	<label for="Total">Total:</label>
 	<input type="number" id="Total" name="Total" class="form-control" readonly value="@Model?.Payment.SplitTotal.ToString("0.00", CultureInfo.InvariantCulture)" />
 
+	<!--extra field VAT to show to the user-->
 	<label for="VAT">VAT:</label>
 	<input type="number" id="VAT" name="VAT" class="form-control" readonly value="@Model?.Payment.SplitVAT.ToString("0.00", CultureInfo.InvariantCulture)" />
 

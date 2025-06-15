@@ -25,12 +25,13 @@ public class RestaurantTableController : Controller
     [HttpGet]
     public IActionResult Details(int id)
     {
-        var table = _tableService.GetAllTables().FirstOrDefault(t => t.TableNumber == id);
+        var table = _tableService.GetTableByNumber(id);
         if (table == null)
             return NotFound();
 
         var order = _orderService.GetOrderByTable(id);
-        bool canBeFreed = !table.IsOccupied || order == null || order.Status == EOrderStatus.paid;
+        bool canBeFreed = _tableService.CanBeFreed(table, order);
+
         ViewBag.CanToggle = canBeFreed;
         ViewBag.TableNumber = id;
 
@@ -46,21 +47,18 @@ public class RestaurantTableController : Controller
     [HttpPost]
     public IActionResult ToggleOccupancy(int id)
     {
-        var table = _tableService.GetAllTables().FirstOrDefault(t => t.TableNumber == id);
+        var table = _tableService.GetTableByNumber(id);
         if (table == null)
             return NotFound();
 
         var order = _orderService.GetOrderByTable(id);
-        if (table.IsOccupied && order != null && order.Status != EOrderStatus.paid)
+        bool success = _tableService.TryToggleOccupancy(table, order);
+
+        if (!success)
         {
             TempData["ToggleError"] = "Table has unpaid or active orders and cannot be marked free.";
             return RedirectToAction("Details", new { id });
         }
-
-        bool newStatus = !table.IsOccupied;
-
-        _tableService.SetManualFreed(id, !newStatus); //if we're freeing it, set flag to true
-        _tableService.UpdateTableOccupancy(id, newStatus);
 
         return RedirectToAction("Overview");
     }

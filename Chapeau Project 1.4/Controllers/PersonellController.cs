@@ -45,7 +45,7 @@ namespace Chapeau_Project_1._4.Controllers
                 return View("Login", loginModel);
             }
 
-            // Store login info in session for later use
+            // Store login info in session for later use for e.g. in navbar
             HttpContext.Session.SetString("LoggedInUsername", personell.Username);
             HttpContext.Session.SetString("UserRole", personell.Role);
 

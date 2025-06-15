@@ -57,19 +57,6 @@ namespace Chapeau_Project_1._4.Services
             return personell;
         }
 
-        /*
-        public Personell? GetByLoginCredentials(string userName, string password)
-        {
-
-            string hashedPassword = HashPassword(password);
-
-            // Get the user from the database
-            Personell? personell = _personellRepository.GetByLoginCredentials(userName, hashedPassword);
-
-            return personell;
-        }
-        */
-
         private string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())

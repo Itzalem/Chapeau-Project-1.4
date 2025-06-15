@@ -126,5 +126,35 @@ namespace Chapeau_Project_1._4.Services.RestaurantTableService
             _tableRepo.SetManualFreed(tableNumber, wasFreed);
         }
 
+        public bool CanBeFreed(RestaurantTable table, OrderModel? order)
+        {
+            if (!table.IsOccupied)
+                return true;
+
+            if (order == null)
+                return true;
+
+            if (order.Status == EOrderStatus.paid)
+                return true;
+
+            return false;
+        }
+
+        public bool TryToggleOccupancy(RestaurantTable table, OrderModel? order)
+        {
+            if (table.IsOccupied && order != null && order.Status != EOrderStatus.paid)
+            {
+                return false;
+            }
+
+            bool newStatus = !table.IsOccupied;
+
+            SetManualFreed(table.TableNumber, !newStatus); // if we free it, set to true
+            UpdateTableOccupancy(table.TableNumber, newStatus);
+
+            return true;
+        }
+
+
     }
 }

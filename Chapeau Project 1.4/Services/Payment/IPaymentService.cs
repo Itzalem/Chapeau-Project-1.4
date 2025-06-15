@@ -10,5 +10,6 @@ namespace Chapeau_Project_1._4.Services.Payment
         void UpdateOrderStatus(Models.Payment payment);
         void UpdateTableStatus(Models.Payment payment);
         Models.Payment SplitAmountsEqual(Models.Payment payment, int totalPay);
+        decimal UpdatePayed(Models.Payment payment, decimal alreadyPayed);
 	}
 }

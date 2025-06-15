@@ -45,17 +45,12 @@ namespace Chapeau_Project_1._4.Services
             else if (personell.Role == "kitchen")
             {
                 redirectController = "Kitchen";
-                redirectAction = "KitchenView";
+                redirectAction = "Index";
             }
             else if (personell.Role == "bar")
             {
-                redirectController = "Kitchen";
-                redirectAction = "BarView";
-            }
-            else if (personell.Role == "manager")
-            {
-                redirectController = "Manager";
-                redirectAction = "Dashboard";
+                redirectController = "Bar";
+                redirectAction = "Index";
             }
 
             // Return the logged-in personell

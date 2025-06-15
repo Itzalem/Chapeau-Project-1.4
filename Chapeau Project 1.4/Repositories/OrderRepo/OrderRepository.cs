@@ -352,44 +352,17 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
 
 
-        public List<Order> GetFinishedOrders()
-        {
-            List<Order> orders = new List<Order>();
-
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string query = @" SELECT orderNumber, status, tableNumber, orderTime
-                                  FROM ORDERS
-                                  WHERE status = 'prepared';";
-                SqlCommand command = new SqlCommand(query, connection);
-
-                command.Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Order order = ReadOrder(reader);
-                    orders.Add(order);
-                }
-                reader.Close();
-            }
-            return orders;
-        }
-
-
-
-
-
-        public List<RunningOrderWithItemsViewModel> GetOrdersWithItems()
+        public List<RunningOrderWithItemsViewModel> GetOrdersWithItems(bool IsDrink)
         {
             var orders = new List<RunningOrderWithItemsViewModel>();
-
+         
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Open();
+                string categoryFilter = IsDrink
+                    ? "'drink'"                                   // Ternary Operator 
+                    : "'food'";
 
-                var command = new SqlCommand(@"
+                string query = @"
                     SELECT 
                          o.orderNumber, o.status, o.tableNumber, o.orderTime, o.finishOrderTime,
                          oi.orderItem_id, oi.quantity, oi.note, oi.itemStatus,
@@ -397,9 +370,13 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                      FROM ORDERS o
                      JOIN ORDER_ITEM oi ON o.orderNumber = oi.orderNumber
                      JOIN MENU_ITEMS mi ON oi.menuItem_id = mi.menuItem_id
-                     WHERE status <> 'onHold' AND oi.itemStatus <> 'onHold' AND mi.category in ('Starters','Mains','Desserts')  
-                     ORDER BY o.orderNumber, oi.orderItem_id
-        ", connection);
+                     WHERE status <> 'onHold' AND oi.itemStatus <> 'onHold' AND " +
+                     $"mi.itemType in ({categoryFilter}) "+ 
+                     "ORDER BY o.orderNumber, oi.orderItem_id";
+               
+
+                var command = new SqlCommand(query, connection);
+                command.Connection.Open();
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -422,7 +399,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                                 FinishOrderTime = reader.IsDBNull(reader.GetOrdinal("finishOrderTime"))
                                     ? (DateTime?)null
                                     : reader.GetDateTime(reader.GetOrdinal("finishOrderTime")),
-                            
+
+                                WaitingTime = DateTime.Now - reader.GetDateTime(reader.GetOrdinal("orderTime"))
+
                             };
 
                             orders.Add(currentOrder);

@@ -1,16 +1,13 @@
-﻿using Chapeau_Project_1._4.Models;
-using Chapeau_Project_1._4.Repositories.OrderItemRepo;
-using Chapeau_Project_1._4.Repositories.OrderRepo;
+﻿using Chapeau_Project_1._4.Repositories.OrderRepo;
 using Chapeau_Project_1._4.Services.Order;
-using Chapeau_Project_1._4.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Chapeau_Project_1._4.ViewComponents.Drink
+namespace Chapeau_Project_1._4.ViewComponents.Food
 {
-    public class DrinkViewComponent: ViewComponent
+    public class FoodViewComponent : ViewComponent
     {
         private readonly IOrderService _ordersService;
-        public DrinkViewComponent(
+        public FoodViewComponent(
             IOrderService ordersService
             )
         {
@@ -19,13 +16,12 @@ namespace Chapeau_Project_1._4.ViewComponents.Drink
 
         public IViewComponentResult Invoke(string filterValue)
         {
-            var orders = _ordersService.GetOrdersWithItems(true , filterValue);
-            if(string.IsNullOrEmpty(filterValue))
+            var orders = _ordersService.GetOrdersWithItems(false , filterValue);
+            if (string.IsNullOrEmpty(filterValue))
             {
                 filterValue = "RunningOrders";
             }
             orders.ForEach(x => x.ShowCourse = filterValue != "RunningOrders");
-
             return View(orders);
         }
     }

@@ -21,10 +21,9 @@ namespace Chapeau_Project_1._4.Services.Order
         void ServeDrinkItems(int orderNumber);
 
 
-        List<Chapeau_Project_1._4.Models.Order> DisplayOrder(string tabName = "RunningOrders");
+        List<Chapeau_Project_1._4.Models.Order> DisplayOrder();
         object GetOrderMunuItemName(int OrderNumber);
-        List<Chapeau_Project_1._4.Models.Order> GetFinishedOrders();
         Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber);
-        List<RunningOrderWithItemsViewModel> GetOrdersWithItems(string tabName = "RunningOrders");
+        List<RunningOrderWithItemsViewModel> GetOrdersWithItems(bool IsDrink,string tabName = "RunningOrders");
     }
 }

@@ -136,9 +136,5 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             _orderItemRepository.UpdateCourseStatus(orderNumber, category, categoryCourseStatus);    
         }
 
-        public List<OrderItem> GetFinishedItems()
-        {
-            return _orderItemRepository.GetFinishedItems();
-        }
     }
 }

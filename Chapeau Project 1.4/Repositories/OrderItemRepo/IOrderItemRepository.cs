@@ -25,7 +25,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
         void UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus);
 
-        List<OrderItem> GetFinishedItems(); // changed from this :  List<OrderItem> GetFinishedItems(DateTime date); because it wasnt worknig
 
         public void EditItemQuantity(OrderItem orderItem);
         void DeleteSingleItem(OrderItem orderItem);

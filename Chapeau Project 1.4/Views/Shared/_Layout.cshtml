@@ -30,11 +30,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="RestaurantTable" asp-action="Overview">Table overview</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Kitchen" asp-action="Index">View Kitchen</a>
+                        <li class="nav-item">                                                                    @*  it sends a tab name  *@
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Kitchen" asp-action="Index" asp-route-linkTab="food">View Kitchen</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Bar" asp-action="Index">View Bar</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Kitchen" asp-action="Index" asp-route-linkTab="drink">View Bar</a>
                         </li>
                     </ul>
 

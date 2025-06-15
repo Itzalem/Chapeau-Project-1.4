@@ -1,92 +1,51 @@
 ﻿@using Chapeau_Project_1._4.ViewModel
-@model List<RunningOrder>
+@model FoodOrDrinkRecognizerViewModel
+
+@{
+    var currentLinkTab = Context.Request.Query["linkTab"].ToString() ?? "food";
+}
 
 <h2 class="page-title">Orders</h2>
 
 <div class="view-tabs">
-    <button class="tab active" id="tab-running">
-        <i class="fa fa-list"></i> Running Orders
-    </button>
-    <button class="tab" id="tab-finished"
-            onclick="location.href='@Url.Action("FinishedOrders","Kitchen")'">
-        <i class="fa fa-clock-o"></i> Finished Today
-    </button>
-    <button class="btn-refresh" onclick="location.reload()">
-        <i class="fa fa-refresh"></i> Refresh
-    </button>
-</div>
+    <form method="get" action="@Url.Action("Index","Kitchen")">
+        <input type="hidden" name="filterValue" value="RunningOrders" />
+        <input type="hidden" name="linkTab" value="@currentLinkTab" />
+        <button class="tab @(Context.Request.Query["filterValue"] == "RunningOrders" ? "active" : "")">
+            <i class="fa fa-list"></i> Running Orders
+        </button>
+    </form>
+   
+    <form method="get" action="@Url.Action("Index","Kitchen")">
+        <input type="hidden" name="filterValue" value="FinishedOrders" />
+        <input type="hidden" name="linkTab" value="@currentLinkTab" />
 
+        <button class="tab @(Context.Request.Query["filterValue"] == "FinishedOrders" ? "active" : "")">
+            <i class="fa fa-clock-o"></i> Finished Today
+        </button>
+    </form>
+
+    <form method="get" action="@Url.Action("Index","Kitchen")">
+        <input type="hidden" name="filterValue" value="RunningOrders" />
+        <button class="btn-refresh">
+            <i class="fa fa-refresh"></i> Refresh
+        </button>
+    </form>
+</div>
 
 <div class="orders-container">
-    @foreach (var order in Model)
-    {
-        <div class="order-card">
-            <div class="order-header">
-                <div>
-                    <i class="fa fa-clock-o"></i> @order.OrderTime.ToString("HH:mm")<br />
-                    Table: #@order.TableNumber
-                </div>
-                <div>
-                    Order:#@order.OrderNumber
-                </div>
-                <div>
 
-                    Waiting: @order.WaitingTime.Hours:@order.WaitingTime.Minutes:@order.WaitingTime.Seconds
-
-                </div>
-            </div>
-
-            @foreach (var group in order.runningOrders.GroupBy(i => i.RunnigOrderMenuItem.OrderItemCategory))
-            {
-                
-                <form method="post" asp-controller="Kitchen" asp-action="UpdateCourseStatus">
-                    <input type="hidden" name="orderNumber" value="@order.OrderNumber" />
-                    <div class="course-header">
-                        <strong>@group.Key</strong>
-                        <select name="itemStatus" onchange="this.form.submit()">
-                            <option value="pending">Pending</option>
-                            <option value="InProgress">In Progress</option>
-                            <option value="ReadyToServe">Ready to Serve</option>
-                        </select> 
-                    </div>
-                </form>
-                @foreach (var item in group)
-                {
-                    <form method="post" asp-action="UpdateItemStatus">
-                        <input type="hidden" name="OrderItemId" value="@item.OrderItemId"/>
-                        <div class="course-item">
-                            <div>
-                                @item.RunnigOrderMenuItem.OrderItemName <b>(@item.Quantity)</b><br />
-                                @if (!string.IsNullOrWhiteSpace(item.Note))
-                                {
-                                    <div class="item-note">--@item.Note</div>
-                                }
-                            </div>
-                            <select name="itemStatus" onchange="this.form.submit()">
-                                <option value="pending" >Pending</option>
-                                <option value="BeingPrepared">In Progress</option>
-                                <option value="ReadyToServe">Ready to Serve</option>
-                            </select> 
-                        </div>
-                    </form>
-                    
-                }
-            }
-
-            <footer class="order-footer">
-                <form method="post" asp-action="UpdateOrderStatus">
-                    <input type="hidden" name="OrderNumber" value="@order.OrderNumber" />
-                    <div class="course-header">
-                        <strong>Order Status</strong>
-                         <select name="itemStatus" onchange="this.form.submit()">
-                            <option value="@order.Status" selected="@(order.Status == EOrderStatus.pending)">Pending</option>
-                            <option value="@order.Status" selected="@(order.Status == EOrderStatus.inProgress)">In Progress</option>
-                            <option value="@order.Status" selected="@(order.Status == EOrderStatus.prepared)">Prepared</option>
-                        </select>
-                    </div>
-                </form>
-            </footer>
-        </div>
+    @{
+        var filterValue = Context.Request.Query["filterValue"].ToString() ?? "RunningOrders";
     }
-</div>
+    @if (Model.IsDrink)
+    {
+        @await Component.InvokeAsync("Drink" , new {filterValue})
+    }
+    else
+    {
+        @await Component.InvokeAsync("Food" , new {filterValue})
 
+    }
+    
+</div>

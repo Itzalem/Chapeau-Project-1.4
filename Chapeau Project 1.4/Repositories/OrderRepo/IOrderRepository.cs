@@ -1,4 +1,5 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.ViewModel;
 
 namespace Chapeau_Project_1._4.Repositories.OrderRepo
 {
@@ -18,13 +19,14 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         // Update only the Status of an order.
         void UpdateOrderStatus(EOrderStatus status, int orderNumber);
 
+        // دلیل استفاده از <آبجکت> این هست که ساختار کلاس مرتبط باهاش رو نداشتیم که اینستنس بگیریم ازش
         object GetOrderMunuItemName(int OrderNumber);
 
 
         //for the overview - Lukas
         List<OrderItem> GetOrderItemsByOrderNumber(int orderNumber);
 
-        List<Order> GetFinishedOrders();
+        List<RunningOrderWithItemsViewModel> GetOrdersWithItems(bool IsDrink);
 
     }
 }

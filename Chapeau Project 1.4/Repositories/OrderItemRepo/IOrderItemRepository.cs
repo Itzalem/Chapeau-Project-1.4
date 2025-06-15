@@ -1,4 +1,5 @@
 ﻿using Chapeau_Project_1._4.Models;
+using Chapeau_Project_1._4.ViewModel;
 
 namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 {
@@ -22,9 +23,8 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         //Change the status for one specific order‐item
         void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
-        void UpdateCourseStatus(int orderNumber, EItemStatus newStatus);
+        void UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus);
 
-        List<OrderItem> GetFinishedItems(); // changed from this :  List<OrderItem> GetFinishedItems(DateTime date); because it wasnt worknig
 
         public void EditItemQuantity(OrderItem orderItem);
         void DeleteSingleItem(OrderItem orderItem);

@@ -20,23 +20,35 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="RestaurantTable" asp-action="Overview">Table overview</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Kitchen" asp-action="Index">View Kitchen</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Bar" asp-action="Index">View Bar</a>
-                        </li>
-                    </ul>
+                    @{
+                        var role = Context.Session.GetString("UserRole");
+                    }
+
+                    @if (!string.IsNullOrEmpty(role))
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            @* Only show links based on user role *@
+
+                            @if (role == "waiter")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="RestaurantTable" asp-action="Overview">Table overview</a>
+                                </li>
+                            }
+                            else if (role == "kitchen")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Kitchen" asp-action="Index">View Kitchen</a>
+                                </li>
+                            }
+                            else if (role == "bar")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Bar" asp-action="Index">View Bar</a>
+                                </li>
+                            }
+                        </ul>
+                    }
 
                     <ul class="navbar-nav">
                         @if (Context.Session.GetString("LoggedInUsername") == null)
@@ -49,6 +61,9 @@
                         {
                             <li class="nav-item">
                                 <span class="nav-link text-dark">@Context.Session.GetString("LoggedInUsername")</span>
+                            </li>
+                            <li class="nav-item">
+                                <span class="nav-link text-muted">Role: @Context.Session.GetString("UserRole")</span>
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Personell" asp-action="LogOff" method="post" class="d-inline">

@@ -2,13 +2,17 @@
 
 namespace Chapeau_Project_1._4.ViewModel
 {
-    public class RunningOrderItem
+    public class RunningOrderItemWithMenuItemViewModel
     {
         public int OrderItemId { get; set; }
-        public RunnigOrderMenuItem RunnigOrderMenuItem { get; set; }
         public int Quantity { get; set; }
         public string? Note { get; set; }
         public EItemStatus ItemStatus { get; set; }
 
+
+        public int MenuItemId { get; set; }
+        public string MenuItemName { get; set; }
+        public ECategoryStatus MenuItemCategoryStatus { get; set; }
+        public string OrderItemCategory { get; set; }
     }
 }

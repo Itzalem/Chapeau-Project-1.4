@@ -6,6 +6,8 @@
         public Bill Bill { get; set; } = new Bill();
         public decimal Tip { get; set; }
         public decimal Total { get; set; }
+        public decimal SplitTotal { get; set; }
+        public decimal AmountPayed { get; set; }
         public EPaymentOptions PaymentType { get; set; }
         public string Feedback { get; set; }
 
@@ -18,13 +20,15 @@
                 foreach (OrderItem item in Bill.Order.OrderItems)
                 {
                     if (item.MenuItem.IsAlcoholic)
-                        VAT += (item.MenuItem.Price * (decimal)0.21);
+                        VAT += (item.MenuItem.Price * item.Quantity * (decimal)0.21);
                     else
-                        VAT += (item.MenuItem.Price * (decimal)0.09);
+                        VAT += (item.MenuItem.Price * item.Quantity * (decimal)0.09);
                 }
                 return VAT;
             }
+            set { }
         }
+        public decimal SplitVAT { get; set; }
 
         public Payment()
         {
@@ -44,6 +48,7 @@
         public Payment(Bill bill, decimal total)
         {
             Bill = bill;
+            Tip = 0;
             Total = total;
             Feedback = "";
         }

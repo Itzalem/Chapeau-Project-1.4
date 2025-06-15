@@ -1,67 +1,85 @@
-﻿@model List<RunningOrder>
+﻿@model List<RunningOrderWithItemsViewModel>
 
+@{
+    var categoryOrder = new List<string> { "Starters", "Entremets", "Mains", "Desserts" };
+}
+@foreach (var drink in Model)
+{
 
-<div class="orders-container m-4">
-    @foreach (var drink in Model)
-    {
-        <div class="order-card">
-            <div class="order-header">
-                <div>
-                    <i class="fa fa-clock-o"></i> @drink.OrderTime.ToString("HH:mm")<br />
-                    Table: #@drink.TableNumber
-                </div>
-                <div>
-                    Order:#@drink.OrderNumber
-                </div>
-                <div>
-                    Waiting: @drink.WaitingTime.Hours : @drink.WaitingTime.Minutes : @drink.WaitingTime.Seconds
-                </div>
+    <div class="order-card">
+        <div class="order-header">
+            <div>
+                <i class="fa fa-clock-o"></i> @drink.OrderTime.ToString("HH:mm")<br />
+                Table: #@drink.TableNumber
             </div>
-             
-            <div class="drink-items">
-                @foreach (var drinkItem in drink.runningOrders)
-                {
-                    <form method="post" asp-action="UpdateItemStatus">
-                        <input type="hidden" name="OrderItemId" value="@drinkItem.OrderItemId" />
-                        <div class="course-item">
-                            <div>
-                                @drinkItem.RunnigOrderMenuItem.OrderItemName <b>(@drinkItem.Quantity)</b><br />
-                                @if (!string.IsNullOrWhiteSpace(drinkItem.Note))
-                                {
-                                    <div class="item-note">
-                                        --@drinkItem.Note
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="item-note">
-                                        --No Note
-                                    </div>
+            <div>
+                Order:#@drink.OrderNumber
+            </div>
+            <div>
 
-                                }
-                            </div>
-                            <select name="itemStatus" onchange="this.form.submit()">
-                                <option value="pending">Pending</option>
-                                <option value="BeingPrepared">In Progress</option>
-                                <option value="ReadyToServe">Ready to Serve</option>
-                            </select>
+                Waiting: @drink.WaitingTime.Hours:@drink.WaitingTime.Minutes:@drink.WaitingTime.Seconds
+
+            </div>
+        </div>
+
+        @foreach (var group in drink.runningOrderItems.GroupBy(i => i.OrderItemCategory).OrderBy(g => categoryOrder.IndexOf(g.Key)))
+        {
+            var categoryStatusResult = group.First().MenuItemCategoryStatus;
+
+
+
+            @foreach (var item in group)
+            {
+                <form method="post" asp-action="UpdateItemStatus">
+                    <input type="hidden" name="OrderItemId" value="@item.OrderItemId" />
+                    <div class="course-item">
+                        <div>
+                            @item.MenuItemName <b>(@item.Quantity)</b><br />
+                            @if (!string.IsNullOrWhiteSpace(item.Note))
+                            {
+                                <div class="item-note">--@item.Note</div>
+                            }
                         </div>
-                    </form>
-                }
-            </div>
-            <footer class="order-footer">
-                <form method="post" asp-action="UpdateOrderStatus">
-                    <input type="hidden" name="OrderNumber" value="@drink.OrderNumber" />
-                    <div class="course-header">
-                        <strong>Order Status</strong>
-                        <select name="itemStatus" onchange="this.form.submit()">
-                            <option value="@drink.Status" selected="@(drink.Status == EOrderStatus.pending)">Pending</option>
-                            <option value="@drink.Status" selected="@(drink.Status == EOrderStatus.inProgress)">In Progress</option>
-                            <option value="@drink.Status" selected="@(drink.Status == EOrderStatus.prepared)">Prepared</option>
-                        </select>
+                        @if (drink.ShowCourse == false)
+                        {
+                            <select name="itemStatus" onchange="this.form.submit()">
+                                <option value="pending" selected="@(item.ItemStatus == EItemStatus.pending)">Pending</option>
+                                <option value="BeingPrepared" selected="@(item.ItemStatus == EItemStatus.BeingPrepared)">Being Prepared</option>
+                                <option value="ReadyToServe" selected="@(item.ItemStatus == EItemStatus.ReadyToServe)">Ready to Serve</option>
+                            </select>
+                        }
+
                     </div>
                 </form>
-            </footer>
-        </div> 
-    }
-</div>
+
+            }
+        }
+
+        <footer class="order-footer">
+            <form method="post" asp-action="UpdateOrderStatus">
+                <input type="hidden" name="OrderNumber" value="@drink.OrderNumber" />
+                <div class="course-header">
+                    <strong>Order Status</strong>
+                    @if (drink.ShowCourse == false)
+                    {
+                        <select name="orderStatus" onchange="this.form.submit()">
+                            <option value="pending" selected="@(drink.Status == EOrderStatus.pending)">Pending</option>
+                            <option value="inProgress" selected="@(drink.Status == EOrderStatus.inProgress)">In Progress</option>
+                            <option value="prepared" selected="@(drink.Status == EOrderStatus.prepared)">Prepared</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select name="orderStatus" onchange="this.form.submit()" disabled>
+                            <option value="pending" selected="@(drink.Status == EOrderStatus.pending)">Pending</option>
+                            <option value="inProgress" selected="@(drink.Status == EOrderStatus.inProgress)">In Progress</option>
+                            <option value="prepared" selected="@(drink.Status == EOrderStatus.prepared)">Prepared</option>
+                        </select>
+                    }
+
+                </div>
+            </form>
+        </footer>
+    </div>
+
+}

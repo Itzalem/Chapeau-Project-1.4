@@ -31,21 +31,27 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpPost]
         public IActionResult GetByLoginCredentials(LoginModel loginModel)
         {
-            Personell? personell = _personellService.GetByLoginCredentials(loginModel.Username, loginModel.Password);
+            string controller;
+            string action;
 
+            // Call service to validate credentials.
+            // If successful, it returns a Personell object and sets the controller and action using 'out' parameters.
+            Personell personell = _personellService.TryLogin(loginModel.Username, loginModel.Password, out controller, out action);
+
+            // If login failed, show error and stay on login page
             if (personell == null)
             {
                 ViewBag.ErrorMessage = "Bad username/password combination!";
                 return View("Login", loginModel);
             }
-            else
-            {
-                HttpContext.Session.SetString("LoggedInUsername", personell.Username);
-                HttpContext.Session.SetString("UserRole", personell.Role);
 
-                return RedirectToAction("Index", "Home");
-            }   
+            // Store login info in session for later use for e.g. in navbar
+            HttpContext.Session.SetString("LoggedInUsername", personell.Username);
+            HttpContext.Session.SetString("UserRole", personell.Role);
+
+            // Redirect to the appropriate page based on the user's role
+            return RedirectToAction(action, controller);
         }
-        
+
     }
 }

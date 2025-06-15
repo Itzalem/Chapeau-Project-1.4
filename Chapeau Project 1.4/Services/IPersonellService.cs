@@ -4,6 +4,9 @@ namespace Chapeau_Project_1._4.Services
 {
     public interface IPersonellService
     {
-        Personell? GetByLoginCredentials(string userName, string password);
+
+        Personell TryLogin(string username, string password, out string redirectController, out string redirectAction);
+
+        //Personell? GetByLoginCredentials(string userName, string password);
     }
 }

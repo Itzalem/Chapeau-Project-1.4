@@ -1,0 +1,103 @@
+﻿@model List<RunningOrderWithItemsViewModel>
+
+@{
+    var categoryOrder = new List<string> { "Starters", "Entremets", "Mains", "Desserts" };
+   
+}
+
+@foreach (var food in Model)
+{
+
+    <div class="order-card">
+        <div class="order-header">
+            <div>
+                <i class="fa fa-clock-o"></i> @food.OrderTime.ToString("HH:mm")<br />
+                Table: #@food.TableNumber
+            </div>
+            <div>
+                Order:#@food.OrderNumber
+            </div>
+            <div>
+
+                Waiting: @food.WaitingTime.Hours:@food.WaitingTime.Minutes:@food.WaitingTime.Seconds
+
+            </div>
+        </div>
+
+        @foreach (var group in food.runningOrderItems.GroupBy(i => i.OrderItemCategory).OrderBy(g => categoryOrder.IndexOf(g.Key)))
+        {
+            var categoryStatusResult = group.First().MenuItemCategoryStatus;
+            <form method="post" asp-controller="Kitchen" asp-action="UpdateCourseStatus">
+                <input type="hidden" name="orderNumber" value="@food.OrderNumber" />
+                <input type="hidden" name="category" value="@group.Key" />
+                <div class="course-header">
+                    <strong>@group.Key</strong>
+                    @if (food.ShowCourse == false)
+                    {
+                        <select name="categoryCourseStatus" onchange="this.form.submit()">
+                            <option value="pending" selected="@(categoryStatusResult == ECategoryStatus.pending)">Pending</option>
+                            <option value="InProcess" selected="@(categoryStatusResult == ECategoryStatus.InProcess)">In Progress</option>
+                            <option value="ReadyToServe" selected="@(categoryStatusResult == ECategoryStatus.ReadyToServe)">Ready to Serve</option>
+                        </select>
+                    }
+
+                </div>
+            </form>
+
+
+            @foreach (var item in group)
+            {
+                <form method="post" asp-action="UpdateItemStatus">
+                    <input type="hidden" name="OrderItemId" value="@item.OrderItemId" />
+                    <div class="course-item">
+                        <div>
+                            @item.MenuItemName <b>(@item.Quantity)</b><br />
+                            @if (!string.IsNullOrWhiteSpace(item.Note))
+                            {
+                                <div class="item-note">--@item.Note</div>
+                            }
+                        </div>
+                        @if (food.ShowCourse == false)
+                        {
+                            <select name="itemStatus" onchange="this.form.submit()">
+                                <option value="pending" selected="@(item.ItemStatus == EItemStatus.pending)">Pending</option>
+                                <option value="BeingPrepared" selected="@(item.ItemStatus == EItemStatus.BeingPrepared)">Being Prepared</option>
+                                <option value="ReadyToServe" selected="@(item.ItemStatus == EItemStatus.ReadyToServe)">Ready to Serve</option>
+                            </select>
+                        }
+
+                    </div>
+                </form>
+
+            }
+        }
+
+        <footer class="order-footer">
+            <form method="post" asp-action="UpdateOrderStatus">
+                <input type="hidden" name="OrderNumber" value="@food.OrderNumber" />
+                <div class="course-header">
+                    <strong>Order Status</strong>
+                    @if (food.ShowCourse == false)
+                    {
+
+                        <select name="orderStatus" onchange="this.form.submit()">
+                            <option value="pending" selected="@(food.Status == EOrderStatus.pending)">Pending</option>
+                            <option value="inProgress" selected="@(food.Status == EOrderStatus.inProgress)">In Progress</option>
+                            <option value="prepared" selected="@(food.Status == EOrderStatus.prepared)">Prepared</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select name="orderStatus" onchange="this.form.submit()" disabled>
+                            <option value="pending" selected="@(food.Status == EOrderStatus.pending)">Pending</option>
+                            <option value="inProgress" selected="@(food.Status == EOrderStatus.inProgress)">In Progress</option>
+                            <option value="prepared" selected="@(food.Status == EOrderStatus.prepared)">Prepared</option>
+                        </select>
+                    }
+
+                </div>
+            </form>
+        </footer>
+    </div>
+
+}

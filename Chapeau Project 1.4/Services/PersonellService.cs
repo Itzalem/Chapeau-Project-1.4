@@ -16,14 +16,44 @@ namespace Chapeau_Project_1._4.Services
             _personellRepository = personellRepository;
         }
 
-        public Personell? GetByLoginCredentials(string userName, string password)
+        // Try to log in with given username and password.
+        // If successful, return the Personell object and set controller/action using out parameters.
+        public Personell TryLogin(string username, string password, out string redirectController, out string redirectAction)
         {
+            // Default to login page (in case login fails)
+            redirectController = "Personell";
+            redirectAction = "Login";
 
+            // Hash the entered password to match what's stored in the database
             string hashedPassword = HashPassword(password);
 
-            // Get the user from the database
-            Personell? personell = _personellRepository.GetByLoginCredentials(userName, hashedPassword);
+            // Check the credentials against the database
+            Personell personell = _personellRepository.GetByLoginCredentials(username, hashedPassword);
 
+            // If not found, return null and keep default redirect
+            if (personell == null)
+            {
+                return null;
+            }
+
+            // Based on the user's role, decide where to redirect
+            if (personell.Role == "waiter")
+            {
+                redirectController = "RestaurantTable";
+                redirectAction = "Overview";
+            }
+            else if (personell.Role == "kitchen")
+            {
+                redirectController = "Kitchen";
+                redirectAction = "Index";
+            }
+            else if (personell.Role == "bar")
+            {
+                redirectController = "Bar";
+                redirectAction = "Index";
+            }
+
+            // Return the logged-in personell
             return personell;
         }
 

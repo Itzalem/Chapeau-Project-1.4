@@ -1,40 +1,15 @@
-﻿@*
-@model List<Chapeau_Project_1._4.Models.RestaurantTable>
-
-<h2>Restaurant Table Layout</h2>
-
-<div class="table-grid">
-    @foreach (var table in Model)
-    {
-        string statusClass = "free";
-        string statusText = "Free";
-
-        if (table.IsOccupied)
-        {
-            statusClass = "occupied";
-            statusText = "Occupied";
-        }
-
-        <a asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@table.TableNumber" class="table-square @statusClass">
-            <div class="table-number">Table @table.TableNumber</div>
-            <div class="table-status">@statusText</div>
-            <div class="table-guests">Guests: @table.AmountOfGuests</div>
-        </a>
-    }
-</div>
-
-
-<form method="get">
-    <button type="submit" asp-controller="RestaurantTable" asp-action="Overview" class="btn btn-secondary">Refresh</button>
-</form>
-*@
-
-@model List<Chapeau_Project_1._4.ViewModel.TableOrderViewModel>
+﻿@model List<Chapeau_Project_1._4.ViewModel.TableOrderViewModel>
 
 @{
     string cancelMessage = TempData["CancelMessage"]?.ToString();
+    ViewData["Title"] = "Table Overview";
 }
 <partial name="_SucessMessage" model="cancelMessage" />
+
+@{
+    string paySucessMessage = TempData["paySuccessMessage"]?.ToString();
+}
+<partial name="_SucessMessage" model="paySucessMessage" />
 
 <h2>Restaurant Table Layout with Order Status</h2>
 

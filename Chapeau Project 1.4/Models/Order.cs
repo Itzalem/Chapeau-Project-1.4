@@ -4,7 +4,8 @@
     {
         public int OrderNumber { get; set; }    
         public EOrderStatus Status { get; set; }  
-        public DateTime OrderTime { get; set; } 
+        public DateTime OrderTime { get; set; }
+        public DateTime? FinishOrderTime { get; set; }
         public int TableNumber { get; set; }
 
         //the list of orderitems 
@@ -18,7 +19,7 @@
                 decimal total = 0;
                 foreach (OrderItem item in OrderItems)
                 {
-                    total += item.MenuItem.Price;
+                    total += (item.MenuItem.Price * item.Quantity);
                 }
                 return total;
             }

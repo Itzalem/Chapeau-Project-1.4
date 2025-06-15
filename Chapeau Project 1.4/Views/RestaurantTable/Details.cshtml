@@ -1,5 +1,8 @@
-﻿@*
-@model Chapeau_Project_1._4.Models.RestaurantTable
+﻿@model Chapeau_Project_1._4.Models.RestaurantTable
+
+@{
+    ViewData["Title"] = "Table Details";
+}
 
 <h2>Table @Model.TableNumber Details</h2>
 
@@ -7,59 +10,59 @@
     <p><strong>Status:</strong> @(Model.IsOccupied ? "Occupied" : "Free")</p>
 </div>
 
+@* If TempData contains an error message (e.g., failed to toggle occupancy), display it in a red alert box *@
 @if (TempData["ToggleError"] != null)
 {
     <div class="alert alert-danger">@TempData["ToggleError"]</div>
 }
 
+@* Button that redirects to the Order controller to begin taking a new order for this table *@
 <a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-tableNumber="@Model.TableNumber">Take Order</a>
 
+@* Button to go to the Payment controller to display the current order for this table *@
 <a asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber" class="btn btn-secondary mt-2 mb-2">View order</a>
 
+@* Form to manually toggle the table's occupancy status (e.g., free <-> occupied) *@
 <form method="post" asp-controller="RestaurantTable" asp-action="ToggleOccupancy" asp-route-id="@Model.TableNumber">
     <button type="submit" class="btn btn-primary" @(ViewBag.CanToggle ? "" : "disabled")>
-        Toggle Occupancy
+        @* Inline if/else statement to check if the table is currently free or occupied -> show then the according option *@
+        @(Model.IsOccupied ? "Set Table to Free" : "Set Table to Occupied")
     </button>
 </form>
 
-<a asp-controller="RestaurantTable" asp-action="Overview" class="btn btn-secondary mt-2">Back to Overview</a>
-*@
-
-@model Chapeau_Project_1._4.Models.RestaurantTable
-
-<h2>Table @Model.TableNumber Details</h2>
-
-<div class="table-detail-card">
-    <p><strong>Status:</strong> @(Model.IsOccupied ? "Occupied" : "Free")</p>
-</div>
-
-@if (TempData["ToggleError"] != null)
-{
-    <div class="alert alert-danger">@TempData["ToggleError"]</div>
-}
-
-<a class="btn btn-primary" asp-controller="Order" asp-action="AddOrder" asp-route-tableNumber="@Model.TableNumber">Take Order</a>
-
-<a asp-controller="Payment" asp-action="DisplayOrder" asp-route-table="@Model.TableNumber" class="btn btn-secondary mt-2 mb-2">View order</a>
-
-<form method="post" asp-controller="RestaurantTable" asp-action="ToggleOccupancy" asp-route-id="@Model.TableNumber">
-    <button type="submit" class="btn btn-primary" @(ViewBag.CanToggle ? "" : "disabled")>
-        Toggle Occupancy
-    </button>
-</form>
-
+@* Link to return to the table overview page *@
 <a asp-controller="RestaurantTable" asp-action="Overview" class="btn btn-secondary mt-2">Back to Overview</a>
 
 <hr />
 
 @{
+    @* -----------------------------------------------
+       Extract the current order and prepare food/drink lists
+       ----------------------------------------------- *@
+
+    @* Attempt to extract the Order object from ViewBag (may be null) *@
     var order = ViewBag.Order as Chapeau_Project_1._4.Models.Order;
+
+    @* If there is no order (null), create an empty list of order items so we can safely continue without errors *@
     var items = order?.OrderItems ?? new List<Chapeau_Project_1._4.Models.OrderItem>();
 
+    @* Filter all non-drink items into a list called foodItems:
+       - Checks that the item's MenuItem.Card is NOT "Drinks"
+       - StringComparison.OrdinalIgnoreCase makes it case-insensitive
+       - .Where(...) is a LINQ method that selects matching items
+       - .ToList() converts the result into a List<T> *@
     var foodItems = items.Where(i => !i.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase)).ToList();
+
+    @* Filter all drink items into a list called drinkItems:
+       - Same logic, but checks that Card == "Drinks" *@
     var drinkItems = items.Where(i => i.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase)).ToList();
 
+    @* Check if there are any food items that are ReadyToServe:
+       - .Any(...) returns true if at least one item matches the condition
+       - This is used to enable or disable the 'Serve Food' button *@
     bool canServeFood = foodItems.Any(i => i.ItemStatus == Chapeau_Project_1._4.Models.EItemStatus.ReadyToServe);
+
+    @* Same logic for drink items — determines if 'Serve Drinks' button should be active *@
     bool canServeDrinks = drinkItems.Any(i => i.ItemStatus == Chapeau_Project_1._4.Models.EItemStatus.ReadyToServe);
 }
 
@@ -67,22 +70,28 @@
 {
     <h3>Food Items</h3>
     <ul>
+        @* Display all food items in a simple list with their current preparation/serving status *@
         @foreach (var item in foodItems)
         {
             <li>@item.MenuItem.MenuItemName - @item.ItemStatus</li>
         }
     </ul>
+
+    @* Button to serve food items — only clickable if at least one is ReadyToServe *@
     <form method="post" asp-action="ServeFood" asp-route-id="@order.TableNumber">
         <button type="submit" class="btn btn-success" @(canServeFood ? "" : "disabled")>Serve Food</button>
     </form>
 
     <h3 class="mt-4">Drink Items</h3>
     <ul>
+        @* Display all drink items in a simple list with their current status *@
         @foreach (var item in drinkItems)
         {
             <li>@item.MenuItem.MenuItemName - @item.ItemStatus</li>
         }
     </ul>
+
+    @* Button to serve drinks — only enabled if at least one drink is ReadyToServe *@
     <form method="post" asp-action="ServeDrinks" asp-route-id="@order.TableNumber">
         <button type="submit" class="btn btn-info" @(canServeDrinks ? "" : "disabled")>Serve Drinks</button>
     </form>

@@ -1,5 +1,6 @@
 ﻿using Chapeau_Project_1._4.Models;
 using Chapeau_Project_1._4.Repositories.MenuRepo;
+using Chapeau_Project_1._4.ViewModel;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 using System.Reflection.PortableExecutable;
@@ -18,6 +19,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             _menuRepository = menuRepository;
         }
 
+ 
         private OrderItem ReadOrderItem(SqlDataReader reader)
         {
             int orderNumber = (int)reader["orderNumber"];
@@ -335,49 +337,59 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
         }
 
-        public void UpdateCourseStatus(int orderNumber, EItemStatus newStatus)
+        public void UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = @" UPDATE ORDER_ITEM
-                                  SET itemStatus = @st
-                                  FROM ORDER_ITEM
-                                  JOIN MENU_ITEMS ON ORDER_ITEM.menuItem_id = MENU_ITEMS.menuItem_id
-                                  WHERE ORDER_ITEM.orderNumber = @ord;";
+
+                // پیدا کردن MenuItemId های مربوط به سفارش و دسته مورد نظر
+                string query = @"
+                                    SELECT DISTINCT mi.menuItem_id,oi.orderNumber
+                                    FROM ORDER_ITEM oi
+                                    JOIN MENU_ITEMS mi ON oi.menuItem_id = mi.menuItem_id
+                                    WHERE oi.orderNumber = @orderNumber AND mi.category = @category" ;
+
+
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@st", newStatus.ToString());
-                command.Parameters.AddWithValue("@ord", orderNumber);
+                command.Parameters.AddWithValue("@orderNumber", orderNumber);
+                command.Parameters.AddWithValue("@category", category);
 
                 command.Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-            }
-        }
 
-        public List<OrderItem> GetFinishedItems()
-        {
-            List<OrderItem> orderItems = new List<OrderItem>();
+                var menuItemIds = new List<int>();
+                int orderNumberId = 0;
 
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string query = @" SELECT orderItem_id, orderNumber, menuItem_id, quantity, note, itemStatus
-                                  FROM ORDER_ITEM
-                                  JOIN ORDERS ON ORDER_ITEM.orderNumber = ORDERS.orderNumber
-                                  WHERE ORDER_ITEM.itemStatus = @ready;";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@ready", EItemStatus.ReadyToServe.ToString());
-
-                command.Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
+                using (var reader = command.ExecuteReader())
                 {
-                    OrderItem orderItem = ReadOrderItem(reader);
-                    orderItems.Add(orderItem);
+                    while (reader.Read())
+                    {
+                        menuItemIds.Add(reader.GetInt32(0));
+                        orderNumberId = reader.GetInt32(1);
+                    }
                 }
-                reader.Close();
+
+                // اگر آیتمی پیدا شد، categoryStatus مربوطه را آپدیت کن
+                foreach (var menuItemId in menuItemIds)
+                {
+                    if (orderNumber == orderNumberId)
+                    {
+                        string queryUpdate = @"
+                            UPDATE MENU_ITEMS
+                            SET categoryStatus = @groupStatus
+                            WHERE menuItem_id = @menuItemId
+                        ";
+                        SqlCommand updateCmd = new SqlCommand(queryUpdate, connection);
+
+                        updateCmd.Parameters.AddWithValue("@groupStatus", categoryCourseStatus.ToString());
+                        updateCmd.Parameters.AddWithValue("@menuItemId", menuItemId);
+
+                        updateCmd.ExecuteNonQuery();
+                    }
+
+                }
+
+                connection.Close();
             }
-            return orderItems;
         }
 
         public void EditItemQuantity(OrderItem orderItem)

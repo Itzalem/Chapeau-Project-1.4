@@ -1,0 +1,46 @@
+﻿@model Chapeau_Project_1._4.ViewModel.SplitBill
+@using System.Globalization
+
+@{
+	ViewData["Title"] = "Prepare payment";
+}
+
+@{
+	string paySucessMessage = TempData["paySuccessMessage"]?.ToString();
+}
+<partial name="_SucessMessage" model="paySucessMessage" />
+
+<h4>Payment @Model.CurrentPay out of @Model.TotalPay</h4>
+
+<form action="/Payment/SplitEqualPay" method="Post">
+	<label for="Tip">tip amount:</label>
+	<input type="number" id="Tip" name="Tip" class="form-control" step=".01" required value="@Model?.Payment.Tip" />
+
+	<label for="Total">Total:</label>
+	<input type="number" id="Total" name="Total" class="form-control" readonly value="@Model?.Payment.SplitTotal.ToString("0.00", CultureInfo.InvariantCulture)" />
+
+	<label for="VAT">VAT:</label>
+	<input type="number" id="VAT" name="VAT" class="form-control" readonly value="@Model?.Payment.SplitVAT.ToString("0.00", CultureInfo.InvariantCulture)" />
+
+	<label for="PayType">Payment Method:</label>
+	@{
+		var selectedType = Model?.Payment.PaymentType;
+	}
+	<select asp-for="Payment.PaymentType" asp-items="Html.GetEnumSelectList<EPaymentOptions>()" class="form-control"></select>
+
+	<label for="Feedback">Feedback:</label>
+	<input type="text" id="Feedback" name="Feedback" class="form-control" value="@Model?.Payment.Feedback" />
+
+	<!--extra parameter table-->
+	<input type="hidden" name="table" value="@Model?.Payment.Bill.Table.TableNumber" />
+
+	<!--extra parameter totalPay-->
+	<input type="hidden" name="totalPay" value="@Model?.TotalPay" />
+
+	<!--extra parameter currentPay-->
+	<input type="hidden" name="currentPay" value="@Model?.CurrentPay" />
+
+	<button type="submit" class="btn mt-2 btn-primary">Pay</button>
+</form>
+
+<a href="/RestaurantTable/Overview"> Back to restaurant overview</a>

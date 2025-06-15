@@ -18,7 +18,9 @@
 	<input type="number" id="VAT" name="VAT" class="form-control" readonly value="@Model?.VAT.ToString("0.00", CultureInfo.InvariantCulture)" />
 
 	<label for="PayType">Payment Method:</label>
-	@{var selectedType = Model?.PaymentType;}
+	@{
+		var selectedType = Model?.PaymentType;
+	}
 	<select asp-for="PaymentType" asp-items="Html.GetEnumSelectList<EPaymentOptions>()" class="form-control"></select>
 
 	<label for="Feedback">Feedback:</label>
@@ -30,4 +32,4 @@
 	<button type="submit" class="btn mt-2 btn-primary">Pay</button>
 </form>
 
-<a href="/RestaurantTable/Overview"> Back to order</a>
+<a href="/RestaurantTable/Overview"> Back to restaurant overview</a>

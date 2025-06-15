@@ -83,19 +83,23 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         //Lukas
         public List<OrderItem> GetItemsForServing(int orderNumber)
         {
+            // Returns all order items for a given order number that are in a state suitable for serving.
             return _orderItemRepository.GetOrderItemsForServing(orderNumber);
         }
-
 
         //Lukas
         public void ServeFoodItems(int orderNumber)
         {
+            // Get all items for the given order that are candidates for serving
             List<OrderItem> items = _orderItemRepository.GetOrderItemsForServing(orderNumber);
+
             foreach (var item in items)
             {
+                // Check if the item is a food item (not a drink) AND is marked as ReadyToServe
                 if (!item.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase) &&
                     item.ItemStatus == EItemStatus.ReadyToServe)
                 {
+                    // If both conditions match, update the item's status to Served
                     _orderItemRepository.UpdateItemStatus(item.OrderItemId, EItemStatus.Served);
                 }
             }
@@ -104,12 +108,16 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         //Lukas
         public void ServeDrinkItems(int orderNumber)
         {
+            // Get all items for the given order that are candidates for serving
             List<OrderItem> items = _orderItemRepository.GetOrderItemsForServing(orderNumber);
+
             foreach (var item in items)
             {
+                // Check if the item is a drink AND is marked as ReadyToServe
                 if (item.MenuItem.Card.Equals("Drinks", StringComparison.OrdinalIgnoreCase) &&
                     item.ItemStatus == EItemStatus.ReadyToServe)
                 {
+                    // If both conditions match, update the item's status to Served
                     _orderItemRepository.UpdateItemStatus(item.OrderItemId, EItemStatus.Served);
                 }
             }

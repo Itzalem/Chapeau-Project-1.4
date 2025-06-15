@@ -49,20 +49,26 @@ namespace Chapeau_Project_1._4.Services.Order
         //Lukas
         public List<OrderItem> GetItemsForServing(int orderNumber)
         {
+            // Calls the service layer to retrieve all items in the order that are ready or eligible to be served.
             return _orderItemService.GetItemsForServing(orderNumber);
         }
 
         //Lukas
         public void ServeFoodItems(int orderNumber)
         {
+            // Delegates the action to the service layer, which will:
+            // - Find all food items (non-drinks) in the order
+            // - Mark them as 'Served' if they are 'ReadyToServe'
             _orderItemService.ServeFoodItems(orderNumber);
         }
 
         //Lukas
         public void ServeDrinkItems(int orderNumber)
         {
+            //same as servefooditems just for drinks
             _orderItemService.ServeDrinkItems(orderNumber);
         }
+
 
         public List<Chapeau_Project_1._4.Models.Order> DisplayOrder()
         {

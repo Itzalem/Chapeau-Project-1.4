@@ -290,16 +290,19 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         //for the overview - Lukas
         public List<OrderItem> GetOrderItemsByOrderNumber(int orderNumber)
         {
+            // Create a list to hold all order items found for this order
             List<OrderItem> items = new List<OrderItem>();
 
+            // Open a connection to the database using the configured connection string
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                // SQL query to select order item details and related menu item info
                 string query = @"
                   SELECT 
                     oi.orderItem_id,
                     oi.itemStatus,
                     oi.quantity,
-                    ISNULL(oi.note, '') AS note,
+                    ISNULL(oi.note, '') AS note,             -- Replace NULL notes with empty string
                     mi.menuItem_id,
                     mi.menuItemName,
                     mi.price,
@@ -309,18 +312,24 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                     mi.isAlcoholic
                   FROM ORDER_ITEM oi
                   INNER JOIN MENU_ITEMS mi 
-                    ON oi.menuItem_id = mi.menuItem_id
-                  WHERE oi.orderNumber = @orderNumber
+                    ON oi.menuItem_id = mi.menuItem_id       -- Join to get menu item details
+                  WHERE oi.orderNumber = @orderNumber        -- Filter by the given order number
                 ";
 
+                // Prepare the SQL command with the query and add the parameter
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@orderNumber", orderNumber);
 
+                // Open the database connection
                 conn.Open();
+
+                // Execute the query and read the result rows
                 SqlDataReader reader = cmd.ExecuteReader();
 
+                // Loop through all rows in the result set
                 while (reader.Read())
                 {
+                    // Create a MenuItem object and fill it with data from the reader
                     MenuItem menuItem = new MenuItem
                     {
                         MenuItemId = (int)reader["menuItem_id"],
@@ -330,25 +339,29 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                         Card = reader["menuCard"].ToString()!,
                         Category = reader["category"].ToString()!,
                         IsAlcoholic = (bool)reader["isAlcoholic"],
-                        CategoryStatus = ECategoryStatus.pending
+                        CategoryStatus = ECategoryStatus.pending // Default value when loading
                     };
 
+                    // Create an OrderItem object, linking the loaded MenuItem
                     OrderItem orderItem = new OrderItem
                     {
                         OrderItemId = (int)reader["orderItem_id"],
                         Quantity = (int)reader["quantity"],
                         Note = reader["note"].ToString()!,
-                        ItemStatus = Enum.Parse<EItemStatus>(reader["itemStatus"].ToString()!),
+                        ItemStatus = Enum.Parse<EItemStatus>(reader["itemStatus"].ToString()!), // Parse enum from string
                         OrderNumber = orderNumber,
                         MenuItem = menuItem
                     };
 
+                    // Add the order item to the list
                     items.Add(orderItem);
                 }
             }
 
+            // Return the full list of order items for the specified order
             return items;
         }
+
 
 
 

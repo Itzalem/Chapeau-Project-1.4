@@ -4,6 +4,12 @@
     ViewData["Title"] = "Table Details";
 }
 
+<!--get an error message if getting the order went wrong-->
+@{
+    string NoOrderMessage = TempData["NoOrderMessage"]?.ToString();
+}
+<partial name="_ErrorMessage" model="NoOrderMessage" />
+
 <h2>Table @Model.TableNumber Details</h2>
 
 <div class="table-detail-card">

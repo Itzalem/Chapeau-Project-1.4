@@ -4,13 +4,21 @@
 	ViewData["Title"] = "Order";
 }
 
+<!--get an error message if the payment went wrong-->
+@{
+	string PaymentWrongMessage = TempData["PaymentWrongMessage"]?.ToString();
+}
+<partial name="_ErrorMessage" model="PaymentWrongMessage" />
+
 <div class="text-center">
 	<h1 class="display-4">Le Order of table @Model.TableNumber</h1>
-
+	
+	<!--links to the different payment methods-->
 	<a asp-controller="Payment" asp-action="PreparePay" asp-route-table="@Model.TableNumber" class="btn btn-primary mt-2 mb-2">Pay together</a>
 	<a asp-controller="Payment" asp-action="SplitAmount" asp-route-table="@Model.TableNumber" class="btn btn-primary mt-2 mb-2">Split bill (equally)</a>
 	<a asp-controller="Payment" asp-action="SplitChooseAmount" asp-route-table="@Model.TableNumber" asp-route-alreadyPayed="0" class="btn btn-primary mt-2 mb-2">Split bill (choose amount)</a>
 
+	<!--the table for the order-->
 	<table class="table">
 		<thead>
 			<tr>
@@ -43,6 +51,7 @@
 					</tr>
 				}
 
+				//add an extra row for the total
 				<tr>
 					<td>total price: €@Model.Total</td>
 				</tr>

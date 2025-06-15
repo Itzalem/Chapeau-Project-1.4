@@ -1,10 +1,12 @@
 ﻿@model Chapeau_Project_1._4.ViewModel.SplitBill
+<!--use the globalization to convert the comma used in Dutch decimals to a universal dot-->
 @using System.Globalization
 
 @{
 	ViewData["Title"] = "Prepare payment";
 }
 
+<!--get an success message if the previous payment went right-->
 @{
 	string paySucessMessage = TempData["paySuccessMessage"]?.ToString();
 }
@@ -12,6 +14,7 @@
 
 <h4>Amount left: €@(Model.Payment.Total - Model.AlreadyPayed) out of €@Model.Payment.Total</h4>
 
+<!--fill in the properties of Payment-->
 <form action="/Payment/SplitChooseAmount" method="Post">
 	<label for="Tip">tip amount:</label>
 	<input type="number" id="Tip" name="Payment.Tip" class="form-control" step=".01" required value="@Model?.Payment.Tip" />
@@ -19,8 +22,9 @@
 	<label for="AmountPayed">Choose amount to pay:</label>
 	<input type="number" id="AmountPayed" name="Payment.AmountPayed" class="form-control" step=".01" value="@Model?.Payment.AmountPayed" />
 
-	<label for="VAT">VAT:</label>
-	<input type="number" id="VAT" name="Payment.VAT" class="form-control" readonly value="@Model?.Payment.SplitVAT.ToString("0.00", CultureInfo.InvariantCulture)" />
+	<!--extra field VAT to show to the user-->
+	<label for="VAT">Total VAT:</label>
+	<input type="number" id="VAT" name="Payment.VAT" class="form-control" readonly value="@Model?.Payment.VAT.ToString("0.00", CultureInfo.InvariantCulture)" />
 
 	<label for="PayType">Payment Method:</label>
 	@{
@@ -42,5 +46,3 @@
 
 	<button type="submit" class="btn mt-2 btn-primary">Pay</button>
 </form>
-
-<a href="/RestaurantTable/Overview"> Back to restaurant overview</a>

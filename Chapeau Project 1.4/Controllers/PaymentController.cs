@@ -31,16 +31,26 @@ namespace Chapeau_Project_1._4.Controllers
         {
 			try
 			{
+				//get the order with the tableNumber
 				Order? order = _orderService.GetOrderByTable(table);
+				
+				//if there is no order, send an error message
 				if (order == null)
-					return RedirectToAction("Overview", "RestaurantTable");
+				{
+                    TempData["NoOrderMessage"] = "This Table Does Not Have An Order";
+                    return RedirectToAction("Details", "RestaurantTable", new { id = table });
+                }
+
+				//fill the order with the orderItems
 				order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 
 				return View(order);
 			}
 			catch
 			{
-				return RedirectToAction("Overview", "RestaurantTable");
+				//something went wrong, send an error message
+                TempData["SomethingWrongMessage"] = "Order Could Not Be Displayed";
+                return RedirectToAction("Overview", "RestaurantTable");
 			}
         }
 
@@ -54,6 +64,7 @@ namespace Chapeau_Project_1._4.Controllers
 
         private Payment GetPayment(int? table)
         {
+			//get the bill by tableNumber
 			Bill bill = GetBill(table);
 			return new Payment(bill, bill.Order.Total);
 		}
@@ -76,23 +87,43 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpGet]
         public IActionResult PreparePay(int? table)
         {
-			Payment payment = GetPayment(table);
+			try
+			{
+                //get the payment by tableNumber
+                Payment payment = GetPayment(table);
 
-			return View(payment);
+                return View(payment);
+            }
+			catch
+			{
+                //something went wrong, send an error message
+                TempData["PaymentWrongMessage"] = "Payment Could Not Be Set Up";
+                return RedirectToAction("DisplayOrder", "Payment", new { table = table });
+            }
 		}
 
         [HttpPost]
         public IActionResult PreparePay(Payment payment, int table)
         {
-			payment = InsertBillAndPayment(payment, table);
+			try
+			{
+				//insert the bill and payment in the database
+				payment = InsertBillAndPayment(payment, table);
 
-            //update the orderstatus to paid and table occupation to free
-            _paymentService.UpdateOrderStatus(payment);
-            _paymentService.UpdateTableStatus(payment);
+				//update the orderstatus to paid and table occupation to free
+				_paymentService.UpdateOrderStatus(payment);
+				_paymentService.UpdateTableStatus(payment);
 
-            TempData["paySuccessMessage"] = "Payment Finished Successfully";
+				TempData["PaySuccessMessage"] = "Payment Finished Successfully";
 
-            return RedirectToAction("Overview", "RestaurantTable");
+				return RedirectToAction("Overview", "RestaurantTable");
+			}
+			catch
+			{
+				//something went wrong, send an error message
+				TempData["PaymentWrongMessage"] = "Payment Could Not Be Submitted";
+				return RedirectToAction("DisplayOrder", "Payment", new { table = table });
+			}
         }
 
         [HttpGet]
@@ -104,79 +135,132 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpPost]
         public IActionResult SplitAmount(int totalPay, int? table)
         {
-            return RedirectToAction("SplitEqualPay", "Payment", new { totalPay = totalPay, table = table, currentPay = 1});
+			return RedirectToAction("SplitEqualPay", "Payment", new { totalPay = totalPay, table = table, currentPay = 1 });
         }
 
 		[HttpGet]
 		public IActionResult SplitEqualPay(int? table, int totalPay, int currentPay)
 		{
-			Payment payment = GetPayment(table);
-			payment = _paymentService.SplitAmountsEqual(payment, totalPay);
+			try
+			{
+				Payment payment = GetPayment(table);
+				payment = _paymentService.SplitAmountsEqual(payment, totalPay);
 
-			SplitBill splitBill = new SplitBill(payment, totalPay, currentPay);
+				SplitBill splitBill = new SplitBill(payment, totalPay, currentPay);
 
-			return View(splitBill); 
+				return View(splitBill);
+			}
+			catch
+			{
+				//something went wrong, send an error message
+				TempData["PaymentWrongMessage"] = "Payment Could Not Be Set Up";
+				return RedirectToAction("DisplayOrder", "Payment", new { table = table });
+			}
 		}
 
 		[HttpPost]
 		public IActionResult SplitEqualPay(Payment payment, int table, int totalPay, int currentPay)
 		{
-			payment = InsertBillAndPayment(payment, table);
-
-			if (currentPay < totalPay)
+			try
 			{
-				currentPay++;
-				TempData["paySuccessMessage"] = "Payment Went Through Successfully";
-				return RedirectToAction("SplitEqualPay", new { table = payment.Bill.Table.TableNumber, totalPay = totalPay, currentPay = currentPay });
+				//insert the bill and payment in the database
+				payment = InsertBillAndPayment(payment, table);
+
+				if (currentPay < totalPay)
+				{
+					currentPay++;
+					TempData["PaySuccessMessage"] = "Payment Went Through Successfully";
+					return RedirectToAction("SplitEqualPay", new { table = payment.Bill.Table.TableNumber, totalPay = totalPay, currentPay = currentPay });
+				}
+				else
+				{
+					//update the orderstatus to paid and table occupation to free
+					_paymentService.UpdateOrderStatus(payment);
+					_paymentService.UpdateTableStatus(payment);
+
+					TempData["PaySuccessMessage"] = "Payment Finished Successfully";
+
+					return RedirectToAction("Overview", "RestaurantTable");
+				}
 			}
-			else
+			catch
 			{
-				//update the orderstatus to paid and table occupation to free
-				_paymentService.UpdateOrderStatus(payment);
-				_paymentService.UpdateTableStatus(payment);
-
-				TempData["paySuccessMessage"] = "Payment Finished Successfully";
-
-				return RedirectToAction("Overview", "RestaurantTable");
+				//something went wrong, send an error message
+				TempData["PaymentWrongMessage"] = "Payment Could Not Be Submitted";
+				return RedirectToAction("DisplayOrder", "Payment", new { table = table });
 			}
 		}
 
 		[HttpGet]
 		public IActionResult SplitChooseAmount(int? table, decimal alreadyPayed)
 		{
-			Payment payment = GetPayment(table);
+			try
+			{
+				Payment payment = GetPayment(table);
 
-			SplitBill splitBill = new SplitBill(payment, alreadyPayed);
+				SplitBill splitBill = new SplitBill(payment, alreadyPayed);
 
-			return View(splitBill);
+				return View(splitBill);
+			}
+			catch
+			{
+				//something went wrong, send an error message
+				TempData["PaymentWrongMessage"] = "Payment Could Not Be Set Up";
+				return RedirectToAction("DisplayOrder", "Payment", new { table = table });
+			}
+		}
+
+		private Payment TemporaryTotal(Payment payment, int table)
+		{
+			//set up a temporary total to insert the split amount in the database
+			decimal tempTotal = payment.Total;
+			payment.Total = payment.AmountPayed;
+			
+			//insert the bill and payment in the database
+			payment = InsertBillAndPayment(payment, table);
+			
+			//set back total
+			payment.Total = tempTotal;
+
+			return payment;
 		}
 
 		[HttpPost]
 		public IActionResult SplitChooseAmount(Payment payment, int table, decimal alreadyPayed)
 		{
-			payment = InsertBillAndPayment(payment, table);
-
-			//update the total amount that was payed
-			alreadyPayed = _paymentService.UpdatePayed(payment, alreadyPayed);
-
-			if (alreadyPayed < payment.Total)
+			try
 			{
-				//go to the next payment
-				TempData["paySuccessMessage"] = "Payment Went Through Successfully";
-				return RedirectToAction("SplitChooseAmount", new { table = payment.Bill.Table.TableNumber, alreadyPayed = alreadyPayed });
-			}
-			else
-			{
-				//update the orderstatus to paid and table occupation to free
-				_paymentService.UpdateOrderStatus(payment);
-				_paymentService.UpdateTableStatus(payment);
+				payment = TemporaryTotal(payment, table);
 
-				if (alreadyPayed == payment.Total)
-					TempData["paySuccessMessage"] = "Payment Finished Successfully";
+				//update the total amount that was payed
+				alreadyPayed = _paymentService.UpdatePayed(payment, alreadyPayed);
+
+				if (alreadyPayed < payment.Total)
+				{
+					//go to the next payment
+					TempData["PaySuccessMessage"] = "Payment Went Through Successfully";
+					return RedirectToAction("SplitChooseAmount", new { table = payment.Bill.Table.TableNumber, alreadyPayed = alreadyPayed });
+				}
 				else
-					TempData["paySuccessMessage"] = $"Payment Finished Successfully. The Extra €{alreadyPayed - payment.Total} Payed Has Been Deposited Back";
+				{
+					//update the orderstatus to paid and table occupation to free
+					_paymentService.UpdateOrderStatus(payment);
+					_paymentService.UpdateTableStatus(payment);
 
-				return RedirectToAction("Overview", "RestaurantTable");
+					if (alreadyPayed == payment.Total)
+						TempData["PaySuccessMessage"] = "Payment Finished Successfully";
+					else
+						TempData["PaySuccessMessage"] = $"Payment Finished Successfully. The Extra €{alreadyPayed - payment.Total} Payed Has Been Deposited Back";
+
+					return RedirectToAction("Overview", "RestaurantTable");
+				}
+			
+			}
+			catch
+			{
+				//something went wrong, send an error message
+				TempData["PaymentWrongMessage"] = "Payment Could Not Be Submitted";
+				return RedirectToAction("DisplayOrder", "Payment", new { table = table });
 			}
 		}
 	}

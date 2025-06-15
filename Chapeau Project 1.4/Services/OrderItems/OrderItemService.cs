@@ -16,7 +16,10 @@ namespace Chapeau_Project_1._4.Services.OrderItems
 
         public void AddOrderItem(OrderItem orderItem)
         {
-            _orderItemRepository.AddOrderItem(orderItem);
+            if (!_orderItemRepository.CheckDuplicateItems(orderItem))
+            {
+                _orderItemRepository.InsertOrderItem(orderItem);
+            }
         }
 
         public void CheckDuplicateItems(Chapeau_Project_1._4.Models.Order order)

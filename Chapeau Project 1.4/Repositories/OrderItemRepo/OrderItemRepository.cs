@@ -47,113 +47,115 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             return orderItem;
         }
 
-        public void AddOrderItem(OrderItem orderItem)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                if (!CheckDuplicateItems(orderItem))
-                {
-                    InsertOrderItem(connection, orderItem);
-                }
-            }
-        }
+       
 
         public bool CheckDuplicateItems(OrderItem orderItem)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                int? existingItemId = FindMatchingOrderItem(connection, orderItem);          
-
-
-                //int? existingItemId = FindMatchingOrderItem(connection, orderItem);
+                int? existingItemId = FindMatchingOrderItem(orderItem);          
 
                 if (existingItemId != null && existingItemId != orderItem.OrderItemId)
                 {
-                    UpdateQuantity(connection, existingItemId.Value, orderItem.Quantity);
-                    DeleteDuplicateItem(connection, orderItem.OrderItemId); // delete the new duplicate, keep the existing one
+                    UpdateQuantity(existingItemId.Value, orderItem.Quantity);
+                    DeleteDuplicateItem(orderItem.OrderItemId); // delete the new duplicate, keep the existing one
                     return true;
                 }
                 else
                 {
                     return false;
                 }
-            }          
+                      
         }
 
-        private int? FindMatchingOrderItem(SqlConnection connection, OrderItem orderItem)
+        private int? FindMatchingOrderItem(OrderItem orderItem)
         {
-            string query = "SELECT orderItem_id FROM ORDER_ITEM " +
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT orderItem_id FROM ORDER_ITEM " +
                            " WHERE orderNumber = @OrderNumber AND menuItem_id = @MenuItemId " +
                            " AND ((note IS NULL AND @Note IS NULL) OR note = @Note)  " +
                            " AND itemStatus = @OrderItemStatus " +
                            " AND orderItem_id<> @CurrentItemId ;"; //if its in a loop it will exclude itself
 
-            SqlCommand command = new SqlCommand(query, connection);
+                SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
-            command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
-            //value note normalization 
-            command.Parameters.AddWithValue("@Note", string.IsNullOrWhiteSpace(orderItem.Note) ? DBNull.Value : orderItem.Note);
-            command.Parameters.AddWithValue("@OrderItemStatus", orderItem.ItemStatus.ToString());
-            command.Parameters.AddWithValue("@CurrentItemId", orderItem.OrderItemId); 
+                command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
+                command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
+                //value note normalization 
+                command.Parameters.AddWithValue("@Note", string.IsNullOrWhiteSpace(orderItem.Note) ? DBNull.Value : orderItem.Note);
+                command.Parameters.AddWithValue("@OrderItemStatus", orderItem.ItemStatus.ToString());
+                command.Parameters.AddWithValue("@CurrentItemId", orderItem.OrderItemId);
 
-            object? result = command.ExecuteScalar();
+                connection.Open();
 
-            if (result != null)
-            {
-                return (int?)Convert.ToInt32(result);
-            }
-            else
-            {
-                return null;
+                object? result = command.ExecuteScalar();
+
+                if (result != null)
+                {
+                    return (int?)Convert.ToInt32(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
 
         }
 
-        private void UpdateQuantity(SqlConnection connection, int existingItemId, int extraQuantity)
+        public void UpdateQuantity(int existingItemId, int extraQuantity)
         {
-            string query = "UPDATE ORDER_ITEM SET quantity = quantity + @ExtraQuantity " +
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "UPDATE ORDER_ITEM SET quantity = quantity + @ExtraQuantity " +
                             " WHERE orderItem_id = @Id ;";
 
-            SqlCommand command = new SqlCommand(query, connection);
+                SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@ExtraQuantity", extraQuantity);
-            command.Parameters.AddWithValue("@Id", existingItemId);
-            command.ExecuteNonQuery();
+                command.Parameters.AddWithValue("@ExtraQuantity", extraQuantity);
+                command.Parameters.AddWithValue("@Id", existingItemId);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
         }
 
-        private void DeleteDuplicateItem(SqlConnection connection, int duplicateItemId)
+        public void DeleteDuplicateItem(int duplicateItemId)
         {
-            string query = "DELETE FROM ORDER_ITEM WHERE orderItem_id = @ExistingId ";
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "DELETE FROM ORDER_ITEM WHERE orderItem_id = @ExistingId ";
 
-            SqlCommand command = new SqlCommand(query, connection);
+                SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@ExistingId", duplicateItemId);
-            command.ExecuteNonQuery();
+                command.Parameters.AddWithValue("@ExistingId", duplicateItemId);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
 
         }
 
-        private void InsertOrderItem(SqlConnection connection, OrderItem orderItem)
+        public void InsertOrderItem(OrderItem orderItem)
         {
-            string query = "INSERT INTO ORDER_ITEM (quantity, note, menuItem_id, orderNumber, itemStatus)" +
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "INSERT INTO ORDER_ITEM (quantity, note, menuItem_id, orderNumber, itemStatus)" +
                             " VALUES (@Quantity, @Note, @MenuItemId, @OrderNumber, @ItemStatus)";
 
-            SqlCommand command = new SqlCommand(query, connection);
+                SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@Quantity", orderItem.Quantity);
-            command.Parameters.AddWithValue("@Note", (object?)orderItem.Note ?? DBNull.Value);
-            command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
-            command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
-            command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus.ToString());
+                command.Parameters.AddWithValue("@Quantity", orderItem.Quantity);
+                command.Parameters.AddWithValue("@Note", (object?)orderItem.Note ?? DBNull.Value);
+                command.Parameters.AddWithValue("@MenuItemId", orderItem.MenuItem.MenuItemId);
+                command.Parameters.AddWithValue("@OrderNumber", orderItem.OrderNumber);
+                command.Parameters.AddWithValue("@ItemStatus", orderItem.ItemStatus.ToString());
 
-            int rowsChanged = command.ExecuteNonQuery();
-            if (rowsChanged != 1)
-            {
-                throw new Exception("Item addition failed");
+                connection.Open();
+
+                int rowsChanged = command.ExecuteNonQuery();
+                if (rowsChanged != 1)
+                {
+                    throw new Exception("Item addition failed");
+                }
             }
 
         }

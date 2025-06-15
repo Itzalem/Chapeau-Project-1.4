@@ -5,8 +5,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 {
     public interface IOrderItemRepository
     {
-        void AddOrderItem(OrderItem orderItem);
+        
         bool CheckDuplicateItems(OrderItem orderItem);
+        void InsertOrderItem(OrderItem orderItem);
 
         public OrderItem GetOrderItemById(int orderItemId);
 

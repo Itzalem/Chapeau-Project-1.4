@@ -100,7 +100,7 @@ namespace Chapeau_Project_1._4.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An unexpected error occurred while adding the item, please try again";
+                TempData["ErrorItemMessage"] = "An unexpected error occurred while adding the item, please try again";
             }
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
         }

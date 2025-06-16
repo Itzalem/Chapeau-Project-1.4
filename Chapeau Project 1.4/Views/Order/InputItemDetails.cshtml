@@ -1,6 +1,10 @@
 ﻿@model Chapeau_Project_1._4.Models.OrderItem
 
 @{
+    ViewData["Title"] = "Item Details";   
+}
+
+@{
     string quantityErrorMessage = ViewData["QuantityError"]?.ToString();    
 }
 <partial name="_ErrorMessage" model="quantityErrorMessage" />
@@ -23,7 +27,7 @@
     <input type="hidden" asp-for="ItemStatus" />
     <input type="hidden" asp-for="OrderNumber" />
 
-    <p>Order #: @Model.OrderNumber</p>
+    <h1>@Model.MenuItem.MenuItemName</h1>
 
     <label for="quantity">Quantity:</label>
     <input type="number" asp-for="Quantity" id="quantity" required />

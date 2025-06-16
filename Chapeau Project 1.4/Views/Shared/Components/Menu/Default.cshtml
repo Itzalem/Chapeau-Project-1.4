@@ -11,6 +11,8 @@
 </div>
 
 <div>
+
+<!--showing the card buttons to choose-->
 <ul class="nav nav-pills">
 
     @foreach (var cardEnum in Model.CategoriesDictionary.Keys)
@@ -23,10 +25,10 @@
 
 </ul>
 
-<!-- Show categories filtered by CardOptions -->
+<!-- Show categories according to the Card Options -->
 @if (Model.CategoriesDictionary.ContainsKey(Model.CardFilter))
 {
-    <p>Choose a Category:</p>
+    <p><strong>Choose a Category:</strong></p>
     @foreach (var category in Model.CategoriesDictionary[Model.CardFilter])
     {
         <a class="btn btn-brown"
@@ -36,9 +38,9 @@
            asp-route-categoryFilter="@category" asp-route-orderNumber="@ViewData["OrderNumber"]">
             <strong>@category</strong>
         </a>      
-
     }
 }
+
 </div>
 
 <div class="tab-content">
@@ -59,44 +61,38 @@
                 previousCategory = menuItem.Category;
             }
 
-            <table style="border-collapse: collapse; width: 70%; margin: auto;">
-                <tr>
-                    <td>
-                        @menuItem.MenuItemName
+            <div class="menu-item">
+                <div class="dish-name">
+                    @menuItem.MenuItemName
+                    @if (menuItem.Stock <= 10 && menuItem.Stock > 0)
+                    {
+                        <span class="runningOut"> Running out </span>
+                    }
+                    else if (menuItem.Stock <= 0)
+                    {
+                        <span class="outOfStock"> Out of stock </span>
+                    }
+                </div>
 
-                        @if (menuItem.Stock <= 10 && menuItem.Stock > 0)
+                <div class="right-side">
+                    <span class="price">€@menuItem.Price</span>
+
+                    <!--To add the item to the order list-->
+                    <form asp-controller="Order" asp-action="InputItemDetails" method="post">
+                        <input type="hidden" name="MenuItemId" value="@menuItem.MenuItemId" />
+                        <input type="hidden" name="MenuItemName" value="@menuItem.MenuItemName" />
+                        <input type="hidden" name="Price" value="@menuItem.Price" />
+                        <input type="hidden" name="Stock" value="@menuItem.Stock" />
+                        <input type="hidden" name="Card" value="@menuItem.Card" />
+                        <input type="hidden" name="Category" value="@menuItem.Category" />
+                        <input type="hidden" name="OrderNumber" value="@ViewData["OrderNumber"]" />
+                        @if (menuItem.Stock > 0)
                         {
-                            <span class="runningOut"> Running out </span>
+                            <button type="submit" class="add-button">Add to order</button>
                         }
-                        else if (menuItem.Stock <= 0)
-                        {
-                            <span class="outOfStock"> Out of stock </span>
-                        }
-                    </td>
-
-                    <td style="text-align: right;">€@menuItem.Price</td>
-
-                    <td>
-                        <form asp-controller="Order" asp-action="InputItemDetails" method="post">
-                            
-                            <input type="hidden" name="MenuItemId" value="@menuItem.MenuItemId" />
-                            <input type="hidden" name="MenuItemName" value="@menuItem.MenuItemName" />
-                            <input type="hidden" name="Price" value="@menuItem.Price" />
-                            <input type="hidden" name="Stock" value="@menuItem.Stock" />
-                            <input type="hidden" name="Card" value="@menuItem.Card" />
-                            <input type="hidden" name="Category" value="@menuItem.Category" />
-
-                            <input type="hidden" name="OrderNumber" value="@ViewData["OrderNumber"]" />
-
-                            @if (menuItem.Stock > 0)
-                            {
-                                <button type="submit">Add to order</button>
-                            }
-                        </form>
-                    </td>
-                </tr>
-
-            </table>
+                    </form>
+                </div>
+            </div>
 
         }
     </div>

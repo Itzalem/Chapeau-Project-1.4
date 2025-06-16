@@ -9,6 +9,8 @@ namespace Chapeau_Project_1._4.Services.Order
 
         Chapeau_Project_1._4.Models.Order? GetOrderByTable(int? table);
 
+        Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber);
+
         void UpdateOrderStatus(EOrderStatus status, int orderNumber);
 
         void CancelUnsentOrder(Chapeau_Project_1._4.Models.Order order);
@@ -23,7 +25,6 @@ namespace Chapeau_Project_1._4.Services.Order
 
         List<Chapeau_Project_1._4.Models.Order> DisplayOrder();
         object GetOrderMunuItemName(int OrderNumber);
-        Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber);
         List<RunningOrderWithItemsViewModel> GetOrdersWithItems(bool IsDrink,string tabName = "RunningOrders");
     }
 }

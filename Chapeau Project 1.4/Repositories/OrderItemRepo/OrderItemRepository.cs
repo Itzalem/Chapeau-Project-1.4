@@ -18,7 +18,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             _connectionString = configuration.GetConnectionString("ChapeauRestaurant");
             _menuRepository = menuRepository;
         }
-
  
         private OrderItem ReadOrderItem(SqlDataReader reader)
         {
@@ -44,7 +43,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             return orderItem;
         }
 
-        public List<OrderItem> DisplayItemsPerOrder(Order order)
+        public List<OrderItem> DisplayItemsPerOrder(Order order) 
         {
             List<OrderItem> orderItems = new List<OrderItem>();
 
@@ -72,7 +71,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             return orderItems;
         }
 
-        public void InsertOrderItem(OrderItem orderItem)
+        public void InsertOrderItem(OrderItem orderItem) //creates a new orderItem in db
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -100,22 +99,22 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
 
         public bool CheckDuplicateItems(OrderItem orderItem)
         {
-                int? existingItemId = FindMatchingOrderItem(orderItem);          
+            int? existingItemId = FindMatchingOrderItem(orderItem);
 
-                if (existingItemId != null && existingItemId != orderItem.OrderItemId)
-                {
-                    UpdateQuantity(existingItemId.Value, orderItem.Quantity);
-                    DeleteDuplicateItem(orderItem.OrderItemId); // delete the new duplicate, keep the existing one
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-                      
+            if (existingItemId != null && existingItemId != orderItem.OrderItemId)
+            {
+                UpdateQuantity(existingItemId.Value, orderItem.Quantity);
+                DeleteDuplicateItem(orderItem.OrderItemId); // delete the new duplicate, keep the existing one
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        private int? FindMatchingOrderItem(OrderItem orderItem)
+        private int? FindMatchingOrderItem(OrderItem orderItem) 
+            // Check if the item already exists in the order with same parameters
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -147,10 +146,9 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                     return null;
                 }
             }
-
         }
 
-        public void UpdateQuantity(int existingItemId, int extraQuantity)
+        public void UpdateQuantity(int existingItemId, int extraQuantity) 
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -212,7 +210,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
             }
         }
 
-        public void UpdateHoldItemsStatus(Order order)
+        public void UpdateHoldItemsStatus(Order order) //hold items are updated to pending after send
         {
             try
             {

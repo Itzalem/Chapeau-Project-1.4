@@ -35,6 +35,10 @@ namespace Chapeau_Project_1._4.Services.Order
         {
             return _orderRepository.GetOrderByTable(table);
         }
+        public Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber)
+        {
+            return _orderRepository.GetOrderByNumber(orderNumber);
+        }
 
         public void CancelUnsentOrder(Chapeau_Project_1._4.Models.Order order) //M
         {
@@ -107,12 +111,6 @@ namespace Chapeau_Project_1._4.Services.Order
         {
             return _orderRepository.GetOrderMunuItemName(OrderNumber);  
         }
-
-        public Chapeau_Project_1._4.Models.Order? GetOrderByNumber(int orderNumber)
-        {
-            return _orderRepository.GetOrderByNumber(orderNumber);
-        }
-
         public void UpdateOrderStatus(EOrderStatus updatedItemStatus, int orderNumber)
         {
             _orderRepository.UpdateOrderStatus(updatedItemStatus, orderNumber);

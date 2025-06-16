@@ -15,10 +15,10 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         }
 
         public void AddOrderItem(OrderItem orderItem) //M
-        {
+        {            
             if (!_orderItemRepository.CheckDuplicateItems(orderItem))
             {
-                _orderItemRepository.InsertOrderItem(orderItem);
+                _orderItemRepository.InsertOrderItem(orderItem); //to add the new item to db
             }
         }
 
@@ -26,9 +26,9 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         {
             foreach (OrderItem orderItem in order.OrderItems)
             {
-                if (orderItem.ItemStatus == EItemStatus.pending)
+                if (orderItem.ItemStatus == EItemStatus.pending) //only checks duplicates for pending items
                 {
-                    _orderItemRepository.CheckDuplicateItems(orderItem);
+                    _orderItemRepository.CheckDuplicateItems(orderItem); 
                 }
             }
         }
@@ -42,17 +42,16 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         {
             foreach (OrderItem orderItem in order.OrderItems)
             {
-                if (orderItem.ItemStatus == EItemStatus.onHold) //this is not the best way to do it, better to do it in the repo
+                if (orderItem.ItemStatus == EItemStatus.onHold) 
                 {
                     _orderItemRepository.ReduceItemStock(orderItem);
                 }
             }
-
         }
 
         public void UpdateHoldItemsStatus(Chapeau_Project_1._4.Models.Order order) //M
         {
-            _orderItemRepository.UpdateHoldItemsStatus(order);
+            _orderItemRepository.UpdateHoldItemsStatus(order); //updates hold items to pending
 
         }
 
@@ -63,6 +62,7 @@ namespace Chapeau_Project_1._4.Services.OrderItems
 
         public void EditItemQuantity(OrderItem orderItem, string operation) //M
         {
+            //depeding on the operation the quantity is increased or decreased and updated in the db
             if (operation == "increase")
             {
                 orderItem.Quantity++;
@@ -73,6 +73,7 @@ namespace Chapeau_Project_1._4.Services.OrderItems
                 orderItem.Quantity--;
                 _orderItemRepository.EditItemQuantity(orderItem); ;
             }
+            //if an item with quantity 1 is decreased, it will be deleted            
             else 
             {
                 DeleteSingleItem(orderItem);
@@ -83,6 +84,7 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         {
             _orderItemRepository.DeleteSingleItem(orderItem);
         }
+
         public void EditItemNote(OrderItem orderItem) //M
         {
             _orderItemRepository.EditItemNote(orderItem);
@@ -92,7 +94,6 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         {
             return _orderItemRepository.GetByOrderNumber(orderNumber);
         }     
-
 
 
         //Lukas

@@ -43,7 +43,7 @@ namespace Chapeau_Project_1._4.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet] //shows the general view to take the Order with every item that's already part of it
         public IActionResult TakeOrder(int orderNumber, ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
             try
@@ -65,7 +65,7 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost] //create a new order item and shows the view for the note and quantity
         public IActionResult InputItemDetails(MenuItem menuItem, int OrderNumber)
         {
             OrderItem orderItem = new OrderItem
@@ -106,28 +106,28 @@ namespace Chapeau_Project_1._4.Controllers
         }
 
 
-
         [HttpPost]
         public IActionResult SendOrder(Order order)
         {
             try
             {
-                order.OrderItems = _orderItemService.DisplayItemsPerOrder(order); //to load the list in the order object
+                //the list is not loaded from the form, I need to call a service to get the items of the order
+                order.OrderItems = _orderItemService.DisplayItemsPerOrder(order); 
 
-                //i pass only the order number because I'm reusing a kitchen method that its already expecting a status
+                //i pass only the order number because I'm reusing a kitchen method
                 _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);
 
-                //the stock its reduced before the itemstatus is changes to avoid already
-                //sent items to reduce the stock again             
+                /*the stock its reduced before the Item status is changed to avoid already
+                  sent items to reduce the stock again*/             
                 _orderItemService.ReduceItemStock(order);
 
+                //all the items that are on hold are updated to pending
                 _orderItemService.UpdateHoldItemsStatus(order);
-
-                _orderItemService.CheckDuplicateItems(order);
+                
+                _orderItemService.CheckDuplicateItems(order); //only for the new pending items 
 
                 TempData["SuccessMessage"] = "Order Sent Successfully";
             }
-
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An unexpected error occurred while sending the order, please try again";
@@ -142,7 +142,8 @@ namespace Chapeau_Project_1._4.Controllers
         {
             try
             {
-                order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);  //to load the list in the order object
+                //the list is not loaded from the form, I need to call a service to get the items of the order
+                order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);  
 
                 _orderService.CancelUnsentOrder(order);
 

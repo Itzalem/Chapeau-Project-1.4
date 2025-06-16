@@ -11,6 +11,11 @@
 }
 <partial name="_SucessMessage" model="sucessMessage" />
 
+@{
+    string errorMessage = TempData["ErrorMessage"]?.ToString();
+}
+<partial name="_ErrorMessage" model="errorMessage" />
+
 
 <a class="btn btn-success" href="/RestaurantTable/Overview"> Back to Tables</a>
 

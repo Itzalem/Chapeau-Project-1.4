@@ -8,6 +8,6 @@
         inProgress, 
         prepared,
         paid
-            //paid an unpaid, other status will move to orderitem
+            
     }
 }

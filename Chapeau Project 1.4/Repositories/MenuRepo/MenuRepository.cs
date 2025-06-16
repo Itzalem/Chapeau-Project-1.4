@@ -19,10 +19,9 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
             int menuItem_id = (int)reader["menuItem_id"];
             string menuItemName = (string)reader["menuItemName"];
             decimal price = (decimal)reader["price"];
-            int stock = (int)reader["stock"];
-           
+            int stock = (int)reader["stock"];           
 
-            // Convertirt to string to dabatase can read them and convert again before filling the object
+            // Convert to string to dabatase can read them and convert again before filling the object
             string card = reader["menuCard"].ToString();
 			string category = reader["category"].ToString();
 
@@ -34,6 +33,7 @@ namespace Chapeau_Project_1._4.Repositories.MenuRepo
             return new MenuItem(menuItem_id, menuItemName, price, stock, card, category, isAlcoholic);
         }
 
+        //gets all the menu items from the db and filters according to card and category 
         public List<MenuItem> GetMenuItems(ECardOptions cardFilter, ECategoryOptions categoryFilter)
         {
             List<MenuItem> menu = new List<MenuItem>();

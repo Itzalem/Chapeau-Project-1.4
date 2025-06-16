@@ -18,7 +18,8 @@ namespace Chapeau_Project_1._4.Services.Menu
         {
             return _menuRepository.GetMenuItems(cardFilter, categoryFilter);
         }
-        
+
+        //for each card option, i create a list of categories to choose
         private readonly Dictionary<ECardOptions, List<ECategoryOptions>> categoriesByCard = 
             new Dictionary<ECardOptions, List<ECategoryOptions>>        
             {

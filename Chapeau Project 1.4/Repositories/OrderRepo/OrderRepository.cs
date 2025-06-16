@@ -17,8 +17,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             // get (database connectionstring from appsetings 
             _connectionString = configuration.GetConnectionString("ChapeauRestaurant");
         }
-
-
         private Order ReadOrder(SqlDataReader reader)
         {
             int OrderNumber = (int)reader["orderNumber"];
@@ -31,7 +29,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
         public List<Order> DisplayOrder()
         {
-
             List<Order> orders = new List<Order>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -46,13 +43,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
 
                 // for each row in the orders table, it converts it into an object  
                 while (reader.Read())
-                {
-                    //Order order = new(
-                    //    reader.GetInt32(0),
-                    //    (EOrderStatus)(Enum.Parse(typeof(EOrderStatus) , reader.GetString(1))),
-                    //    reader.GetDateTime(2), 
-                    //    reader.GetInt32(3)
-                    //    );
+                {                    
                     var order = ReadOrder(reader);
                     orders.Add(order);
                 }
@@ -63,6 +54,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         }
 
         public int AddNewOrder(int tableNumber) //M
+            //returns the new added order Id
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -137,25 +129,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return null;
         }
 
-
-        public void Update(Order order)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-
-                string query = @"UPDATE Orders SET status = @status, tableNumber = @tableNumber, orderTime = @orderTime WHERE orderNumber = @orderNumber";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@status", order.Status.ToString());
-                command.Parameters.AddWithValue("@tableNumber", order.TableNumber);
-                command.Parameters.AddWithValue("@orderTime", order.OrderTime);
-                command.Parameters.AddWithValue("@orderNumber", order.OrderNumber);
-
-                command.Connection.Open();
-                command.ExecuteNonQuery();
-            }
-
-        }
-
         public void UpdateOrderStatus(EOrderStatus status, int orderNumber)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -172,7 +145,6 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 {
                     throw new Exception("Failed to update the order");
                 }
-
             }
         }
 
@@ -189,17 +161,16 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
 
                 command.Connection.Open();
-                int rowsAffected  = command.ExecuteNonQuery();                
+                int rowsAffected = command.ExecuteNonQuery();
 
                 int itemsInList = CountItemsInOrder(order);
 
-                if (itemsInList == 0)
+                if (itemsInList == 0) //if the order item list is empty, the order will be deleted
                 {
                     DeleteEmptyOrder(order);
                 }
             }
         }
-
 
         public void DeleteEmptyOrder(Order order) //M
         {
@@ -242,6 +213,23 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             }
         }
 
+        public void Update(Order order)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+
+                string query = @"UPDATE Orders SET status = @status, tableNumber = @tableNumber, orderTime = @orderTime WHERE orderNumber = @orderNumber";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@status", order.Status.ToString());
+                command.Parameters.AddWithValue("@tableNumber", order.TableNumber);
+                command.Parameters.AddWithValue("@orderTime", order.OrderTime);
+                command.Parameters.AddWithValue("@orderNumber", order.OrderNumber);
+
+                command.Connection.Open();
+                command.ExecuteNonQuery();
+            }
+
+        }
         
         // To get the name of each orderItem from the MenuItems 
         public object GetOrderMunuItemName(int OrderNumber)

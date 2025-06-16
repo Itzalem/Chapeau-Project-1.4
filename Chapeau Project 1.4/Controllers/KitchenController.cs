@@ -21,6 +21,40 @@ namespace Chapeau_Project_1._4.Controllers
             _menuService = menuService;
         }
 
+        public IActionResult Index(string linkTab, string filterValue = "RunningOrders")
+        {
+            // Get the user role from session
+            var role = HttpContext.Session.GetString("UserRole");
+
+            // Fallback to the query parameter if role is not found (e.g. direct access)
+            bool isDrink;
+
+            // Priority: use role first
+            if (role == "bar")
+            {
+                isDrink = true;
+            }
+            else if (role == "kitchen")
+            {
+                isDrink = false;
+            }
+            else
+            {
+                // Fallback to linkTab if role is missing or unknown
+                isDrink = linkTab != "food";
+            }
+
+            var queryResult = new FoodOrDrinkRecognizerViewModel
+            {
+                IsDrink = isDrink,
+                FilterValue = filterValue
+            };
+
+            return View("RunningOrder", queryResult);
+        }
+
+
+        /*
         public IActionResult Index(string linkTab , string filterValue = "RunningOrders")
         {
             bool isDrink = linkTab != "food";
@@ -31,6 +65,7 @@ namespace Chapeau_Project_1._4.Controllers
             };
             return View("RunningOrder", queryResult);
         }
+        */
 
         [HttpPost]
         public IActionResult UpdateItemStatus(int orderItemId, EItemStatus itemStatus)

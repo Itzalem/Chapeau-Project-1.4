@@ -36,6 +36,7 @@ namespace Chapeau_Project_1._4.Controllers
 
             // Call service to validate credentials.
             // If successful, it returns a Personell object and sets the controller and action using 'out' parameters.
+            //out parameters allow to return mutltiple values, then it redirects to the according controller / method
             Personell personell = _personellService.TryLogin(loginModel.Username, loginModel.Password, out controller, out action);
 
             // If login failed, show error and stay on login page

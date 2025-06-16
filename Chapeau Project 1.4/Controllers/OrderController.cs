@@ -23,29 +23,45 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpGet]
         public IActionResult AddOrder(int tableNumber) //pass only table number because i dont have an order yet, i create it in this method
         {
-            Order order = _orderService.GetOrderByTable(tableNumber); //too veryfy if the table already has an order open
-
-            if (order != null)
+            try
             {
-                return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
+                Order order = _orderService.GetOrderByTable(tableNumber); //too veryfy if the table already has an order open
+
+                if (order != null)
+                {
+                    return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
+                }
+
+                int newOrderNumber = _orderService.AddNewOrder(tableNumber);
+
+                return RedirectToAction("TakeOrder", new { orderNumber = newOrderNumber });
             }
-
-            int newOrderNumber = _orderService.AddNewOrder(tableNumber);
-
-            return RedirectToAction("TakeOrder", new { orderNumber = newOrderNumber });
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while creating the order, please try again";
+                return RedirectToAction("Overview", "RestaurantTable");
+            }
         }
 
-
+        [HttpGet]
         public IActionResult TakeOrder(int orderNumber, ECardOptions cardFilter = ECardOptions.Lunch, ECategoryOptions categoryFilter = ECategoryOptions.All)
         {
-            Order order = _orderService.GetOrderByNumber(orderNumber);
+            try
+            {
+                Order order = _orderService.GetOrderByNumber(orderNumber);
 
-            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
+                order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);
 
-            ViewData["CardFilter"] = cardFilter;
-            ViewData["CategoryFilter"] = categoryFilter;
+                ViewData["CardFilter"] = cardFilter;
+                ViewData["CategoryFilter"] = categoryFilter;
 
-            return View(order);
+                return View(order);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred, please try again";
+                return RedirectToAction("Overview", "RestaurantTable");
+            }
         }
 
 
@@ -78,11 +94,15 @@ namespace Chapeau_Project_1._4.Controllers
                 return View("InputItemDetails", orderItem);
             }
 
-            _orderItemService.AddOrderItem(orderItem); //add item to Db
-
-
+            try
+            {
+                _orderItemService.AddOrderItem(orderItem); //add item to Db
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while adding the item, please try again";
+            }
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
-
         }
 
 
@@ -90,24 +110,28 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpPost]
         public IActionResult SendOrder(Order order)
         {
-            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order); //to load the list in the order object
+            try
+            {
+                order.OrderItems = _orderItemService.DisplayItemsPerOrder(order); //to load the list in the order object
 
-            //i pass only the order number because I'm reusing a kitchen method that its already expecting a status
-            _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);
+                //i pass only the order number because I'm reusing a kitchen method that its already expecting a status
+                _orderService.UpdateOrderStatus(EOrderStatus.pending, order.OrderNumber);
 
-            //the stock its reduced before the itemstatus is changes to avoid already
-            //sent items to reduce the stock again 
-            
-            _orderItemService.ReduceItemStock(order);
-             
+                //the stock its reduced before the itemstatus is changes to avoid already
+                //sent items to reduce the stock again             
+                _orderItemService.ReduceItemStock(order);
 
-            _orderItemService.UpdateAllItemsStatus(order);
+                _orderItemService.UpdateHoldItemsStatus(order);
 
-           
-                    _orderItemService.CheckDuplicateItems(order);
-               
+                _orderItemService.CheckDuplicateItems(order);
 
-            TempData["SuccessMessage"] = "Order Sent Successfully";
+                TempData["SuccessMessage"] = "Order Sent Successfully";
+            }
+
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while sending the order, please try again";
+            }
 
             return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
         }
@@ -116,13 +140,21 @@ namespace Chapeau_Project_1._4.Controllers
         [HttpPost]
         public IActionResult CancelOrder(Order order)
         {
-            order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);  //to load the list in the order object
+            try
+            {
+                order.OrderItems = _orderItemService.DisplayItemsPerOrder(order);  //to load the list in the order object
 
-            _orderService.CancelUnsentOrder(order);
+                _orderService.CancelUnsentOrder(order);
 
-            TempData["CancelMessage"] = "Order Canceled";
+                TempData["CancelMessage"] = "Order Canceled";
 
-            return RedirectToAction("Overview", "RestaurantTable");
+                return RedirectToAction("Overview", "RestaurantTable");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while canceling the order, please try again";
+                return RedirectToAction("TakeOrder", new { orderNumber = order.OrderNumber });
+            }
 
         }
 
@@ -132,20 +164,34 @@ namespace Chapeau_Project_1._4.Controllers
         {
             OrderItem orderItem = _orderItemService.GetOrderItemById(orderItemId);
 
-            _orderItemService.EditItemQuantity(orderItem, operation);
-
+            try
+            {
+                _orderItemService.EditItemQuantity(orderItem, operation);                
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while editing the item quantity, please try again";                
+            }
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
         }
+
 
         [HttpGet]
         public IActionResult DeleteSingleItem(int orderItemId)
         {
             OrderItem orderItem = _orderItemService.GetOrderItemById(orderItemId);
 
-            _orderItemService.DeleteSingleItem(orderItem);
-
+            try
+            {
+                _orderItemService.DeleteSingleItem(orderItem);               
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while deleting the item, please try again";                
+            }
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
         }
+
 
         [HttpPost]
         public IActionResult EditItemNote(int orderItemId, string note)
@@ -153,7 +199,14 @@ namespace Chapeau_Project_1._4.Controllers
             OrderItem orderItem = _orderItemService.GetOrderItemById(orderItemId);
             orderItem.Note = note;
 
-            _orderItemService.EditItemNote(orderItem);
+            try
+            {
+                _orderItemService.EditItemNote(orderItem);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An unexpected error occurred while editing the item note, please try again";                
+            }
 
             return RedirectToAction("TakeOrder", new { orderNumber = orderItem.OrderNumber });
         }

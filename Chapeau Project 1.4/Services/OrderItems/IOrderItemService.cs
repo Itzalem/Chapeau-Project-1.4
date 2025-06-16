@@ -16,13 +16,12 @@ namespace Chapeau_Project_1._4.Services.OrderItems
         List<OrderItem> DisplayOrderItems();
         List<OrderItem> GetRunningItem();
         void UpdateItemStatus(int orderItemId, EItemStatus newStatus);
-        void UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus);
-        
+        void UpdateCourseStatus(int orderNumber, string category, ECategoryStatus categoryCourseStatus);        
 
 
-        void UpdateAllItemsStatus(Chapeau_Project_1._4.Models.Order order);
+        void UpdateHoldItemsStatus(Chapeau_Project_1._4.Models.Order order);
 
-        void ReduceItemStock(Chapeau_Project_1._4.Models.Order order);
+        void ReduceItemStock(Chapeau_Project_1._4.Models.Order order); 
 
         void EditItemQuantity(OrderItem orderItem, string operation);
         void DeleteSingleItem(OrderItem orderItem);

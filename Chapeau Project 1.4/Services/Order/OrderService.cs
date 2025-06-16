@@ -25,8 +25,6 @@ namespace Chapeau_Project_1._4.Services.Order
 
         public int AddNewOrder(int tableNumber)
         {
-            //return _orderRepository.AddNewOrder(tableNumber);
-
             //lukas - i added this
             int newOrderNumber = _orderRepository.AddNewOrder(tableNumber);
             _tableService.UpdateTableOccupancy(tableNumber, true);
@@ -38,10 +36,11 @@ namespace Chapeau_Project_1._4.Services.Order
             return _orderRepository.GetOrderByTable(table);
         }
 
-        public void CancelUnsentOrder(Chapeau_Project_1._4.Models.Order order)
+        public void CancelUnsentOrder(Chapeau_Project_1._4.Models.Order order) //M
         {
             _orderRepository.CancelUnsentOrder(order);
         }
+
         public List<OrderItem> GetOrderItems(int orderNumber)
         {
             return _orderRepository.GetOrderItemsByOrderNumber(orderNumber);

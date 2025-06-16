@@ -62,7 +62,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
             return orders;
         }
 
-        public int AddNewOrder(int tableNumber)
+        public int AddNewOrder(int tableNumber) //M
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -112,7 +112,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         }
 
 
-        public Order? GetOrderByTable(int? table)
+        public Order? GetOrderByTable(int? table) 
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -167,11 +167,16 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 command.Parameters.AddWithValue("@orderNumber", orderNumber);
 
                 command.Connection.Open();
-                command.ExecuteNonQuery();
+                int rowChanged = command.ExecuteNonQuery();
+                if (rowChanged == 0)
+                {
+                    throw new Exception("Failed to update the order");
+                }
+
             }
         }
 
-        public void CancelUnsentOrder(Order order)
+        public void CancelUnsentOrder(Order order) //M
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -184,7 +189,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
                 command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
 
                 command.Connection.Open();
-                command.ExecuteNonQuery();
+                int rowsAffected  = command.ExecuteNonQuery();                
 
                 int itemsInList = CountItemsInOrder(order);
 
@@ -196,21 +201,28 @@ namespace Chapeau_Project_1._4.Repositories.OrderRepo
         }
 
 
-        public void DeleteEmptyOrder(Order order)
+        public void DeleteEmptyOrder(Order order) //M
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            try
             {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
 
-                string query = "DELETE FROM ORDERS WHERE orderNumber = @OrderNumber";
+                    string query = "DELETE FROM ORDERS WHERE orderNumber = @OrderNumber";
 
-                SqlCommand command = new SqlCommand(query, connection);
+                    SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
+                    command.Parameters.AddWithValue("@OrderNumber", order.OrderNumber);
 
-                command.Connection.Open();
+                    command.Connection.Open();
 
-                command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
 
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error deleting empty order", ex);
             }
         }
 

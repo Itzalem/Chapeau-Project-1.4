@@ -14,7 +14,7 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             _orderItemRepository = orderItemRepository;
         }
 
-        public void AddOrderItem(OrderItem orderItem)
+        public void AddOrderItem(OrderItem orderItem) //M
         {
             if (!_orderItemRepository.CheckDuplicateItems(orderItem))
             {
@@ -22,7 +22,7 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             }
         }
 
-        public void CheckDuplicateItems(Chapeau_Project_1._4.Models.Order order)
+        public void CheckDuplicateItems(Chapeau_Project_1._4.Models.Order order) //M
         {
             foreach (OrderItem orderItem in order.OrderItems)
             {
@@ -33,29 +33,12 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             }
         }
 
-        public OrderItem GetOrderItemById(int orderItemId)
-        {
-            return _orderItemRepository.GetOrderItemById(orderItemId);
-        }
-
-        public List<OrderItem> DisplayItemsPerOrder(Chapeau_Project_1._4.Models.Order order)
+        public List<OrderItem> DisplayItemsPerOrder(Chapeau_Project_1._4.Models.Order order) //M
         {
             return _orderItemRepository.DisplayItemsPerOrder(order);
         }
 
-
-        public List<OrderItem> GetByOrderNumber(int orderNumber)
-        {
-            return _orderItemRepository.GetByOrderNumber(orderNumber);
-        }
-
-        public void UpdateAllItemsStatus(Chapeau_Project_1._4.Models.Order order)
-        {
-            _orderItemRepository.UpdateAllItemsStatus(order);
-
-        }
-
-        public void ReduceItemStock(Chapeau_Project_1._4.Models.Order order)
+        public void ReduceItemStock(Chapeau_Project_1._4.Models.Order order) //M
         {
             foreach (OrderItem orderItem in order.OrderItems)
             {
@@ -64,11 +47,21 @@ namespace Chapeau_Project_1._4.Services.OrderItems
                     _orderItemRepository.ReduceItemStock(orderItem);
                 }
             }
-            
+
         }
 
+        public void UpdateHoldItemsStatus(Chapeau_Project_1._4.Models.Order order) //M
+        {
+            _orderItemRepository.UpdateHoldItemsStatus(order);
 
-        public void EditItemQuantity(OrderItem orderItem, string operation)
+        }
+
+        public OrderItem GetOrderItemById(int orderItemId) //M
+        {
+            return _orderItemRepository.GetOrderItemById(orderItemId);
+        }         
+
+        public void EditItemQuantity(OrderItem orderItem, string operation) //M
         {
             if (operation == "increase")
             {
@@ -86,15 +79,20 @@ namespace Chapeau_Project_1._4.Services.OrderItems
             }
         }
 
-        public void DeleteSingleItem(OrderItem orderItem)
+        public void DeleteSingleItem(OrderItem orderItem) //M
         {
             _orderItemRepository.DeleteSingleItem(orderItem);
         }
-
-        public void EditItemNote(OrderItem orderItem)
+        public void EditItemNote(OrderItem orderItem) //M
         {
             _orderItemRepository.EditItemNote(orderItem);
         }
+
+        public List<OrderItem> GetByOrderNumber(int orderNumber)
+        {
+            return _orderItemRepository.GetByOrderNumber(orderNumber);
+        }     
+
 
 
         //Lukas

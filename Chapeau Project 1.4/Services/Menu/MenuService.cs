@@ -18,8 +18,7 @@ namespace Chapeau_Project_1._4.Services.Menu
         {
             return _menuRepository.GetMenuItems(cardFilter, categoryFilter);
         }
-
-        //si tengo tiempo automatizo el llenado de la lista
+        
         private readonly Dictionary<ECardOptions, List<ECategoryOptions>> categoriesByCard = 
             new Dictionary<ECardOptions, List<ECategoryOptions>>        
             {

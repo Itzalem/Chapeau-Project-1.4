@@ -173,11 +173,11 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "DELETE FROM ORDER_ITEM WHERE orderItem_id = @ExistingId ";
+                string query = "DELETE FROM ORDER_ITEM WHERE orderItem_id = @DuplicateItemId";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@ExistingId", duplicateItemId);
+                command.Parameters.AddWithValue("@DuplicateItemId", duplicateItemId);
 
                 connection.Open();
                 int rowsChanged = command.ExecuteNonQuery();
@@ -321,7 +321,7 @@ namespace Chapeau_Project_1._4.Repositories.OrderItemRepo
                 int rows = command.ExecuteNonQuery();
                 if (rows != 1)
                 {
-                    throw new Exception("Failed to reduce stock");
+                    throw new Exception("Failed to edit note");
                 }
             }
 
